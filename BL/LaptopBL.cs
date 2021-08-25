@@ -3,7 +3,7 @@ using Persistance;
 using DAL;
 using System.Collections.Generic;
 
-namespace BL
+namespace BL  
 {
     public class LaptopBL
     {
