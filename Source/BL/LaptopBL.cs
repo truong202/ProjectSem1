@@ -6,7 +6,7 @@ using System.Collections.Generic;
 namespace BL  
 {
     public class LaptopBL
-    {
+    {  
         private LaptopDAL laptopDAL = new LaptopDAL();
         public Laptop GetById(int laptopId)
         {
