@@ -9,7 +9,7 @@ namespace ConsolePL
     {
         static void Main(string[] args)
         {
-            Console.OutputEncoding = Encoding.UTF8;
+            Console.OutputEncoding = Encoding.UTF8; //fjsdakfjaks
             Console.InputEncoding = Encoding.Unicode;
             // staff.Username = "afdd','afs');drop database laptop_store;";
             Staff staff;
