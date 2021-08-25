@@ -14,7 +14,6 @@ namespace DAL
         {
             List<Laptop> laptops = new List<Laptop>();
             lock (connection)
-            {
                 try
                 {
                     // connection = DbHelper.GetConnection();
@@ -34,58 +33,58 @@ namespace DAL
                 }
                 catch
                 {
-                throw new Exception("Không thể kết nối đến database!");
-                    
+                    throw new Exception("Không thể kết nối đến database!");
                 }
-            }
             return laptops;
 
         }
         public Laptop GetById(int laptopId)
         {
             Laptop laptop = null;
-            try
-            {
-                connection.Open();
-                MySqlCommand command = new MySqlCommand("call sp_GetLaptopById(@laptopId)", connection);
-                command.Parameters.AddWithValue("@laptopId", laptopId);
-                command.Parameters["@laptopId"].Direction = System.Data.ParameterDirection.Input;
-                reader = command.ExecuteReader();
-                if (reader.Read())
+            lock (connection)
+                try
                 {
-                    laptop = new Laptop();
-                    laptop = GetLaptop(reader);
+                    connection.Open();
+                    MySqlCommand command = new MySqlCommand("call sp_GetLaptopById(@laptopId)", connection);
+                    command.Parameters.AddWithValue("@laptopId", laptopId);
+                    command.Parameters["@laptopId"].Direction = System.Data.ParameterDirection.Input;
+                    reader = command.ExecuteReader();
+                    if (reader.Read())
+                    {
+                        laptop = new Laptop();
+                        laptop = GetLaptop(reader);
+                    }
+                    reader.Close();
+                    connection.Close();
                 }
-                reader.Close();
-                connection.Close();
-            }
-            catch
-            {
-                throw new Exception("Không thể kết nối đến database!");
-            }
+                catch
+                {
+                    throw new Exception("Không thể kết nối đến database!");
+                }
             return laptop;
         }
         public int GetCount(string searchValue)
         {
             int result = 0;
-            try
-            {
-                connection.Open();
-                MySqlCommand command = new MySqlCommand("call sp_getCount(@searchValue)", connection);
-                command.Parameters.AddWithValue("@searchValue", searchValue);
-                command.Parameters["@searchValue"].Direction = System.Data.ParameterDirection.Input;
-                reader = command.ExecuteReader();
-                if (reader.Read())
+            lock (connection)
+                try
                 {
-                    result = reader.GetInt32("count");
+                    connection.Open();
+                    MySqlCommand command = new MySqlCommand("call sp_getCount(@searchValue)", connection);
+                    command.Parameters.AddWithValue("@searchValue", searchValue);
+                    command.Parameters["@searchValue"].Direction = System.Data.ParameterDirection.Input;
+                    reader = command.ExecuteReader();
+                    if (reader.Read())
+                    {
+                        result = reader.GetInt32("count");
+                    }
+                    reader.Close();
+                    connection.Close();
                 }
-                reader.Close();
-                connection.Close();
-            }
-            catch
-            {
-                throw new Exception("Không thể kết nối đến database!");
-            }
+                catch
+                {
+                    throw new Exception("Không thể kết nối đến database!");
+                }
             return result;
         }
         private Laptop GetLaptop(MySqlDataReader reader)
