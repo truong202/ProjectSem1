@@ -12,6 +12,7 @@ namespace DAL
 
         public bool CreateOrder(Order order)
         {
+            if (order == null || order.Laptops == null || order.Laptops.Count == 0 || order.CustomerInfo ==null) return false;
             bool result = true;
             lock (connection)
             {
@@ -26,23 +27,35 @@ namespace DAL
                     command.Transaction = transaction;
                     try
                     {
-                        //Insert new Customer
-                        command.CommandText = "call sp_createCustomer(@customerName, @address, @phone);";
-                        command.Parameters.AddWithValue("@customerName", order.CustomerInfo.CustomerName ?? "");
-                        command.Parameters.AddWithValue("@address", order.CustomerInfo.Address ?? "");
+                        command.CommandText = "call sp_getCustomerByPhone(@phone);";
                         command.Parameters.AddWithValue("@phone", order.CustomerInfo.Phone);
-                        command.ExecuteNonQuery();
-                        //Get new customer id
-                        command.CommandText = "call sp_getNewCustomerId();";
                         reader = command.ExecuteReader();
                         if (reader.Read())
                         {
                             order.CustomerInfo.CustomerId = reader.GetInt32("customer_id");
                         }
                         reader.Close();
-                        if (order.CustomerInfo == null || order.CustomerInfo.CustomerId == null)
+                        if (order.CustomerInfo.CustomerId == null)
                         {
-                            throw new Exception("Can't find Customer!");
+                            //Insert new Customer
+                            command.CommandText = "call sp_createCustomer(@customerName, @address, @phone);";
+                            command.Parameters.Clear();
+                            command.Parameters.AddWithValue("@customerName", order.CustomerInfo.CustomerName ?? "");
+                            command.Parameters.AddWithValue("@address", order.CustomerInfo.Address ?? "");
+                            command.Parameters.AddWithValue("@phone", order.CustomerInfo.Phone);
+                            command.ExecuteNonQuery();
+                            //Get new customer id
+                            command.CommandText = "call sp_getNewCustomerId();";
+                            reader = command.ExecuteReader();
+                            if (reader.Read())
+                            {
+                                order.CustomerInfo.CustomerId = reader.GetInt32("customer_id");
+                            }
+                            reader.Close();
+                            if (order.CustomerInfo == null || order.CustomerInfo.CustomerId == null)
+                            {
+                                throw new Exception("Can't find Customer!");
+                            }
                         }
                         if (order.Seller == null || order.Seller.StaffId == null)
                         {
@@ -64,7 +77,6 @@ namespace DAL
                             order.OrderId = reader.GetInt32("order_id");
                         }
                         reader.Close();
-
                         //insert Order Details table
                         foreach (var laptop in order.Laptops)
                         {
@@ -103,8 +115,9 @@ namespace DAL
                         transaction.Commit();
                         result = true;
                     }
-                    catch
+                    catch (Exception e)
                     {
+                        Console.WriteLine(e.Message);
                         result = false;
                         try { transaction.Rollback(); }
                         catch { }

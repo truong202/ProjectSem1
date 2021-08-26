@@ -29,8 +29,8 @@ namespace Persistance
 
     public static class StaffRole
     {
-        public const int SELLER_ROLE = 1;
-        public const int ACCOUNTANCE_ROLE = 2;
+        public const int SELLER = 1;
+        public const int ACCOUNTANCE = 2;
     }
 
 }

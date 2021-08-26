@@ -6,16 +6,15 @@ namespace DAL
 {
     public class CustomerDAL
     {
-        public Customer GetCustomer(string phone)
+        private MySqlConnection connection = DbHelper.GetConnection();
+        public Customer GetByPhone(string phone)
         {
-            Customer customer = new Customer();   
+            Customer customer = new Customer();
             try
             {
-                MySqlConnection connection = DbHelper.GetConnection();
                 connection.Open();
-                MySqlCommand command = new MySqlCommand("call sp_getCustomer(@phone)", connection);
+                MySqlCommand command = new MySqlCommand("call sp_getCustomerByPhone(@phone)", connection);
                 command.Parameters.AddWithValue("@phone", phone);
-                command.Parameters["@phone"].Direction = System.Data.ParameterDirection.Input;
                 MySqlDataReader reader = command.ExecuteReader();
                 if (reader.Read())
                 {
@@ -24,9 +23,10 @@ namespace DAL
                 reader.Close();
                 connection.Close();
             }
-            catch
+            catch(Exception e)
             {
-                throw new Exception("Đã có lỗi xảy ra!");
+                Console.WriteLine(e.Message);
+                // throw new Exception("Đã có lỗi xảy ra!");
             }
             return customer;
         }

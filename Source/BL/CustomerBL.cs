@@ -8,9 +8,9 @@ namespace DAL
     {
         private CustomerDAL customerDAL = new CustomerDAL();
 
-        public Customer GetCustomer(string phone)
+        public Customer GetByPhone(string phone)
         {
-            return customerDAL.GetCustomer(phone);
+            return customerDAL.GetByPhone(phone);
         }
     }
 }
