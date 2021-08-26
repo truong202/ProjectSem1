@@ -12,18 +12,25 @@ namespace ConsolePL
             Console.OutputEncoding = Encoding.UTF8;
             Console.InputEncoding = Encoding.Unicode;
             // staff.Username = "afdd','afs');drop database laptop_store;";
-            Staff staff = Login();
-            int role = staff.Role;
-            switch (role)
-            {
-                case StaffRole.SELLER_ROLE:
+            Order order = new Order();
+            order.CustomerInfo.Phone = "0836984301";
+            order.Laptops.Add(new Laptop { LaptopId = 1, Quantity = 1 });
+            // order.Seller.StaffId = 1;
+            bool a = new OrderBL().CreateOrder(order);
+            Console.WriteLine(a == false);
+            // Staff staff = Login();
+            // int role = staff.Role;
 
-                    break;
-                case StaffRole.ACCOUNTANCE_ROLE:
-                    Console.WriteLine("accountance");
+            // switch (role)
+            // {
+            //     case StaffRole.SELLER_ROLE:
 
-                    break;
-            }
+            //         break;
+            //     case StaffRole.ACCOUNTANCE_ROLE:
+            //         Console.WriteLine("accountance");
+
+            //         break;
+            // }
         }
         static Staff Login()
         {

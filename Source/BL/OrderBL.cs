@@ -7,19 +7,19 @@ namespace BL
 {
     public class OrderBL
     {
-        private OrderBL orderBL = new OrderBL();
+        private OrderDAL orderDAL = new OrderDAL();
 
         public bool CreateOrder(Order order)
         {
-            return orderBL.CreateOrder(order);
+            return orderDAL.CreateOrder(order);
         }
         public bool ChangeStatus(int status)
         {
-            return orderBL.ChangeStatus(status);
+            return orderDAL.ChangeStatus(status);
         }
         public List<Order> GetOrders()
         {
-            return orderBL.GetOrders();
+            return orderDAL.GetOrders();
         }
     }
 }

@@ -12,14 +12,15 @@ namespace DAL
         {
             Staff _staff = null;
             lock (connection)
+            {
                 try
                 {
                     connection.Open();
                     MySqlCommand command = new MySqlCommand($"call sp_login(@username, @password)", connection);
                     command.Parameters.AddWithValue("@username", staff.Username);
-                    command.Parameters["@username"].Direction = System.Data.ParameterDirection.Input;
+                    // command.Parameters["@username"].Direction = System.Data.ParameterDirection.Input;
                     command.Parameters.AddWithValue("@password", CreateMD5(staff.Password));
-                    command.Parameters["@password"].Direction = System.Data.ParameterDirection.Input;
+                    // command.Parameters["@password"].Direction = System.Data.ParameterDirection.Input;
                     MySqlDataReader reader = command.ExecuteReader();
                     if (reader.Read())
                     {
@@ -33,6 +34,7 @@ namespace DAL
                 {
                     throw new Exception("Không thể kết nối đến database!");
                 }
+            }
             return _staff;
         }
         private Staff GetStaff(MySqlDataReader reader)

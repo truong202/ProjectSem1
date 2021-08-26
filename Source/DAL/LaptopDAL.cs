@@ -14,15 +14,16 @@ namespace DAL
         {
             List<Laptop> laptops = new List<Laptop>();
             lock (connection)
+            {
                 try
                 {
                     // connection = DbHelper.GetConnection();
                     connection.Open();
                     MySqlCommand command = new MySqlCommand("call sp_getLaptops(@searchValue, @offset)", connection);
                     command.Parameters.AddWithValue("@searchValue", searchValue);
-                    command.Parameters["@searchValue"].Direction = System.Data.ParameterDirection.Input;
+                    // command.Parameters["@searchValue"].Direction = System.Data.ParameterDirection.Input;
                     command.Parameters.AddWithValue("@offset", offset);
-                    command.Parameters["@offset"].Direction = System.Data.ParameterDirection.Input;
+                    // command.Parameters["@offset"].Direction = System.Data.ParameterDirection.Input;
                     reader = command.ExecuteReader();
                     while (reader.Read())
                     {
@@ -35,6 +36,7 @@ namespace DAL
                 {
                     throw new Exception("Không thể kết nối đến database!");
                 }
+            }
             return laptops;
 
         }
@@ -42,6 +44,7 @@ namespace DAL
         {
             Laptop laptop = null;
             lock (connection)
+            {
                 try
                 {
                     connection.Open();
@@ -61,6 +64,7 @@ namespace DAL
                 {
                     throw new Exception("Không thể kết nối đến database!");
                 }
+            }
             return laptop;
         }
         public int GetCount(string searchValue)
