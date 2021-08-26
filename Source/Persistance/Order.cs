@@ -6,7 +6,7 @@ namespace Persistance
     public class Order
     {
         public int? OrderId { get; set; }
-        public Customer OrderCustomer { get; set; }
+        public Customer CustomerInfo { get; set; }
         public List<Laptop> Laptops { get; set; }
         public DateTime Date { get; set; }
         public int Status { get; set; }
@@ -14,8 +14,13 @@ namespace Persistance
 
         public Order()
         {
-            Customer customer = new Customer();
+            CustomerInfo = new Customer();
             Laptops = new List<Laptop>();
+        }
+        public static class OrderStatus
+        {
+            public const int CREATED = 1;
+
         }
     }
 }
