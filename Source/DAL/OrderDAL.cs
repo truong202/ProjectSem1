@@ -54,7 +54,6 @@ namespace DAL
                         command.Parameters.AddWithValue("@customerId", order.CustomerInfo.CustomerId);
                         command.Parameters.AddWithValue("@sellerId", order.Seller.StaffId);
                         command.Parameters.AddWithValue("@orderStatus", OrderStatus.CREATED);
-
                         command.ExecuteNonQuery();
                         //get new Order_ID
                         // cmd.CommandText = "select order_id from Orders order by order_id desc limit 1;";

@@ -87,7 +87,7 @@ namespace DAL
                 }
                 catch
                 {
-                    throw new Exception("Không thể kết nối đến database!");
+                    // throw new Exception("Không thể kết nối đến database!");
                 }
             return result;
         }
@@ -96,10 +96,10 @@ namespace DAL
             Laptop laptop = new Laptop();
             laptop.LaptopId = reader.GetInt32("laptop_id");
             laptop.LaptopName = reader.GetString("laptop_name");
-            laptop.CategoryInfor.CategoryName = reader.GetString("category_name");
-            laptop.ManufactoryInfor.ManufactoryName = reader.GetString("manufactory_name");
-            laptop.ManufactoryInfor.Website = reader.GetString("website");
-            laptop.ManufactoryInfor.Address = reader.GetString("address");
+            laptop.CategoryInfo.CategoryName = reader.GetString("category_name");
+            laptop.ManufactoryInfo.ManufactoryName = reader.GetString("manufactory_name");
+            laptop.ManufactoryInfo.Website = reader.GetString("website");
+            laptop.ManufactoryInfo.Address = reader.GetString("address");
             laptop.CPU = reader.GetString("CPU");
             laptop.Ram = reader.GetString("Ram");
             laptop.HardDrive = reader.GetString("hard_drive");

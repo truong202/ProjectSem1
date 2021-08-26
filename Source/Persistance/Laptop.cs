@@ -6,8 +6,8 @@ namespace Persistance
     {
         public int? LaptopId { set; get; }
         public string LaptopName { set; get; }
-        public Category CategoryInfor { set; get; }
-        public Manufactory ManufactoryInfor { set; get; }
+        public Category CategoryInfo { set; get; }
+        public Manufactory ManufactoryInfo { set; get; }
         public string CPU { set; get; }
         public string Ram { set; get; }
         public string HardDrive { set; get; }
@@ -28,8 +28,8 @@ namespace Persistance
 
         public Laptop()
         {
-            CategoryInfor = new Category();
-            ManufactoryInfor = new Manufactory();
+            CategoryInfo = new Category();
+            ManufactoryInfo = new Manufactory();
         }
     }
 }
