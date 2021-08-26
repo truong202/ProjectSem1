@@ -11,20 +11,23 @@ namespace ConsolePL
         {
             Console.OutputEncoding = Encoding.UTF8;
             Console.InputEncoding = Encoding.Unicode;
+            string title = "MENU SELLER";
+            string[] menu = { "CREATE ORDER", "EXIT" };
+            int a = Menu(title, menu);
             // staff.Username = "afdd','afs');drop database laptop_store;";
-            while (true)
-            {
-                try
-                {
-                    Console.Write("name: ");
-                    string a = Console.ReadLine();
-                    Customer.CheckName(a);
-                }
-                catch (Exception e)
-                {
-                    Console.WriteLine(e.Message);
-                }
-            }
+            // while (true)
+            // {
+            //     try
+            //     {
+            //         Console.Write("name: ");
+            //         string a = Console.ReadLine();
+            //         Customer.CheckName(a);
+            //     }
+            //     catch (Exception e)
+            //     {
+            //         Console.WriteLine(e.Message);
+            //     }
+            // }
             // Staff staff = Login();
             // int role = staff.Role;
 
@@ -38,6 +41,22 @@ namespace ConsolePL
 
             //         break;
             // }
+        }
+        static short Menu(string title, string[] menuItems)
+        {
+            short choose = 0;
+            string input;
+            Console.WriteLine(ConsoleUtility.GetMenu(title, menuItems));
+            Console.Write("\n → Your choice: ");
+            while (true)
+            {
+                input = Console.ReadLine();
+                if (short.TryParse(input, out choose) && choose >= 1 && choose <= menuItems.Length) return choose;
+                Console.ForegroundColor = ConsoleColor.Red;
+                Console.WriteLine(" → Entered incorrectly!");
+                Console.ResetColor();
+                Console.Write(" → re-enter: ");
+            }
         }
         static Staff Login()
         {
