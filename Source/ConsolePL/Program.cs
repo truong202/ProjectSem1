@@ -58,7 +58,8 @@ namespace ConsolePL
             Display(laptops, page, pageCount);
             do
             {
-                key = PressKey();
+                Console.CursorVisible = false;
+                key = Console.ReadKey(true).Key;
                 switch (key)
                 {
                     case ConsoleKey.F:
@@ -182,19 +183,6 @@ namespace ConsolePL
                 Console.WriteLine(" → Press 'D' to view laptop details");
                 Console.WriteLine(" → Press 'C' to Create Order");
                 Console.WriteLine(" → Press 'ESC' to exit");
-            }
-        }
-        static ConsoleKey PressKey()
-        {
-            ConsoleKey key = new ConsoleKey();
-            while (true)
-            {
-                Console.CursorVisible = false;
-                var keyInfo = Console.ReadKey(true);
-                key = keyInfo.Key;
-                if (key == ConsoleKey.Escape || key == ConsoleKey.LeftArrow || key == ConsoleKey.RightArrow ||
-                    key == ConsoleKey.F || key == ConsoleKey.C || key == ConsoleKey.D)
-                    return key;
             }
         }
         static ConsoleKey PressYN()

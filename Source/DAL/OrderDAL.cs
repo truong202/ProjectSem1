@@ -12,7 +12,8 @@ namespace DAL
 
         public bool CreateOrder(Order order)
         {
-            if (order == null || order.Laptops == null || order.Laptops.Count == 0 || order.CustomerInfo ==null) return false;
+            if (order == null || order.Laptops == null || order.Laptops.Count == 0 ||
+                order.CustomerInfo == null || order.Seller.StaffId == null) return false;
             bool result = true;
             lock (connection)
             {
@@ -56,10 +57,6 @@ namespace DAL
                             {
                                 throw new Exception("Can't find Customer!");
                             }
-                        }
-                        if (order.Seller == null || order.Seller.StaffId == null)
-                        {
-                            throw new Exception("Can't find Seller!");
                         }
                         //Insert Order
                         command.CommandText = "call sp_createOrder(@customerId, @sellerId, @orderStatus);";
