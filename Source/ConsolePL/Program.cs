@@ -12,35 +12,36 @@ namespace ConsolePL
         {
             Console.OutputEncoding = Encoding.UTF8;
             Console.InputEncoding = Encoding.Unicode;
-            SearchLaptops();
-            // Staff staff = Login();
-            // int role = staff.Role;
-            // switch (role)
-            // {
-            //     case StaffRole.SELLER:
-            //         short choice;
-            //         string title = "MENU SELLER";
-            //         string[] menu = { "CREATE ORDER", "EXIT" };
-            //         do
-            //         {
-            //             choice = Menu(title, menu);
-            //             switch (choice)
-            //             {
-            //                 case 1:
-            //                     break;
-            //                 case 2:
-            //                     break;
-            //             }
-            //         } while (choice != menu.Length);
-            //         break;
-            //     case StaffRole.ACCOUNTANCE:
-            // Console.WriteLine("accountance");
+            Staff staff = Login();
+            int role = staff.Role;
+            switch (role)
+            {
+                case StaffRole.SELLER:
+                    short choice;
+                    string title = "MENU SELLER";
+                    string[] menu = { "SEARCH LAPTOPS", "EXIT" };
+                    do
+                    {
+                        Console.Clear();
+                        choice = Menu(title, menu);
+                        switch (choice)
+                        {
+                            case 1:
+                                SearchLaptops(staff);
+                                break;
+                            case 2:
+                                break;
+                        }
+                    } while (choice != menu.Length);
+                    break;
+                case StaffRole.ACCOUNTANCE:
+                    Console.WriteLine("accountance");
 
-            //         break;
-            // }
+                    break;
+            }
         }
 
-        static void SearchLaptops()
+        static void SearchLaptops(Staff staff)
         {
             int offset = 0;
             ConsoleKey key = new ConsoleKey();
@@ -65,6 +66,7 @@ namespace ConsolePL
                     case ConsoleKey.F:
                         Console.CursorVisible = true;
                         offset = 0;
+                        Console.WriteLine();
                         Console.Write(" → Input search value: "); searchValue = Console.ReadLine();
                         laptopCount = laptopBL.GetCount(searchValue);
                         pageCount = (laptopCount % 10 == 0) ? laptopCount / 10 : laptopCount / 10 + 1;
@@ -75,7 +77,7 @@ namespace ConsolePL
                     case ConsoleKey.C:
                         if (laptops.Count > 0 || laptops != null)
                         {
-                            CreateOrder();
+                            CreateOrder(staff);
                         }
                         break;
                     case ConsoleKey.D:
@@ -107,34 +109,89 @@ namespace ConsolePL
             } while (key != ConsoleKey.Escape && key != ConsoleKey.C);
             Console.CursorVisible = true;
         }
-        static bool CreateOrder()
+        static void CreateOrder(Staff staff)
         {
-            bool result = true;
             Order order = new Order();
+            order.Seller.StaffId = staff.StaffId;
             LaptopBL laptopBL = new LaptopBL();
-            OrderBL orderBL = new OrderBL();
             Laptop laptop;
             ConsoleKey isContinue = ConsoleKey.Y;
-            while (isContinue == ConsoleKey.Y)
+            Console.WriteLine();
+            Console.WriteLine(" * Input List Laptop:");
+            do
             {
                 Console.CursorVisible = true;
-                Console.WriteLine(" * Input List Laptop:");
-                laptop = laptopBL.GetById(GetId());
+                Console.WriteLine();
+                laptop = laptopBL.GetById(GetNumber("ID"));
                 if (laptop == null)
                 {
                     Console.WriteLine(" Laptop not found!");
-
                 }
+                else
                 {
+                    int quantity = GetNumber("Quantity");
+                    int index = order.Laptops.IndexOf(laptop);
+                    if (index != -1)
+                    {
+                        quantity += order.Laptops[index].Quantity;
+                    }
+                    if (quantity > laptop.Quantity)
+                    {
+                        Console.ForegroundColor = ConsoleColor.Red;
+                        Console.WriteLine(" The number of laptop in the store is not enough!");
+                        Console.ResetColor();
+                    }
+                    else
+                    {
+                        laptop.Quantity = quantity;
+                        if (index != -1) order.Laptops[index] = laptop;
+                        else order.Laptops.Add(laptop);
+                        Console.ForegroundColor = ConsoleColor.Green;
+                        Console.WriteLine(" Add laptop to order completed!");
+                        Console.ResetColor();
+                    }
+                    Console.Write(" Would you like to add another laptop to this order? [Y/N]");
                     isContinue = PressYN();
+                    Console.WriteLine();
                 }
+            } while (isContinue == ConsoleKey.Y);
+            if (order.Laptops.Count > 0)
+            {
+                Console.WriteLine("\n * Input Customer information");
+                Console.CursorVisible = true;
+                Console.Write(" → Phone: "); order.CustomerInfo.Phone = GetPhone();
+                Customer customer = new CustomerBL().GetByPhone(order.CustomerInfo.Phone);
+                if (customer != null)
+                {
+                    order.CustomerInfo = customer;
+                    Console.WriteLine(" → Customer name: " + order.CustomerInfo.CustomerName);
+                    Console.WriteLine(" → Address: " + order.CustomerInfo.Address);
+                }
+                else
+                {
+                    Console.Write(" → Customer name: "); order.CustomerInfo.CustomerName = GetName();
+                    Console.Write(" → Address: "); order.CustomerInfo.Address = Console.ReadLine();
+                }
+                bool result = new OrderBL().CreateOrder(order);
+                if (result)
+                {
+                    Console.ForegroundColor = ConsoleColor.Green;
+                    Console.WriteLine(" Create order completed!");
+                    Console.ResetColor();
+                }
+                else
+                {
+                    Console.ForegroundColor = ConsoleColor.Red;
+                    Console.WriteLine(" Create order not complete");
+                    Console.ResetColor();
+                }
+                Console.Write(" Press any key to back main menu..."); Console.ReadKey(true);
             }
-            return result;
         }
         static void ViewLaptopDetails()
         {
             Console.CursorVisible = true;
-            Laptop laptop = new LaptopBL().GetById(GetId());
+            Laptop laptop = new LaptopBL().GetById(GetNumber("ID"));
             if (laptop == null) Console.WriteLine(" Laptop not found!");
             else
             {
@@ -219,7 +276,13 @@ namespace ConsolePL
             Staff staff;
             do
             {
-                Console.Write("Username: ");
+                Console.Clear();
+                Console.WriteLine("╔═══════════════════════════════════════════════╗");
+                Console.WriteLine("║                                               ║");
+                Console.WriteLine("║                     LOGIN                     ║");   
+                Console.WriteLine("║                                               ║");
+                Console.WriteLine("╚═══════════════════════════════════════════════╝");
+                Console.Write("\n → Username: ");
                 while (true)
                 {
                     username = Console.ReadLine();
@@ -231,12 +294,11 @@ namespace ConsolePL
                     catch (Exception e)
                     {
                         Console.ForegroundColor = ConsoleColor.Red;
-                        Console.WriteLine(e.Message);
-                        Console.ResetColor();
-                        Console.Write("Re-enter Username: ");
+                        Console.WriteLine(" " + e.Message); Console.ResetColor();
+                        Console.Write(" → Re-enter Username: ");
                     }
                 }
-                Console.Write("Password: ");
+                Console.Write(" → Password: ");
                 while (true)
                 {
                     password = GetPassword();
@@ -249,32 +311,71 @@ namespace ConsolePL
                     catch (Exception e)
                     {
                         Console.ForegroundColor = ConsoleColor.Red;
-                        Console.WriteLine(e.Message);
-                        Console.ResetColor();
-                        Console.Write("Re-enter Password: ");
+                        Console.WriteLine(" " + e.Message); Console.ResetColor();
+                        Console.Write(" → Re-enter Password: ");
                     }
                 }
                 staff = new StaffBL().Login(new Staff { Username = username, Password = password });
                 if (staff == null)
                 {
                     Console.ForegroundColor = ConsoleColor.Red;
-                    Console.WriteLine("Incorrect UserName or Password!");
-                    Console.ResetColor();
+                    Console.WriteLine("Incorrect UserName or Password!"); Console.ResetColor();
+                    Console.Write("Press any key to login again..."); Console.ReadKey(true);
                 }
             } while (staff == null);
             return staff;
         }
-        static int GetId()
+        static int GetNumber(string message)
         {
-            int id;
-            Console.Write("\n → Enter ID: ");
+            int number;
+            Console.Write(" → Enter {0}: ", message);
             while (true)
             {
-                if (int.TryParse(Console.ReadLine(), out id)) return id;
+                if (int.TryParse(Console.ReadLine(), out number) && number > 0) return number;
                 Console.ForegroundColor = ConsoleColor.Red;
-                Console.WriteLine(" → Invalid ID!");
+                Console.WriteLine(" → Invalid {0}!", message);
                 Console.ResetColor();
-                Console.Write(" → Re-enter ID: ");
+                Console.Write(" → Re-enter {0}: ", message);
+            }
+        }
+        static string GetName()
+        {
+            string name;
+            while (true)
+            {
+                name = Console.ReadLine();
+                try
+                {
+                    Customer.CheckName(name);
+                    return name;
+                }
+                catch (Exception e)
+                {
+                    Console.ForegroundColor = ConsoleColor.Red;
+                    Console.WriteLine(" " + e.Message);
+                    Console.ResetColor();
+                    Console.Write(" → Re-enter customer name: ");
+                }
+            }
+        }
+        static string GetPhone()
+        {
+            string phone;
+            while (true)
+            {
+                phone = Console.ReadLine();
+                try
+                {
+                    Customer.CheckPhone(phone);
+                    return phone;
+                }
+                catch (Exception e)
+                {
+                    Console.ForegroundColor = ConsoleColor.Red;
+                    Console.WriteLine(" " + e.Message);
+                    Console.ResetColor();
+                    Console.Write(" → Re-enter phone: ");
+                }
             }
         }
         static string GetPassword()

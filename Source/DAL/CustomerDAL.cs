@@ -9,7 +9,7 @@ namespace DAL
         private MySqlConnection connection = DbHelper.GetConnection();
         public Customer GetByPhone(string phone)
         {
-            Customer customer = new Customer();
+            Customer customer = null;
             try
             {
                 connection.Open();

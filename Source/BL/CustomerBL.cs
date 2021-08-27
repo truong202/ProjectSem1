@@ -2,7 +2,7 @@ using System;
 using Persistance;
 using DAL;
 
-namespace DAL
+namespace BL
 {
     public class CustomerBL
     {
