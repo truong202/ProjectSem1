@@ -17,13 +17,10 @@ namespace DAL
             {
                 try
                 {
-                    // connection = DbHelper.GetConnection();
                     connection.Open();
                     MySqlCommand command = new MySqlCommand("call sp_getLaptops(@searchValue, @offset)", connection);
                     command.Parameters.AddWithValue("@searchValue", searchValue);
-                    // command.Parameters["@searchValue"].Direction = System.Data.ParameterDirection.Input;
                     command.Parameters.AddWithValue("@offset", offset);
-                    // command.Parameters["@offset"].Direction = System.Data.ParameterDirection.Input;
                     reader = command.ExecuteReader();
                     while (reader.Read())
                     {
@@ -34,7 +31,6 @@ namespace DAL
                 }
                 catch
                 {
-                    throw new Exception("Không thể kết nối đến database!");
                 }
             }
             return laptops;
@@ -50,7 +46,6 @@ namespace DAL
                     connection.Open();
                     MySqlCommand command = new MySqlCommand("call sp_GetLaptopById(@laptopId)", connection);
                     command.Parameters.AddWithValue("@laptopId", laptopId);
-                    command.Parameters["@laptopId"].Direction = System.Data.ParameterDirection.Input;
                     reader = command.ExecuteReader();
                     if (reader.Read())
                     {
@@ -62,7 +57,6 @@ namespace DAL
                 }
                 catch
                 {
-                    throw new Exception("Không thể kết nối đến database!");
                 }
             }
             return laptop;
@@ -76,7 +70,6 @@ namespace DAL
                     connection.Open();
                     MySqlCommand command = new MySqlCommand("call sp_getCount(@searchValue)", connection);
                     command.Parameters.AddWithValue("@searchValue", searchValue);
-                    command.Parameters["@searchValue"].Direction = System.Data.ParameterDirection.Input;
                     reader = command.ExecuteReader();
                     if (reader.Read())
                     {
@@ -87,7 +80,6 @@ namespace DAL
                 }
                 catch
                 {
-                    // throw new Exception("Không thể kết nối đến database!");
                 }
             return result;
         }
@@ -106,6 +98,7 @@ namespace DAL
             laptop.VGA = reader.GetString("VGA");
             laptop.Display = reader.GetString("display");
             laptop.Battery = reader.GetString("battery");
+            laptop.Weight = reader.GetString("weight");
             laptop.Materials = reader.GetString("materials");
             laptop.Ports = reader.GetString("ports");
             laptop.NetworkAndConnection = reader.GetString("network_and_connection");
@@ -116,6 +109,7 @@ namespace DAL
             laptop.OS = reader.GetString("OS");
             laptop.Quantity = reader.GetInt32("quantity");
             laptop.Price = reader.GetDecimal("price");
+            laptop.WarrantyPeriod = reader.GetString("warranty_period");
             return laptop;
         }
     }

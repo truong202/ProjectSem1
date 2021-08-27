@@ -12,33 +12,37 @@ namespace ConsolePL
         {
             Console.OutputEncoding = Encoding.UTF8;
             Console.InputEncoding = Encoding.Unicode;
-            Staff staff = Login();
-            int role = staff.Role;
-            switch (role)
+            while (true)
             {
-                case StaffRole.SELLER:
-                    short choice;
-                    string title = "MENU SELLER";
-                    string[] menu = { "SEARCH LAPTOPS", "EXIT" };
-                    do
-                    {
-                        Console.Clear();
-                        choice = Menu(title, menu);
-                        switch (choice)
-                        {
-                            case 1:
-                                SearchLaptops(staff);
-                                break;
-                            case 2:
-                                break;
-                        }
-                    } while (choice != menu.Length);
-                    break;
-                case StaffRole.ACCOUNTANCE:
-                    Console.WriteLine("accountance");
-
-                    break;
+                ViewLaptopDetails();
             }
+            // Staff staff = Login();
+            // int role = staff.Role;
+            // short choice;
+            // string title;
+            // string[] menu;
+            // switch (role)
+            // {
+            //     case StaffRole.SELLER:
+            //         title = "MENU SELLER";
+            //         menu = new[] { "SEARCH LAPTOPS", "EXIT" };
+            //         do
+            //         {
+            //             Console.Clear();
+            //             choice = Menu(title, menu);
+            //             switch (choice)
+            //             {
+            //                 case 1:
+            //                     SearchLaptops(staff);
+            //                     break;
+            //             }
+            //         } while (choice != menu.Length);
+            //         break;
+            //     case StaffRole.ACCOUNTANCE:
+            //         Console.WriteLine("accountance");
+
+            //         break;
+            // }
         }
 
         static void SearchLaptops(Staff staff)
@@ -117,7 +121,7 @@ namespace ConsolePL
             Laptop laptop;
             ConsoleKey isContinue = ConsoleKey.Y;
             Console.WriteLine();
-            Console.WriteLine(" * Input List Laptop:");
+            Console.Write(" * Input List Laptop");
             do
             {
                 Console.CursorVisible = true;
@@ -150,6 +154,7 @@ namespace ConsolePL
                         Console.WriteLine(" Add laptop to order completed!");
                         Console.ResetColor();
                     }
+                    Console.CursorVisible = false;
                     Console.Write(" Would you like to add another laptop to this order? [Y/N]");
                     isContinue = PressYN();
                     Console.WriteLine();
@@ -182,9 +187,10 @@ namespace ConsolePL
                 else
                 {
                     Console.ForegroundColor = ConsoleColor.Red;
-                    Console.WriteLine(" Create order not complete");
+                    Console.WriteLine(" Create order not complete!");
                     Console.ResetColor();
                 }
+                Console.CursorVisible = false;
                 Console.Write(" Press any key to back main menu..."); Console.ReadKey(true);
             }
         }
@@ -196,14 +202,71 @@ namespace ConsolePL
             else
             {
                 Console.Clear();
-                Console.WriteLine("Laptop details " + laptop.LaptopId);
+                string data;
+                string[] lines;
+                string line = "──────────────────────────────────────────────────────────────────────────────────────────────────────────────────";
+                string title = "Laptop infomation";
+                int lengthLine = line.Length + 2;
+                int position = lengthLine / 2 + title.Length / 2 - 1;
+                Console.WriteLine(" ┌{0}┐", line);
+                Console.WriteLine(" │{0," + position + "}{1," + (lengthLine - position - 1) + "}", title, "│");
+                Console.WriteLine(" ├{0}┤", line);
+                Console.WriteLine(" │{0," + (lengthLine - 1) + "}", "│");
+                Console.WriteLine(" │ Laptop Id:   {0}{1," + (lengthLine - 15 - laptop.LaptopId.ToString().Length) + "}", laptop.LaptopId, "│");
+                Console.WriteLine(" │ Laptop name: {0}{1," + (lengthLine - 15 - laptop.LaptopName.Length) + "}", laptop.LaptopName, "│");
+                Console.WriteLine(" │ Manufactory: {0}{1," + (lengthLine - 15 - laptop.ManufactoryInfo.ManufactoryName.Length) + "}", laptop.ManufactoryInfo.ManufactoryName, "│");
+                Console.WriteLine(" │ Category:    {0}{1," + (lengthLine - 15 - laptop.CategoryInfo.CategoryName.Length) + "}", laptop.CategoryInfo.CategoryName, "│");
+                Console.WriteLine(" │ CPU:         {0}{1," + (lengthLine - 15 - laptop.CPU.Length) + "}", laptop.CPU, "│");
+                Console.WriteLine(" │ RAM:         {0}{1," + (lengthLine - 15 - laptop.Ram.Length) + "}", laptop.Ram, "│");
+                Console.WriteLine(" │ Hard drive:  {0}{1," + (lengthLine - 15 - laptop.HardDrive.Length) + "}", laptop.HardDrive, "│");
+                Console.WriteLine(" │ VGA:         {0}{1," + (lengthLine - 15 - laptop.VGA.Length) + "}", laptop.VGA, "│");
+                data = laptop.Display;
+                if (data.Length > 99)
+                {
+                    lines = ConsoleUtility.LineFormat(data, 99);
+                    Console.WriteLine(" │ Display:     {0}{1," + (lengthLine - 15 - lines[0].Length) + "}", lines[0], "│");
+                    for (int i = 1; i < lines.Length; i++)
+                        Console.WriteLine(" │              {0}{1," + (lengthLine - 15 - lines[i].Length) + "}", lines[i], "│");
+                }
+                else
+                {
+                    Console.WriteLine(" │ Display:     {0}{1," + (lengthLine - 15 - data.Length) + "}", data, "│");
+                }
+                Console.WriteLine(" │ Battery:     {0}{1," + (lengthLine - 15 - laptop.Battery.Length) + "}", laptop.Battery, "│");
+                Console.WriteLine(" │ Weight:      {0}{1," + (lengthLine - 15 - laptop.Weight.Length) + "}", laptop.Weight, "│");
+                Console.WriteLine(" │ Materials:   {0}{1," + (lengthLine - 15 - laptop.Materials.Length) + "}", laptop.Materials, "│");
+                data = laptop.Ports;
+                if (data.Length > 99)
+                {
+                    lines = ConsoleUtility.LineFormat(data, 99);
+                    Console.WriteLine(" │ Ports:       {0}{1," + (lengthLine - 15 - lines[0].Length) + "}", lines[0], "│");
+                    for (int i = 1; i < lines.Length; i++)
+                        Console.WriteLine(" │              {0}{1," + (lengthLine - 15 - lines[i].Length) + "}", lines[i], "│");
+                }
+                else
+                {
+                    Console.WriteLine(" │ Ports:       {0}{1," + (lengthLine - 15 - data.Length) + "}", data, "│");
+                }
+                Console.WriteLine(" │ Network and connection: {0}{1," + (lengthLine - 26 - laptop.NetworkAndConnection.Length) + "}", laptop.NetworkAndConnection, "│");
+                Console.WriteLine(" │ Security:    {0}{1," + (lengthLine - 15 - laptop.Security.Length) + "}", laptop.Security, "│");
+                Console.WriteLine(" │ Keyboard:    {0}{1," + (lengthLine - 15 - laptop.Keyboard.Length) + "}", laptop.Keyboard, "│");
+                Console.WriteLine(" │ Audio:       {0}{1," + (lengthLine - 15 - laptop.Audio.Length) + "}", laptop.Audio, "│");
+                Console.WriteLine(" │ Size:        {0}{1," + (lengthLine - 15 - laptop.Size.Length) + "}", laptop.Size, "│");
+                Console.WriteLine(" │ Operating system: {0}{1," + (lengthLine - 20 - laptop.OS.Length) + "}", laptop.OS, "│");
+                Console.WriteLine(" │ Quantity:    {0}{1," + (lengthLine - 15 - laptop.Quantity.ToString().Length) + "}", laptop.Quantity, "│");
+                string price = laptop.Price.ToString("N0") +" VNĐ";
+                Console.WriteLine(" │ Price:       {0}{1," + (lengthLine - 15 - price.Length) + "}", price, "│");
+                Console.WriteLine(" │ Warranty period: {0}{1," + (lengthLine - 19 - laptop.WarrantyPeriod.Length) + "}", laptop.WarrantyPeriod, "│");
+                Console.WriteLine(" └{0}┘", line);
+
             }
-            Console.CursorVisible = false;
-            Console.WriteLine(" Press any key to continue..."); Console.ReadKey(true);
+            // Console.CursorVisible = false;
+            // Console.WriteLine("  Press any key to back..."); Console.ReadKey(true);
         }
         static void Display(List<Laptop> laptops, int page, int pageCount)
         {
             Console.Clear();
+            Console.CursorVisible = false;
             if (laptops.Count == 0 || laptops == null)
             {
                 Console.WriteLine(" Laptop not found!");
@@ -279,7 +342,7 @@ namespace ConsolePL
                 Console.Clear();
                 Console.WriteLine("╔═══════════════════════════════════════════════╗");
                 Console.WriteLine("║                                               ║");
-                Console.WriteLine("║                     LOGIN                     ║");   
+                Console.WriteLine("║                     LOGIN                     ║");
                 Console.WriteLine("║                                               ║");
                 Console.WriteLine("╚═══════════════════════════════════════════════╝");
                 Console.Write("\n → Username: ");

@@ -41,7 +41,7 @@ namespace DAL
                             //Insert new Customer
                             command.CommandText = "call sp_createCustomer(@customerName, @address, @phone);";
                             command.Parameters.Clear();
-                            command.Parameters.AddWithValue("@customerName", order.CustomerInfo.CustomerName ?? "");
+                            command.Parameters.AddWithValue("@customerName", order.CustomerInfo.CustomerName);
                             command.Parameters.AddWithValue("@address", order.CustomerInfo.Address ?? "");
                             command.Parameters.AddWithValue("@phone", order.CustomerInfo.Phone);
                             command.ExecuteNonQuery();

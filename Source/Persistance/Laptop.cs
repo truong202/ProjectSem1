@@ -25,6 +25,7 @@ namespace Persistance
         public string OS { set; get; }
         public int Quantity { set; get; }
         public Decimal Price { set; get; }
+        public string WarrantyPeriod { set; get; }
 
         public Laptop()
         {

@@ -49,6 +49,30 @@ namespace ConsolePL
             string[] a = builder.ToString().Split('\n');
             return a;
         }
+        public static string[] LineFormat(string data, int lengthLine)
+        {
+            int lineCount = (data.Length % lengthLine == 0) ? data.Length / lengthLine : data.Length / lengthLine + 1;
+            string[] lines = new string[lineCount];
+            int startIndex = 0; int startIndexFind = 0;
+            int lastIndex = lengthLine; int preIndex;
+            int index = -1;
+            for (int i = 0; i < lineCount; i++)
+            {
+                do
+                {
+                    preIndex = index;
+                    index = data.IndexOf(" ", startIndexFind);
+                    startIndexFind = index + 1;
+                } while (index < lastIndex && index != -1);
+                int length = preIndex - startIndex;
+                lines[i] = data.Substring(startIndex, length);
+                startIndex = preIndex + 1;
+                if (i < lineCount - 1) lastIndex = startIndex + lengthLine;
+                else
+                    lastIndex = data.Length % lengthLine + startIndex;
+            }
+            return lines;
+        }
         private static int[] GetLength(List<string[]> lines)
         {
             var numElements = lines[0].Length;
@@ -73,6 +97,5 @@ namespace ConsolePL
             }
             return line;
         }
-
     }
 }

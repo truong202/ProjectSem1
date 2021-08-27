@@ -30,7 +30,6 @@ namespace DAL
                 }
                 catch
                 {
-                    // throw new Exception("Không thể kết nối đến database!");
                 }
             }
             return _staff;
