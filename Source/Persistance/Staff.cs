@@ -15,14 +15,14 @@ namespace Persistance
         {
             if (!Regex.IsMatch(username, @"^([A-Za-z-0-9])+$"))
                 throw new Exception("Only letters (a-Z), numbers (0-9) are allowed!");
-            else if (username.Length < 6 || username == null || username.Trim() == "")
+            if (username.Length < 6 || username == null || username.Trim() == "")
                 throw new Exception("Username must be at least 6 characters long!");
         }
         public static void CheckPassword(string password)
         {
             if (!Regex.IsMatch(password, @"^([A-Za-z0-9])+$"))
                 throw new Exception("Only letters (a-Z), numbers (0-9) are allowed!");
-            else if (password.Length < 8 || password == null || password.Trim() == "")
+            if (password.Length < 8 || password == null || password.Trim() == "")
                 throw new Exception("Password must be at least 8 characters long!");
         }
     }

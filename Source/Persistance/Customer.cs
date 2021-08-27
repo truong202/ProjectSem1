@@ -21,6 +21,8 @@ namespace Persistance
             if (!Regex.IsMatch(name, @"^([A-Za-z - ÀÁÂÃÈÉÊÌÍÒÓÔÕÙÚĂĐĨŨƠàáâãèéêìíòóôõùúăđĩũơƯĂẠẢẤẦẨẪẬẮẰẲẴẶẸẺẼỀỀỂưăạ
                                     ảấầẩẫậắằẳẵặẹẻẽềềểỄỆỈỊỌỎỐỒỔỖỘỚỜỞỠỢỤỦỨỪễệỉịọỏốồổỗộớờởỡợụủứừỬỮỰỲỴÝỶỸửữựỳỵỷỹ])+$"))
                 throw new Exception("Invalid name!");
+            if (name.Trim() == "")
+                throw new Exception("Customer name cannot be empty!");
         }
     }
 }
