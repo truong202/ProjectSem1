@@ -12,7 +12,7 @@ namespace ConsolePL
         {
             Console.OutputEncoding = Encoding.UTF8;
             Console.InputEncoding = Encoding.Unicode;
-            CreateOrder();
+            SearchLaptops();
             // Staff staff = Login();
             // int role = staff.Role;
             // switch (role)
@@ -40,7 +40,7 @@ namespace ConsolePL
             // }
         }
 
-        static void CreateOrder()
+        static void SearchLaptops()
         {
             int offset = 0;
             ConsoleKey key = new ConsoleKey();
@@ -63,6 +63,7 @@ namespace ConsolePL
                 {
                     case ConsoleKey.F:
                         Console.CursorVisible = true;
+                        offset = 0;
                         Console.Write(" → Input search value: "); searchValue = Console.ReadLine();
                         laptopCount = laptopBL.GetCount(searchValue);
                         pageCount = (laptopCount % 10 == 0) ? laptopCount / 10 : laptopCount / 10 + 1;
@@ -71,12 +72,17 @@ namespace ConsolePL
                         Display(laptops, page, pageCount);
                         break;
                     case ConsoleKey.C:
-                        Console.CursorVisible = true;
-                        Console.Write(" → Input search value: ");
+                        if (laptops.Count > 0 || laptops != null)
+                        {
+                            CreateOrder();
+                        }
                         break;
                     case ConsoleKey.D:
-                        Console.CursorVisible = true;
-                        Console.Write(" → Input search value: ");
+                        if (laptops.Count > 0 && laptops != null)
+                        {
+                            ViewLaptopDetails();
+                            Display(laptops, page, pageCount);
+                        }
                         break;
                     case ConsoleKey.LeftArrow:
                         if (page > 1)
@@ -97,39 +103,86 @@ namespace ConsolePL
                         }
                         break;
                 }
-            } while (key != ConsoleKey.Escape);
+            } while (key != ConsoleKey.Escape && key != ConsoleKey.C);
             Console.CursorVisible = true;
+        }
+        static bool CreateOrder()
+        {
+            bool result = true;
+            Order order = new Order();
+            LaptopBL laptopBL = new LaptopBL();
+            OrderBL orderBL = new OrderBL();
+            Laptop laptop;
+            ConsoleKey isContinue = ConsoleKey.Y;
+            while (isContinue == ConsoleKey.Y)
+            {
+                Console.CursorVisible = true;
+                Console.WriteLine(" * Input List Laptop:");
+                laptop = laptopBL.GetById(GetId());
+                if (laptop == null)
+                {
+                    Console.WriteLine(" Laptop not found!");
+
+                }
+                {
+                    isContinue = PressYN();
+                }
+            }
+            return result;
+        }
+        static void ViewLaptopDetails()
+        {
+            Console.CursorVisible = true;
+            Laptop laptop = new LaptopBL().GetById(GetId());
+            if (laptop == null) Console.WriteLine(" Laptop not found!");
+            else
+            {
+                Console.Clear();
+                Console.WriteLine("Laptop details " + laptop.LaptopId);
+            }
+            Console.CursorVisible = false;
+            Console.WriteLine(" Press any key to continue..."); Console.ReadKey(true);
         }
         static void Display(List<Laptop> laptops, int page, int pageCount)
         {
             Console.Clear();
-            List<string[]> lines = new List<string[]>();
-            lines.Add(new[] { "Manufactory", "Laptop Name", "CPU", "RAM", "Quantity", "Price(VNĐ)" });
-            foreach (var laptop in laptops)
+            if (laptops.Count == 0 || laptops == null)
             {
-                int lengthName = 35;
-                string name = (laptop.LaptopName.Length > lengthName) ?
-                laptop.LaptopName.Remove(lengthName, laptop.LaptopName.Length - lengthName) + "..." : laptop.LaptopName;
-                int index = laptop.Ram.IndexOf('B') + 1;
-                string ram = laptop.Ram.Substring(0, index);
-                string quantity = laptop.Quantity.ToString();
-                string price = laptop.Price.ToString("N0");
-                lines.Add(new[] { laptop.ManufactoryInfo.ManufactoryName, name, laptop.CPU, ram, quantity, price });
+                Console.WriteLine(" Laptop not found!");
+                Console.WriteLine("\n → Press 'F' to search laptops");
+                Console.WriteLine(" → Press 'ESC' to exit");
             }
-            string[] table = ConsoleUtility.GetTable(lines);
-            foreach (string line in table) Console.WriteLine(" " + line);
-            string nextPage = (page > 0 && page < pageCount) ? "►" : " ";
-            string prePage = (page > 1) ? "◄" : " ";
-            string pages = prePage + $"      [{page}]      " + nextPage;
-            if (page > 0 && pageCount > 1)
+            else
             {
-                int position = table[0].Length / 2 + pages.Length / 2 + 1;
-                Console.WriteLine(String.Format("{0," + position + "}", pages));
+                List<string[]> lines = new List<string[]>();
+                lines.Add(new[] { "ID", "Manufactory", "Laptop Name", "CPU", "RAM", "Quantity", "Price(VNĐ)" });
+                foreach (var laptop in laptops)
+                {
+                    int lengthName = 30;
+                    string id = laptop.LaptopId.ToString();
+                    string name = (laptop.LaptopName.Length > lengthName) ?
+                    laptop.LaptopName.Remove(lengthName, laptop.LaptopName.Length - lengthName) + "..." : laptop.LaptopName;
+                    int index = laptop.Ram.IndexOf('B') + 1;
+                    string ram = laptop.Ram.Substring(0, index);
+                    string quantity = laptop.Quantity.ToString();
+                    string price = laptop.Price.ToString("N0");
+                    lines.Add(new[] { id, laptop.ManufactoryInfo.ManufactoryName, name, laptop.CPU, ram, quantity, price });
+                }
+                string[] table = ConsoleUtility.GetTable(lines);
+                foreach (string line in table) Console.WriteLine(" " + line);
+                string nextPage = (page > 0 && page < pageCount) ? "►" : " ";
+                string prePage = (page > 1) ? "◄" : " ";
+                string pages = prePage + $"      [{page}]      " + nextPage;
+                if (page > 0 && pageCount > 1)
+                {
+                    int position = table[0].Length / 2 + pages.Length / 2 + 1;
+                    Console.WriteLine(String.Format("{0," + position + "}", pages));
+                }
+                Console.WriteLine("\n → Press 'F' to search laptops");
+                Console.WriteLine(" → Press 'D' to view laptop details");
+                Console.WriteLine(" → Press 'C' to Create Order");
+                Console.WriteLine(" → Press 'ESC' to exit");
             }
-            Console.WriteLine("\n → Press 'F' to search laptops");
-            Console.WriteLine(" → Press 'D' to view laptop details");
-            Console.WriteLine(" → Press 'C' to Create Order");
-            Console.WriteLine(" → Press 'ESC' to exit");
         }
         static ConsoleKey PressKey()
         {
@@ -141,6 +194,18 @@ namespace ConsolePL
                 key = keyInfo.Key;
                 if (key == ConsoleKey.Escape || key == ConsoleKey.LeftArrow || key == ConsoleKey.RightArrow ||
                     key == ConsoleKey.F || key == ConsoleKey.C || key == ConsoleKey.D)
+                    return key;
+            }
+        }
+        static ConsoleKey PressYN()
+        {
+            ConsoleKey key = new ConsoleKey();
+            while (true)
+            {
+                Console.CursorVisible = false;
+                var keyInfo = Console.ReadKey(true);
+                key = keyInfo.Key;
+                if (key == ConsoleKey.N || key == ConsoleKey.Y)
                     return key;
             }
         }
@@ -210,6 +275,19 @@ namespace ConsolePL
                 }
             } while (staff == null);
             return staff;
+        }
+        static int GetId()
+        {
+            int id;
+            Console.Write("\n → Enter ID: ");
+            while (true)
+            {
+                if (int.TryParse(Console.ReadLine(), out id)) return id;
+                Console.ForegroundColor = ConsoleColor.Red;
+                Console.WriteLine(" → Invalid ID!");
+                Console.ResetColor();
+                Console.Write(" → Re-enter ID: ");
+            }
         }
         static string GetPassword()
         {
