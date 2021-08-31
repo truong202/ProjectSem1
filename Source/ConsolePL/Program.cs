@@ -121,7 +121,7 @@ namespace ConsolePL
             Laptop laptop;
             ConsoleKey isContinue = ConsoleKey.Y;
             Console.WriteLine();
-            Console.Write(" * Input List Laptop"); 
+            Console.Write(" * Input List Laptop");
             do
             {
                 Console.CursorVisible = true;
@@ -266,7 +266,7 @@ namespace ConsolePL
         {
             Console.Clear();
             Console.CursorVisible = false;
-            if (laptops.Count == 0 || laptops == null)
+            if (laptops == null || laptops.Count == 0)
             {
                 Console.WriteLine(" Laptop not found!");
                 Console.WriteLine("\n → Press 'F' to search laptops");

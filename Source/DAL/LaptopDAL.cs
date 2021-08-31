@@ -33,6 +33,7 @@ namespace DAL
                 {
                 }
             }
+            if (laptops.Count == 0) laptops = null;
             return laptops;
 
         }

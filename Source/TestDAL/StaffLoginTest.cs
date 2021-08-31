@@ -22,16 +22,6 @@ namespace TestDAL
             Assert.True(result == expected);
         }
 
-        // [Theory]
-        // [InlineData("seller001", "12345678")]
-        // [InlineData("seller002", "12345678")]
-        // public void LoginTest2(string username, string password)
-        // {
-        //     staff.Username = username;
-        //     staff.Password = password;
-        //     Staff result = staffDAL.Login(staff);
-        //     Assert.False(result == null);
-        // }
         [Fact]
         public void LoginTest2()
         {
