@@ -121,7 +121,7 @@ namespace ConsolePL
             Laptop laptop;
             ConsoleKey isContinue = ConsoleKey.Y;
             Console.WriteLine();
-            Console.Write(" * Input List Laptop");
+            Console.Write(" * Input List Laptop"); 
             do
             {
                 Console.CursorVisible = true;
