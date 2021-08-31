@@ -10,7 +10,8 @@ namespace Persistance
         public string Username { set; get; }
         public string Password { set; get; }
         public int Role { set; get; }
-
+        public const int SELLER = 1;
+        public const int ACCOUNTANCE = 2;
         public static void CheckUsername(string username)
         {
             if (!Regex.IsMatch(username, @"^([A-Za-z-0-9])+$"))
@@ -25,12 +26,13 @@ namespace Persistance
             if (password.Length < 8 || password == null || password.Trim() == "")
                 throw new Exception("Password must be at least 8 characters long!");
         }
+
     }
 
-    public static class StaffRole
-    {
-        public const int SELLER = 1;
-        public const int ACCOUNTANCE = 2;
-    }
+    // public static class StaffRole
+    // {
+    //     public const int SELLER = 1;
+    //     public const int ACCOUNTANCE = 2;
+    // }
 
 }

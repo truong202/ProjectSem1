@@ -12,37 +12,37 @@ namespace ConsolePL
         {
             Console.OutputEncoding = Encoding.UTF8;
             Console.InputEncoding = Encoding.Unicode;
-            while (true)
-            {
-                ViewLaptopDetails();
-            }
-            // Staff staff = Login();
-            // int role = staff.Role;
-            // short choice;
-            // string title;
-            // string[] menu;
-            // switch (role)
+            // while (true)
             // {
-            //     case StaffRole.SELLER:
-            //         title = "MENU SELLER";
-            //         menu = new[] { "SEARCH LAPTOPS", "EXIT" };
-            //         do
-            //         {
-            //             Console.Clear();
-            //             choice = Menu(title, menu);
-            //             switch (choice)
-            //             {
-            //                 case 1:
-            //                     SearchLaptops(staff);
-            //                     break;
-            //             }
-            //         } while (choice != menu.Length);
-            //         break;
-            //     case StaffRole.ACCOUNTANCE:
-            //         Console.WriteLine("accountance");
-
-            //         break;
+            //     ViewLaptopDetails();
             // }
+            Staff staff = Login();
+            int role = staff.Role;
+            short choice;
+            string title;
+            string[] menu;
+            switch (role)
+            {
+                case Staff.SELLER:
+                    title = "MENU SELLER";
+                    menu = new[] { "SEARCH LAPTOPS", "EXIT" };
+                    do
+                    {
+                        Console.Clear();
+                        choice = Menu(title, menu);
+                        switch (choice)
+                        {
+                            case 1:
+                                SearchLaptops(staff);
+                                break;
+                        }
+                    } while (choice != menu.Length);
+                    break;
+                case Staff.ACCOUNTANCE:
+                    Console.WriteLine("accountance");
+
+                    break;
+            }
         }
 
         static void SearchLaptops(Staff staff)
@@ -174,7 +174,7 @@ namespace ConsolePL
                 }
                 else
                 {
-                    Console.Write(" → Customer name: "); order.CustomerInfo.CustomerName = GetName();
+                    Console.Write(" → Customer name: "); order.CustomerInfo.CustomerName = Utility.Standardize(GetName());
                     Console.Write(" → Address: "); order.CustomerInfo.Address = Console.ReadLine();
                 }
                 bool result = new OrderBL().CreateOrder(order);
@@ -203,7 +203,6 @@ namespace ConsolePL
             {
                 Console.Clear();
                 string data;
-                string[] lines;
                 string line = "──────────────────────────────────────────────────────────────────────────────────────────────────────────────────";
                 string title = "Laptop infomation";
                 int lengthLine = line.Length + 2;
@@ -223,9 +222,9 @@ namespace ConsolePL
                 data = laptop.Display;
                 if (data.Length > 99)
                 {
-                    lines = ConsoleUtility.LineFormat(data, 99);
+                    var lines = Utility.LineFormat(data, 99);
                     Console.WriteLine(" │ Display:     {0}{1," + (lengthLine - 15 - lines[0].Length) + "}", lines[0], "│");
-                    for (int i = 1; i < lines.Length; i++)
+                    for (int i = 1; i < lines.Count; i++)
                         Console.WriteLine(" │              {0}{1," + (lengthLine - 15 - lines[i].Length) + "}", lines[i], "│");
                 }
                 else
@@ -238,9 +237,9 @@ namespace ConsolePL
                 data = laptop.Ports;
                 if (data.Length > 99)
                 {
-                    lines = ConsoleUtility.LineFormat(data, 99);
+                    var lines = Utility.LineFormat(data, 99);
                     Console.WriteLine(" │ Ports:       {0}{1," + (lengthLine - 15 - lines[0].Length) + "}", lines[0], "│");
-                    for (int i = 1; i < lines.Length; i++)
+                    for (int i = 1; i < lines.Count; i++)
                         Console.WriteLine(" │              {0}{1," + (lengthLine - 15 - lines[i].Length) + "}", lines[i], "│");
                 }
                 else
@@ -254,14 +253,14 @@ namespace ConsolePL
                 Console.WriteLine(" │ Size:        {0}{1," + (lengthLine - 15 - laptop.Size.Length) + "}", laptop.Size, "│");
                 Console.WriteLine(" │ Operating system: {0}{1," + (lengthLine - 20 - laptop.OS.Length) + "}", laptop.OS, "│");
                 Console.WriteLine(" │ Quantity:    {0}{1," + (lengthLine - 15 - laptop.Quantity.ToString().Length) + "}", laptop.Quantity, "│");
-                string price = laptop.Price.ToString("N0") +" VNĐ";
+                string price = laptop.Price.ToString("N0") + " VNĐ";
                 Console.WriteLine(" │ Price:       {0}{1," + (lengthLine - 15 - price.Length) + "}", price, "│");
                 Console.WriteLine(" │ Warranty period: {0}{1," + (lengthLine - 19 - laptop.WarrantyPeriod.Length) + "}", laptop.WarrantyPeriod, "│");
                 Console.WriteLine(" └{0}┘", line);
 
             }
-            // Console.CursorVisible = false;
-            // Console.WriteLine("  Press any key to back..."); Console.ReadKey(true);
+            Console.CursorVisible = false;
+            Console.WriteLine("  Press any key to back..."); Console.ReadKey(true);
         }
         static void Display(List<Laptop> laptops, int page, int pageCount)
         {
@@ -289,7 +288,7 @@ namespace ConsolePL
                     string price = laptop.Price.ToString("N0");
                     lines.Add(new[] { id, laptop.ManufactoryInfo.ManufactoryName, name, laptop.CPU, ram, quantity, price });
                 }
-                string[] table = ConsoleUtility.GetTable(lines);
+                string[] table = Utility.GetTable(lines);
                 foreach (string line in table) Console.WriteLine(" " + line);
                 string nextPage = (page > 0 && page < pageCount) ? "►" : " ";
                 string prePage = (page > 1) ? "◄" : " ";
@@ -321,7 +320,7 @@ namespace ConsolePL
         {
             short choose = 0;
             string input;
-            Console.WriteLine(ConsoleUtility.GetMenu(title, menuItems));
+            Console.WriteLine(Utility.GetMenu(title, menuItems));
             Console.Write("\n → Your choice: ");
             while (true)
             {
