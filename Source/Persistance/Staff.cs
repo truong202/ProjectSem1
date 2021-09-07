@@ -26,13 +26,21 @@ namespace Persistance
             if (password.Length < 8 || password == null || password.Trim() == "")
                 throw new Exception("Password must be at least 8 characters long!");
         }
+        public override bool Equals(object obj)
+        {
+            if (obj == null || GetType() != obj.GetType()) return false;
 
+            var staff = (Staff)obj;
+
+            return StaffId.Equals(staff.StaffId)
+                   && Username.Equals(staff.Username)
+                   && Password.Equals(staff.Password)
+                   && StaffName.Equals(staff.StaffName)
+                   && Role.Equals(staff.Role);
+        }
+        public override int GetHashCode()
+        {
+            return StaffId.GetHashCode();
+        }
     }
-
-    // public static class StaffRole
-    // {
-    //     public const int SELLER = 1;
-    //     public const int ACCOUNTANCE = 2;
-    // }
-
 }

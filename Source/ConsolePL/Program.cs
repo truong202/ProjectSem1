@@ -2,7 +2,10 @@
 using Persistance;
 using BL;
 using System.Collections.Generic;
+using System.Threading;
 using System.Text;
+using System.Threading.Tasks;
+
 
 namespace ConsolePL
 {
@@ -347,6 +350,7 @@ namespace ConsolePL
                 Console.Write("\n → Username: ");
                 while (true)
                 {
+                Console.CursorVisible = true;
                     username = Console.ReadLine();
                     try
                     {
@@ -382,7 +386,11 @@ namespace ConsolePL
                 {
                     Console.ForegroundColor = ConsoleColor.Red;
                     Console.WriteLine("Incorrect UserName or Password!"); Console.ResetColor();
-                    Console.Write("Press any key to login again..."); Console.ReadKey(true);
+                    // Console.Write("Press any key to login again..."); 
+                //    new Task(PressToContinue).Start();
+                    // Console.ReadKey(true);
+                    PressToContinue();
+
                 }
             } while (staff == null);
             return staff;
@@ -461,6 +469,36 @@ namespace ConsolePL
                 }
             } while (key != ConsoleKey.Enter);
             return pass;
+        }
+         static void PressToContinue()
+        {
+            var cancelSource = new CancellationTokenSource();
+           var taskContinue = new Task(() =>
+            {
+                try { PressToContinue(cancelSource.Token); }
+                catch { }
+            });
+            taskContinue.Start();
+            Console.ReadKey(true);
+            cancelSource.Cancel();
+            taskContinue.Wait();
+        }
+
+        static void PressToContinue(CancellationToken cancelToken)
+        {
+            while (!cancelToken.IsCancellationRequested)
+            {
+                Console.CursorVisible = false;
+                Console.SetCursorPosition(0, Console.CursorTop);
+                Console.Write("Press any key to continue...");
+                if(cancelToken.IsCancellationRequested) break;
+                Thread.Sleep(400);
+                Console.SetCursorPosition(0, Console.CursorTop);
+                Console.Write("                               ");
+                if(cancelToken.IsCancellationRequested) break;
+                Thread.Sleep(300);
+                // cancelToken.ThrowIfCancellationRequested();
+            }
         }
     }
 }
