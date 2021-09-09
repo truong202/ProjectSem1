@@ -77,7 +77,7 @@ namespace DAL
                         //insert Order Details table
                         foreach (var laptop in order.Laptops)
                         {
-                            if (laptop.LaptopId == null || laptop.Quantity <= 0)
+                            if (laptop.Quantity <= 0)
                             {
                                 throw new Exception("Not Exists Item");
                             }
@@ -112,9 +112,9 @@ namespace DAL
                         transaction.Commit();
                         result = true;
                     }
-                    catch (Exception e)
+                    catch (Exception )
                     {
-                        Console.WriteLine(e.Message);
+                        // Console.WriteLine(e.Message);
                         result = false;
                         try { transaction.Rollback(); }
                         catch { }

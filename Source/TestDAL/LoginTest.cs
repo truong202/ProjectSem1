@@ -10,7 +10,6 @@ namespace TestDAL
     public class LoginTest
     {
         private StaffDAL staffDAL = new StaffDAL();
-        private Staff staff = new Staff();
         private static Staff staff1 = new Staff
         {
             StaffId = 1,
@@ -48,9 +47,7 @@ namespace TestDAL
         [Theory, MemberData(nameof(SplitCountData))]
         public void LoginTest1(string username, string password, Staff expected)
         {
-            staff.Username = username;
-            staff.Password = password;
-            Staff result = staffDAL.Login(staff);
+            Staff result = staffDAL.Login(new Staff { Username = username, Password = password });
             Assert.Equal(result, expected);
         }
 

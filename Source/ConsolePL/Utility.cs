@@ -1,33 +1,12 @@
 using System;
 using System.Collections.Generic;
+using Persistance;
 using System.Text;
 
 namespace ConsolePL
 {
     public class Utility
     {
-        public static string GetMenu(string title, string[] menuItems)
-        {
-            StringBuilder builder = new StringBuilder();
-            string line = "╟───────────────────────────────────────────────╢\n";
-            int position = line.Length / 2 + title.Length / 2 - 1;
-            builder.Append("╔═══════════════════════════════════════════════╗\n");
-            builder.Append("║                                               ║\n");
-            builder.Append(String.Format("║{0," + position + "}{1," + (line.Length - position - 2) + "}\n", title, "║"));
-            builder.Append("║                                               ║\n");
-            builder.Append(line);
-            for (int index = 0; index < menuItems.Length; index++)
-            {
-                position = line.Length - menuItems[index].Length - (index + 1).ToString().Length - 6;
-                builder.Append(String.Format("║  {0}. {1}{2," + position + "}\n", index + 1, menuItems[index], "║"));
-                if (index < menuItems.Length - 1)
-                {
-                    builder.Append(line);
-                }
-            }
-            builder.Append("╚═══════════════════════════════════════════════╝");
-            return builder.ToString();
-        }
         public static string[] GetTable(List<string[]> lines)
         {
             int[] lengthDatas = GetLength(lines);
@@ -118,12 +97,79 @@ namespace ConsolePL
             if (Char.IsLower(arr[0])) arr[0] = Char.ToUpper(arr[0]);
             else
             {
-
                 int found = LowercaseLetter.IndexOf(arr[0]);
                 if (found != -1) arr[0] = CapitalizeLetter[found];
             }
             value = new string(arr);
             return value;
+        }
+        public static int GetNumber()
+        {
+            int number;
+            Console.CursorVisible = true;
+            while (true)
+            {
+                if (int.TryParse(Console.ReadLine(), out number) && number >= 0) return number;
+                Console.ForegroundColor = ConsoleColor.Red;
+                Console.WriteLine(" Entered incorrectly");
+                Console.ResetColor();
+                Console.Write(" → Re-enter: ");
+            }
+        }
+        public static int GetQuantity()
+        {
+            int quantity;
+            Console.CursorVisible = true;
+            while (true)
+            {
+                if (int.TryParse(Console.ReadLine(), out quantity) && quantity > 0) return quantity;
+                Console.ForegroundColor = ConsoleColor.Red;
+                Console.WriteLine(" Entered incorrectly");
+                Console.ResetColor();
+                Console.Write(" → Re-enter: ");
+            }
+        }
+
+        public static string GetName()
+        {
+            string name;
+            Console.CursorVisible = true;
+            while (true)
+            {
+                name = Console.ReadLine();
+                try
+                {
+                    Customer.CheckName(name); return name;
+                }
+                catch (Exception e)
+                {
+                    Console.ForegroundColor = ConsoleColor.Red;
+                    Console.WriteLine(" " + e.Message);
+                    Console.ResetColor();
+                    Console.Write(" → Re-enter customer name: ");
+                }
+            }
+        }
+
+        public static string GetPhone()
+        {
+            string phone;
+            Console.CursorVisible = true;
+            while (true)
+            {
+                phone = Console.ReadLine();
+                try
+                {
+                    Customer.CheckPhone(phone); return phone;
+                }
+                catch (Exception e)
+                {
+                    Console.ForegroundColor = ConsoleColor.Red;
+                    Console.WriteLine(" " + e.Message);
+                    Console.ResetColor();
+                    Console.Write(" → Re-enter phone: ");
+                }
+            }
         }
 
         private static int[] GetLength(List<string[]> lines)
@@ -138,6 +184,7 @@ namespace ConsolePL
             }
             return lengthDatas;
         }
+
         private static string GetLine(int[] lengthDatas, string c1, string c2, string c3, string c4)
         {
             string line = c1;
