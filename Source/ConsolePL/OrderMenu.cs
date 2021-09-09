@@ -30,7 +30,7 @@ namespace ConsolePL
                     }
                     else
                     {
-                        Console.Write(" → Input quantity: ");
+                        Console.Write(" → Input quantity: "); 
                         laptop.Quantity = Utility.GetQuantity();
                         AddLaptopToOrder(laptop);
                         Console.WriteLine(" Press any key to continue...");
