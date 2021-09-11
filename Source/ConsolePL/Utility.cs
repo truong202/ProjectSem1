@@ -103,33 +103,19 @@ namespace ConsolePL
             value = new string(arr);
             return value;
         }
-        public static int GetNumber()
+        public static int GetNumber(int numberStart)
         {
             int number;
             Console.CursorVisible = true;
             while (true)
             {
-                if (int.TryParse(Console.ReadLine(), out number) && number >= 0) return number;
+                if (int.TryParse(Console.ReadLine(), out number) && number >= numberStart) return number;
                 Console.ForegroundColor = ConsoleColor.Red;
                 Console.WriteLine(" Entered incorrectly");
                 Console.ResetColor();
                 Console.Write(" → Re-enter: ");
             }
         }
-        public static int GetQuantity()
-        {
-            int quantity;
-            Console.CursorVisible = true;
-            while (true)
-            {
-                if (int.TryParse(Console.ReadLine(), out quantity) && quantity > 0) return quantity;
-                Console.ForegroundColor = ConsoleColor.Red;
-                Console.WriteLine(" Entered incorrectly");
-                Console.ResetColor();
-                Console.Write(" → Re-enter: ");
-            }
-        }
-
         public static string GetName()
         {
             string name;
@@ -197,5 +183,84 @@ namespace ConsolePL
             }
             return line;
         }
+        public static void PrintColor(string content, int height, int posleft, int posTop, ConsoleColor fColor, ConsoleColor bColor)
+        {
+            Console.ForegroundColor = fColor;
+            string line = string.Empty;
+            if (height == 1)
+            {
+                Console.SetCursorPosition(1, posTop);
+                for (int i = 0; i < posleft - content.Length; i++) Console.Write(" ");
+                Console.BackgroundColor = bColor;
+                Console.Write(content);
+            }
+            else if (height == 2)
+            {
+                for (int i = 0; i < content.Length; i++) line += "▄";
+                Console.SetCursorPosition(1, posTop + 1);
+                Console.BackgroundColor = ConsoleColor.Black;
+                for (int i = 0; i < posleft - line.Length; i++) Console.Write(" ");
+                Console.BackgroundColor = bColor;
+                Console.Write(content);
+                Console.BackgroundColor = ConsoleColor.Black;
+                Console.ForegroundColor = bColor;
+                Console.SetCursorPosition(1, posTop);
+                Console.Write("{0, " + posleft + "}", line);
+                Console.SetCursorPosition(1, posTop + 2);
+                Console.Write("{0, " + posleft + "}", line.Replace("▄", "▀"));
+            }
+            else if (height == 3)
+            {
+                for (int i = 0; i < content.Length; i++) line += "█";
+                Console.SetCursorPosition(1, posTop + 1);
+                Console.BackgroundColor = ConsoleColor.Black;
+                for (int i = 0; i < posleft - line.Length; i++) Console.Write(" ");
+                Console.BackgroundColor = bColor;
+                Console.Write(content);
+                Console.BackgroundColor = ConsoleColor.Black;
+                Console.ForegroundColor = bColor;
+                Console.SetCursorPosition(1, posTop);
+                Console.Write("{0, " + posleft + "}", line);
+                Console.SetCursorPosition(1, posTop + 2);
+                Console.Write("{0, " + posleft + "}", line);
+            }
+            Console.ResetColor();
+
+        }
+        public static void PrintColor(string content, ConsoleColor fColor, ConsoleColor bColor)
+        {
+            Console.BackgroundColor = bColor;
+            Console.ForegroundColor = fColor;
+            Console.Write(content);
+            Console.BackgroundColor = ConsoleColor.Black;
+            Console.ForegroundColor = ConsoleColor.Black;
+            Console.Write(".\b");
+            Console.ResetColor();
+        }
+        public static void PrintBorder(int width, int height)
+        {
+            Console.ForegroundColor = ConsoleColor.Green;
+            for (int i = 0; i < width; i++)
+            {
+                Console.Write("▄");
+            }
+            Console.WriteLine();
+            for (int i = 1; i < height; i++)
+            {
+                Console.WriteLine("█{0," + (width - 1) + "}", "█");
+            }
+            Console.SetCursorPosition(0, height);
+            for (int i = 0; i < width; i++)
+            {
+                Console.Write("▀");
+            }
+            Console.ResetColor();
+        }
+        public static int GetPosition(string value, int width)
+        {
+            int pos = width / 2 + value.Length / 2;
+            return pos;
+        }
+
     }
 }

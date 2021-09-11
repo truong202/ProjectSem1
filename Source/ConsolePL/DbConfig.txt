@@ -1,0 +1,1 @@
+server=localhost;user id=laptop;password=vtcacademy;port=3306;database=laptop_store;

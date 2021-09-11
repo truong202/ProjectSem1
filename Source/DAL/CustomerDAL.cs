@@ -6,7 +6,7 @@ namespace DAL
 {
     public class CustomerDAL
     {
-        private MySqlConnection connection = DbHelper.GetConnection();
+        private MySqlConnection connection = DbConfig.GetConnection();
         public Customer GetByPhone(string phone)
         {
             Customer customer = null;
@@ -15,19 +15,14 @@ namespace DAL
                 connection.Open();
                 MySqlCommand command = new MySqlCommand("call sp_getCustomerByPhone(@phone)", connection);
                 command.Parameters.AddWithValue("@phone", phone);
-                MySqlDataReader reader = command.ExecuteReader();
-                if (reader.Read())
+                using (MySqlDataReader reader = command.ExecuteReader())
                 {
-                    customer = GetCustomer(reader);
+                    if (reader.Read())
+                        customer = GetCustomer(reader);
                 }
-                reader.Close();
                 connection.Close();
             }
-            catch(Exception e)
-            {
-                Console.WriteLine(e.Message);
-                // throw new Exception("Đã có lỗi xảy ra!");
-            }
+            catch { }
             return customer;
         }
         private Customer GetCustomer(MySqlDataReader reader)

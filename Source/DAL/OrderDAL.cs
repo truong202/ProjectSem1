@@ -7,7 +7,7 @@ namespace DAL
 {
     public class OrderDAL
     {
-        private MySqlConnection connection = DbHelper.GetConnection();
+        private MySqlConnection connection = DbConfig.GetConnection();
         private MySqlDataReader reader;
 
         public bool CreateOrder(Order order)

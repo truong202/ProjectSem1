@@ -22,14 +22,14 @@ namespace ConsolePL
                 case Staff.SELLER:
                     title = "MENU SELLER";
                     menu = new[] { "SEARCH LAPTOPS", "EXIT" };
-                    LaptopMenu laptopM = new LaptopMenu();
+                    LaptopHandle laptopH = new LaptopHandle();
                     do
                     {
                         choose = Menu.Display(title, menu);
                         switch (choose)
                         {
                             case 1:
-                                laptopM.SearchLaptops(staff);
+                                laptopH.SearchLaptops(staff);
                                 break;
                         }
                     } while (choose != menu.Length);

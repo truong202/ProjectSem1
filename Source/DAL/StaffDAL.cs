@@ -7,7 +7,7 @@ namespace DAL
 {
     public class StaffDAL
     {
-        private MySqlConnection connection = DbHelper.GetConnection();
+        private MySqlConnection connection = DbConfig.GetConnection();
         public Staff Login(Staff staff)
         {
             Staff _staff = null;
@@ -19,18 +19,17 @@ namespace DAL
                     MySqlCommand command = new MySqlCommand($"call sp_login(@username, @password)", connection);
                     command.Parameters.AddWithValue("@username", staff.Username);
                     command.Parameters.AddWithValue("@password", CreateMD5(staff.Password));
-                    MySqlDataReader reader = command.ExecuteReader();
-                    if (reader.Read())
+                    using (MySqlDataReader reader = command.ExecuteReader())
                     {
-                        _staff = new Staff();
-                        _staff = GetStaff(reader);
+                        if (reader.Read())
+                        {
+                            _staff = new Staff();
+                            _staff = GetStaff(reader);
+                        }
                     }
-                    reader.Close();
                     connection.Close();
                 }
-                catch
-                {
-                }
+                catch { }
             }
             return _staff;
         }

@@ -5,10 +5,10 @@ using BL;
 
 namespace ConsolePL
 {
-    public class LaptopMenu
+    public class LaptopHandle
     {
         private LaptopBL laptopBL = new LaptopBL();
-        private OrderMenu orderM = new OrderMenu();
+        private OrderHandle orderH = new OrderHandle();
         public void SearchLaptops(Staff staff)
         {
             int offset = 0;
@@ -45,19 +45,16 @@ namespace ConsolePL
                     case ConsoleKey.C:
                         // if (laptops != null && laptops.Count > 0)
                         // {
-                        orderM.CreateOrder(staff);
+                        orderH.CreateOrder(staff);
                         Display(laptops, page, pageCount);
                         // }
                         break;
                     case ConsoleKey.D:
                         Console.WriteLine();
-                        Console.Write(" → Input ID(input 0 to cannel): ");
-                        int id = Utility.GetNumber();
-                        if (id != 0)
-                        {
-                            Laptop laptop = new LaptopBL().GetById(id);
-                            ViewLaptopDetails(laptop);
-                        }
+                        Console.Write(" → Input Id to view details: ");
+                        int id = Utility.GetNumber(1);
+                        Laptop laptop = laptopBL.GetById(id);
+                        ViewLaptopDetails(laptop);
                         Display(laptops, page, pageCount);
                         break;
                     case ConsoleKey.LeftArrow:
@@ -116,10 +113,16 @@ namespace ConsolePL
                     Console.WriteLine(String.Format("{0," + position + "}", pages));
                 }
             }
-            Console.WriteLine("\n ● Press 'F' to search laptops");
-            Console.WriteLine(" ● Press 'D' to view laptop details");
-            Console.WriteLine(" ● Press 'C' to Create Order");
-            Console.WriteLine(" ● Press 'ESC' to exit");
+            Console.Write("\n ● Press '");
+            Utility.PrintColor("F", ConsoleColor.Yellow, ConsoleColor.Black);
+            Console.Write("' to search laptops, '");
+            Utility.PrintColor("D", ConsoleColor.Yellow, ConsoleColor.Black);
+            Console.WriteLine("' to view laptop details,");
+            Console.Write("         '");
+            Utility.PrintColor("C", ConsoleColor.Yellow, ConsoleColor.Black);
+            Console.Write("' to Create Order, '");
+            Utility.PrintColor("ESC", ConsoleColor.Red, ConsoleColor.Black);
+            Console.WriteLine("' to exit");
         }
         private void ViewLaptopDetails(Laptop laptop)
         {
@@ -182,15 +185,19 @@ namespace ConsolePL
             Console.WriteLine(" │ Price:       {0}{1," + (lengthLine - 15 - price.Length) + "}", price, "│");
             Console.WriteLine(" │ Warranty period: {0}{1," + (lengthLine - 19 - laptop.WarrantyPeriod.Length) + "}", laptop.WarrantyPeriod, "│");
             Console.WriteLine(" └{0}┘", line);
-            Console.Write(" → Input quantity to Add laptop to order or input 0 to back: ");
-            laptop.Quantity = Utility.GetNumber();
-            Console.CursorVisible = false;
-            if (laptop.Quantity == 0) return;
-            bool result = orderM.AddLaptopToOrder(laptop);
-            Console.ForegroundColor = result ? ConsoleColor.Green : ConsoleColor.Red;
-            Console.WriteLine((result ? " Add laptop to order completed!" : " The number of laptop in the store is not enough!"));
-            Console.ResetColor();
-            Console.Write(" Press any key to continue...");
+            // bool result;
+            // do
+            // {
+            //     Console.Write(" → Input quantity to Add laptop to order or input 0 to back: ");
+            //     laptop.Quantity = Utility.GetNumber();
+            //     Console.CursorVisible = false;
+            //     if (laptop.Quantity == 0) return;
+            //     result = orderH.AddLaptopToOrder(laptop);
+            //     Console.ForegroundColor = result ? ConsoleColor.Green : ConsoleColor.Red;
+            //     Console.WriteLine((result ? " Add laptop to order completed!" : " The number of laptop in the store is not enough!"));
+            //     Console.ResetColor();
+            // } while (!result);
+            Console.Write(" Press any key to back...");
             Console.ReadKey(true);
         }
     }

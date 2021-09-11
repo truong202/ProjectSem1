@@ -5,40 +5,53 @@ using Persistance;
 
 namespace ConsolePL
 {
-    public class OrderMenu
+    public class OrderHandle
     {
         private Order order = new Order();
         private OrderBL orderBL = new OrderBL();
         private LaptopBL laptopBL = new LaptopBL();
         public void CreateOrder(Staff staff)
         {
-            order.Seller.StaffId = staff.StaffId;
             Laptop laptop;
             int id;
-            if (order.Laptops.Count == 0)
-                do
+            // if (order.Laptops.Count == 0)
+            // {
+            Console.WriteLine("\n ■ Input List Laptop");
+            do
+            {
+                Console.Write(" → Input ID(input 0 to cannel): ");
+                id = Utility.GetNumber(0);
+                if (id == 0) break;
+                laptop = laptopBL.GetById(id);
+                if (laptop == null)
                 {
-                    Console.WriteLine();
-                    Console.WriteLine(" * Input List Laptop");
-                    Console.Write(" → Input ID(input 0 to cannel): ");
-                    id = Utility.GetNumber();
-                    if (id == 0) break;
-                    laptop = laptopBL.GetById(id);
-                    if (laptop == null)
+                    Console.WriteLine(" Laptop not found!");
+                }
+                else
+                {
+                    if (laptop.Quantity <= 0)
                     {
-                        Console.WriteLine(" Laptop not found!");
+                        Utility.PrintColor(" Laptop is out of stock, please choose another laptop!", ConsoleColor.Red, ConsoleColor.Black);
                     }
                     else
                     {
-                        Console.Write(" → Input quantity: "); 
-                        laptop.Quantity = Utility.GetQuantity();
-                        AddLaptopToOrder(laptop);
-                        Console.WriteLine(" Press any key to continue...");
-                        Console.ReadKey(true);
+                        bool result;
+                        do
+                        {
+                            Console.Write(" → Input quantity: ");
+                            laptop.Quantity = Utility.GetNumber(1);
+                            result = AddLaptopToOrder(laptop);
+                            Utility.PrintColor(result ? " Add laptop to order completed!" : " The number of laptop in the store is not enough!",
+                            result ? ConsoleColor.Green : ConsoleColor.Red, ConsoleColor.Black);
+                        } while (!result);
+                        // Console.WriteLine(" Press any key to continue...");
+                        // Console.ReadKey(true);
                     }
-                } while (id != 0);
+                }
+            } while (id != 0);
             if (order.Laptops.Count > 0)
             {
+                order.Seller.StaffId = staff.StaffId;
                 order.CustomerInfo = GetCustomer();
                 bool result = orderBL.CreateOrder(order);
                 Console.ForegroundColor = result ? ConsoleColor.Green : ConsoleColor.Red;
@@ -49,9 +62,10 @@ namespace ConsolePL
                 Console.Write(" Press any key to back..."); Console.ReadKey(true);
             }
         }
+
         private Customer GetCustomer()
         {
-            Console.WriteLine("\n * Customer information");
+            Console.WriteLine("\n ■ Customer information");
             Customer customer = new Customer();
             Console.CursorVisible = true;
             Console.Write(" → Phone: ");

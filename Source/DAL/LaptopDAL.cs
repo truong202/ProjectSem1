@@ -8,8 +8,8 @@ namespace DAL
 {
     public class LaptopDAL
     {
-        private MySqlConnection connection = DbHelper.GetConnection();
-        private MySqlDataReader reader;
+        private MySqlConnection connection = DbConfig.GetConnection();
+        // private MySqlDataReader reader;
         public List<Laptop> Search(string searchValue, int offset)
         {
             List<Laptop> laptops = new List<Laptop>();
@@ -21,12 +21,13 @@ namespace DAL
                     MySqlCommand command = new MySqlCommand("call sp_getLaptops(@searchValue, @offset)", connection);
                     command.Parameters.AddWithValue("@searchValue", searchValue);
                     command.Parameters.AddWithValue("@offset", offset);
-                    reader = command.ExecuteReader();
-                    while (reader.Read())
+                    using (MySqlDataReader reader = command.ExecuteReader())
                     {
-                        laptops.Add(GetLaptop(reader));
+                        while (reader.Read())
+                        {
+                            laptops.Add(GetLaptop(reader));
+                        }
                     }
-                    reader.Close();
                     connection.Close();
                 }
                 catch
@@ -47,13 +48,14 @@ namespace DAL
                     connection.Open();
                     MySqlCommand command = new MySqlCommand("call sp_GetLaptopById(@laptopId)", connection);
                     command.Parameters.AddWithValue("@laptopId", laptopId);
-                    reader = command.ExecuteReader();
-                    if (reader.Read())
+                    using (MySqlDataReader reader = command.ExecuteReader())
                     {
-                        laptop = new Laptop();
-                        laptop = GetLaptop(reader);
+                        if (reader.Read())
+                        {
+                            laptop = new Laptop();
+                            laptop = GetLaptop(reader);
+                        }
                     }
-                    reader.Close();
                     connection.Close();
                 }
                 catch
@@ -71,17 +73,14 @@ namespace DAL
                     connection.Open();
                     MySqlCommand command = new MySqlCommand("call sp_getCount(@searchValue)", connection);
                     command.Parameters.AddWithValue("@searchValue", searchValue);
-                    reader = command.ExecuteReader();
-                    if (reader.Read())
+                    using (MySqlDataReader reader = command.ExecuteReader())
                     {
-                        result = reader.GetInt32("count");
+                        if (reader.Read())
+                            result = reader.GetInt32("count");
                     }
-                    reader.Close();
                     connection.Close();
                 }
-                catch
-                {
-                }
+                catch { }
             return result;
         }
         private Laptop GetLaptop(MySqlDataReader reader)
