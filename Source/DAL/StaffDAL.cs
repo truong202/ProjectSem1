@@ -11,7 +11,7 @@ namespace DAL
         public Staff Login(Staff staff)
         {
             Staff _staff = null;
-            lock (connection)
+            lock (connection)   
             {
                 try
                 {

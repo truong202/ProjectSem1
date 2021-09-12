@@ -103,7 +103,7 @@ namespace ConsolePL
                     lines.Add(new[] { id, name, laptop.ManufactoryInfo.ManufactoryName, laptop.CategoryInfo.CategoryName, laptop.CPU, ram, price });
                 }
                 string[] table = Utility.GetTable(lines);
-                foreach (string line in table) Console.WriteLine(" " + line);
+                foreach (string line in table) Console.WriteLine("  " + line);
                 string nextPage = (page > 0 && page < pageCount) ? "►" : " ";
                 string prePage = (page > 1) ? "◄" : " ";
                 string pages = prePage + $"      [{page}/{pageCount}]      " + nextPage;
@@ -137,54 +137,54 @@ namespace ConsolePL
             Console.Clear();
             string data;
             string line = "──────────────────────────────────────────────────────────────────────────────────────────────────────────────────";
-            string title = "Laptop infomation";
+            string title = "LAPTOP INFORMATION";
             int lengthLine = line.Length + 2;
             int position = lengthLine / 2 + title.Length / 2 - 1;
-            Console.WriteLine(" ┌{0}┐", line);
-            Console.WriteLine(" │{0," + position + "}{1," + (lengthLine - position - 1) + "}", title, "│");
-            Console.WriteLine(" ├{0}┤", line);
-            Console.WriteLine(" │ Laptop Id:   {0}{1," + (lengthLine - 15 - laptop.LaptopId.ToString().Length) + "}", laptop.LaptopId, "│");
-            Console.WriteLine(" │ Laptop name: {0}{1," + (lengthLine - 15 - laptop.LaptopName.Length) + "}", laptop.LaptopName, "│");
-            Console.WriteLine(" │ Manufactory: {0}{1," + (lengthLine - 15 - laptop.ManufactoryInfo.ManufactoryName.Length) + "}", laptop.ManufactoryInfo.ManufactoryName, "│");
-            Console.WriteLine(" │ Category:    {0}{1," + (lengthLine - 15 - laptop.CategoryInfo.CategoryName.Length) + "}", laptop.CategoryInfo.CategoryName, "│");
-            Console.WriteLine(" │ CPU:         {0}{1," + (lengthLine - 15 - laptop.CPU.Length) + "}", laptop.CPU, "│");
-            Console.WriteLine(" │ RAM:         {0}{1," + (lengthLine - 15 - laptop.Ram.Length) + "}", laptop.Ram, "│");
-            Console.WriteLine(" │ Hard drive:  {0}{1," + (lengthLine - 15 - laptop.HardDrive.Length) + "}", laptop.HardDrive, "│");
-            Console.WriteLine(" │ VGA:         {0}{1," + (lengthLine - 15 - laptop.VGA.Length) + "}", laptop.VGA, "│");
+            Console.WriteLine("  ┌{0}┐", line);
+            Console.WriteLine("  │{0," + position + "}{1," + (lengthLine - position - 1) + "}", title, "│");
+            Console.WriteLine("  ├{0}┤", line);
+            Console.WriteLine("  │ Laptop Id:   {0}{1," + (lengthLine - 15 - laptop.LaptopId.ToString().Length) + "}", laptop.LaptopId, "│");
+            Console.WriteLine("  │ Laptop name: {0}{1," + (lengthLine - 15 - laptop.LaptopName.Length) + "}", laptop.LaptopName, "│");
+            Console.WriteLine("  │ Manufactory: {0}{1," + (lengthLine - 15 - laptop.ManufactoryInfo.ManufactoryName.Length) + "}", laptop.ManufactoryInfo.ManufactoryName, "│");
+            Console.WriteLine("  │ Category:    {0}{1," + (lengthLine - 15 - laptop.CategoryInfo.CategoryName.Length) + "}", laptop.CategoryInfo.CategoryName, "│");
+            Console.WriteLine("  │ CPU:         {0}{1," + (lengthLine - 15 - laptop.CPU.Length) + "}", laptop.CPU, "│");
+            Console.WriteLine("  │ RAM:         {0}{1," + (lengthLine - 15 - laptop.Ram.Length) + "}", laptop.Ram, "│");
+            Console.WriteLine("  │ Hard drive:  {0}{1," + (lengthLine - 15 - laptop.HardDrive.Length) + "}", laptop.HardDrive, "│");
+            Console.WriteLine("  │ VGA:         {0}{1," + (lengthLine - 15 - laptop.VGA.Length) + "}", laptop.VGA, "│");
             data = laptop.Display;
             if (data.Length > 99)
             {
                 var lines = Utility.LineFormat(data, 99);
-                Console.WriteLine(" │ Display:     {0}{1," + (lengthLine - 15 - lines[0].Length) + "}", lines[0], "│");
+                Console.WriteLine("  │ Display:     {0}{1," + (lengthLine - 15 - lines[0].Length) + "}", lines[0], "│");
                 for (int i = 1; i < lines.Count; i++)
-                    Console.WriteLine(" │              {0}{1," + (lengthLine - 15 - lines[i].Length) + "}", lines[i], "│");
+                    Console.WriteLine("  │              {0}{1," + (lengthLine - 15 - lines[i].Length) + "}", lines[i], "│");
             }
             else
-                Console.WriteLine(" │ Display:     {0}{1," + (lengthLine - 15 - data.Length) + "}", data, "│");
-            Console.WriteLine(" │ Battery:     {0}{1," + (lengthLine - 15 - laptop.Battery.Length) + "}", laptop.Battery, "│");
-            Console.WriteLine(" │ Weight:      {0}{1," + (lengthLine - 15 - laptop.Weight.Length) + "}", laptop.Weight, "│");
-            Console.WriteLine(" │ Materials:   {0}{1," + (lengthLine - 15 - laptop.Materials.Length) + "}", laptop.Materials, "│");
+                Console.WriteLine("  │ Display:     {0}{1," + (lengthLine - 15 - data.Length) + "}", data, "│");
+            Console.WriteLine("  │ Battery:     {0}{1," + (lengthLine - 15 - laptop.Battery.Length) + "}", laptop.Battery, "│");
+            Console.WriteLine("  │ Weight:      {0}{1," + (lengthLine - 15 - laptop.Weight.Length) + "}", laptop.Weight, "│");
+            Console.WriteLine("  │ Materials:   {0}{1," + (lengthLine - 15 - laptop.Materials.Length) + "}", laptop.Materials, "│");
             data = laptop.Ports;
             if (data.Length > 99)
             {
                 var lines = Utility.LineFormat(data, 99);
-                Console.WriteLine(" │ Ports:       {0}{1," + (lengthLine - 15 - lines[0].Length) + "}", lines[0], "│");
+                Console.WriteLine("  │ Ports:       {0}{1," + (lengthLine - 15 - lines[0].Length) + "}", lines[0], "│");
                 for (int i = 1; i < lines.Count; i++)
-                    Console.WriteLine(" │              {0}{1," + (lengthLine - 15 - lines[i].Length) + "}", lines[i], "│");
+                    Console.WriteLine("  │              {0}{1," + (lengthLine - 15 - lines[i].Length) + "}", lines[i], "│");
             }
             else
-                Console.WriteLine(" │ Ports:       {0}{1," + (lengthLine - 15 - data.Length) + "}", data, "│");
-            Console.WriteLine(" │ Network and connection: {0}{1," + (lengthLine - 26 - laptop.NetworkAndConnection.Length) + "}", laptop.NetworkAndConnection, "│");
-            Console.WriteLine(" │ Security:    {0}{1," + (lengthLine - 15 - laptop.Security.Length) + "}", laptop.Security, "│");
-            Console.WriteLine(" │ Keyboard:    {0}{1," + (lengthLine - 15 - laptop.Keyboard.Length) + "}", laptop.Keyboard, "│");
-            Console.WriteLine(" │ Audio:       {0}{1," + (lengthLine - 15 - laptop.Audio.Length) + "}", laptop.Audio, "│");
-            Console.WriteLine(" │ Size:        {0}{1," + (lengthLine - 15 - laptop.Size.Length) + "}", laptop.Size, "│");
-            Console.WriteLine(" │ Operating system: {0}{1," + (lengthLine - 20 - laptop.OS.Length) + "}", laptop.OS, "│");
-            Console.WriteLine(" │ Quantity:    {0}{1," + (lengthLine - 15 - laptop.Quantity.ToString().Length) + "}", laptop.Quantity, "│");
+                Console.WriteLine("  │ Ports:       {0}{1," + (lengthLine - 15 - data.Length) + "}", data, "│");
+            Console.WriteLine("  │ Network and connection: {0}{1," + (lengthLine - 26 - laptop.NetworkAndConnection.Length) + "}", laptop.NetworkAndConnection, "│");
+            Console.WriteLine("  │ Security:    {0}{1," + (lengthLine - 15 - laptop.Security.Length) + "}", laptop.Security, "│");
+            Console.WriteLine("  │ Keyboard:    {0}{1," + (lengthLine - 15 - laptop.Keyboard.Length) + "}", laptop.Keyboard, "│");
+            Console.WriteLine("  │ Audio:       {0}{1," + (lengthLine - 15 - laptop.Audio.Length) + "}", laptop.Audio, "│");
+            Console.WriteLine("  │ Size:        {0}{1," + (lengthLine - 15 - laptop.Size.Length) + "}", laptop.Size, "│");
+            Console.WriteLine("  │ Operating system: {0}{1," + (lengthLine - 20 - laptop.OS.Length) + "}", laptop.OS, "│");
+            Console.WriteLine("  │ Quantity:    {0}{1," + (lengthLine - 15 - laptop.Quantity.ToString().Length) + "}", laptop.Quantity, "│");
             string price = laptop.Price.ToString("N0") + " VNĐ";
-            Console.WriteLine(" │ Price:       {0}{1," + (lengthLine - 15 - price.Length) + "}", price, "│");
-            Console.WriteLine(" │ Warranty period: {0}{1," + (lengthLine - 19 - laptop.WarrantyPeriod.Length) + "}", laptop.WarrantyPeriod, "│");
-            Console.WriteLine(" └{0}┘", line);
+            Console.WriteLine("  │ Price:       {0}{1," + (lengthLine - 15 - price.Length) + "}", price, "│");
+            Console.WriteLine("  │ Warranty period: {0}{1," + (lengthLine - 19 - laptop.WarrantyPeriod.Length) + "}", laptop.WarrantyPeriod, "│");
+            Console.WriteLine("  └{0}┘", line);
             // bool result;
             // do
             // {
@@ -197,8 +197,7 @@ namespace ConsolePL
             //     Console.WriteLine((result ? " Add laptop to order completed!" : " The number of laptop in the store is not enough!"));
             //     Console.ResetColor();
             // } while (!result);
-            Console.Write(" Press any key to back...");
-            Console.ReadKey(true);
+            Console.Write("  Press any key to back..."); Console.ReadKey(true);
         }
     }
 }

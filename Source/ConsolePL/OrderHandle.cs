@@ -43,6 +43,7 @@ namespace ConsolePL
                             result = AddLaptopToOrder(laptop);
                             Utility.PrintColor(result ? " Add laptop to order completed!" : " The number of laptop in the store is not enough!",
                             result ? ConsoleColor.Green : ConsoleColor.Red, ConsoleColor.Black);
+                            Console.WriteLine();
                         } while (!result);
                         // Console.WriteLine(" Press any key to continue...");
                         // Console.ReadKey(true);
