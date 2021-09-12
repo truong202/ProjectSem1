@@ -5,7 +5,7 @@ using System.Text;
 
 namespace ConsolePL
 {
-    public class Utility
+    public static class Utility
     {
         public static string[] GetTable(List<string[]> lines)
         {

@@ -8,6 +8,7 @@ namespace ConsolePL
     {
         private static int width = 119;
         private static int height = 29;
+        private const int POSITION = 12;
         public static Staff Run()
         {
             Console.Clear();
@@ -23,19 +24,21 @@ namespace ConsolePL
                               "███████  ██████   ██████  ██ ██   ████"};
             Utility.PrintBorder(width, height);
             Console.ForegroundColor = ConsoleColor.DarkCyan;
+            int posTitle = Utility.GetPosition(title[0], width);
             for (int i = 0; i < title.Length; i++)
             {
                 Console.SetCursorPosition(1, i + 3);
-                Console.WriteLine("{0," + Utility.GetPosition(title[0], width) + "}", title[i]);
+                Console.Write("{0," + posTitle + "}", title[i]);
             }
             Console.ResetColor();
-            Console.SetCursorPosition(1, 13); Console.Write("{0,78}", "┌────────────────────────────────┐");
-            Console.SetCursorPosition(1, 14); Console.Write("{0,78}", "Username:     │                                │");
-            Console.SetCursorPosition(1, 15); Console.Write("{0,78}", "└────────────────────────────────┘");
-            Console.SetCursorPosition(1, 18); Console.Write("{0,78}", "┌────────────────────────────────┐");
-            Console.SetCursorPosition(1, 19); Console.Write("{0,78}", "Password:     │                                │");
-            Console.SetCursorPosition(1, 20); Console.Write("{0,78}", "└────────────────────────────────┘");
-            Utility.PrintColor("     LOGIN     ", 3, 69, 23, ConsoleColor.White, ConsoleColor.DarkCyan);
+            Console.SetCursorPosition(1, POSITION); Console.Write("{0,78}", "┌────────────────────────────────┐");
+            Console.SetCursorPosition(1, POSITION + 1); Console.Write("{0,78}", "Username:     │                                │");
+            Console.SetCursorPosition(1, POSITION + 2); Console.Write("{0,78}", "└────────────────────────────────┘");
+            Console.SetCursorPosition(1, POSITION + 5); Console.Write("{0,78}", "┌────────────────────────────────┐");
+            Console.SetCursorPosition(1, POSITION + 6); Console.Write("{0,78}", "Password:     │                                │");
+            Console.SetCursorPosition(1, POSITION + 7); Console.Write("{0,78}", "└────────────────────────────────┘");
+            WriteLogin(ConsoleColor.White, ConsoleColor.DarkCyan);
+
         }
         private static Staff Handle()
         {
@@ -43,7 +46,7 @@ namespace ConsolePL
             ConsoleKey key = new ConsoleKey();
             Staff staff;
             int choose = 1;
-            Console.SetCursorPosition(1, 14); Console.Write("{0,46}", "Username:     │ ");
+            Console.SetCursorPosition(1, POSITION + 1); Console.Write("{0,46}", "Username:     │ ");
             while (true)
             {
                 if (choose == 1 || choose == 2)
@@ -58,7 +61,7 @@ namespace ConsolePL
                         {
                             if (IsValidUsername(username))
                             {
-                                Console.SetCursorPosition(1, 19); Console.Write("{0,46}", "Password:     │ ");
+                                Console.SetCursorPosition(1, POSITION + 6); Console.Write("{0,46}", "Password:     │ ");
                                 Console.Write(pass);
                                 choose = 2;
                             }
@@ -67,14 +70,14 @@ namespace ConsolePL
                         {
                             if (IsValidPassword(password))
                             {
-                                Utility.PrintColor("     LOGIN     ", 3, 69, 23, ConsoleColor.White, ConsoleColor.Red);
+                                WriteLogin(ConsoleColor.White, ConsoleColor.Red);
+
                                 staff = new StaffBL().Login(new Staff { Username = username, Password = password });
                                 if (staff == null)
                                 {
-                                    Utility.PrintColor("     LOGIN     ", 3, 69, 23, ConsoleColor.White, ConsoleColor.DarkCyan);
-                                    ShowMessageError("Incorrect Username or Password!", 44, 21);
-                                    Console.SetCursorPosition(1, 19);
-                                    Console.Write("{0,46}", "Password:     │ ");
+                                    WriteLogin(ConsoleColor.White, ConsoleColor.DarkCyan);
+                                    ShowMessage("Incorrect Username or Password!", 44, POSITION + 8);
+                                    Console.SetCursorPosition(1, POSITION + 6); Console.Write("{0,46}", "Password:     │ ");
                                     Console.Write(pass);
                                 }
                                 else
@@ -88,12 +91,12 @@ namespace ConsolePL
                         {
                             staff = new StaffBL().Login(new Staff { Username = username, Password = password });
                             if (staff == null)
-                                ShowMessageError("Incorrect Username or Password!", 44, 21);
+                                ShowMessage("Incorrect Username or Password!", 44, POSITION + 8);
                             else
                             {
                                 Console.CursorVisible = true;
                                 return staff;
-                            }   
+                            }
                         }
                         break;
                     case ConsoleKey.DownArrow:
@@ -101,7 +104,7 @@ namespace ConsolePL
                         {
                             if (IsValidUsername(username))
                             {
-                                Console.SetCursorPosition(1, 19); Console.Write("{0,46}", "Password:     │ ");
+                                Console.SetCursorPosition(1, POSITION + 6); Console.Write("{0,46}", "Password:     │ ");
                                 Console.Write(pass);
                                 choose = 2;
                             }
@@ -110,7 +113,7 @@ namespace ConsolePL
                         {
                             if (IsValidPassword(password))
                             {
-                                Utility.PrintColor("     LOGIN     ", 3, 69, 23, ConsoleColor.White, ConsoleColor.Red);
+                                WriteLogin(ConsoleColor.White, ConsoleColor.Red);
                                 choose = 3;
                             }
                         }
@@ -120,15 +123,15 @@ namespace ConsolePL
                         {
                             if (IsValidPassword(password))
                             {
-                                Console.SetCursorPosition(1, 14); Console.Write("{0,46}", "Username:     │ ");
+                                Console.SetCursorPosition(1, POSITION + 1); Console.Write("{0,46}", "Username:     │ ");
                                 Console.Write(username);
                                 choose = 1;
                             }
                         }
                         else if (choose == 3)
                         {
-                            Utility.PrintColor("     LOGIN     ", 3, 69, 23, ConsoleColor.White, ConsoleColor.DarkCyan);
-                            Console.SetCursorPosition(1, 19); Console.Write("{0,46}", "Password:     │ ");
+                            WriteLogin(ConsoleColor.White, ConsoleColor.DarkCyan);
+                            Console.SetCursorPosition(1, POSITION + 6); Console.Write("{0,46}", "Password:     │ ");
                             Console.Write(pass);
                             choose = 2;
                         }
@@ -171,22 +174,33 @@ namespace ConsolePL
             try
             {
                 Staff.CheckUsername(username);
-                Console.SetCursorPosition(1, 16);
+                Console.SetCursorPosition(1, POSITION + 3);
                 Console.Write("{0,38}{1}", "", "                                                          ");
                 return true;
             }
             catch (Exception e)
             {
-                ShowMessageError(e.Message, 38, 16);
-                Console.SetCursorPosition(1, 14); Console.Write("{0,46}", "Username:     │ ");
+                ShowMessage(e.Message, 38, POSITION + 3);
+                Console.SetCursorPosition(1, POSITION + 1); Console.Write("{0,46}", "Username:     │ ");
                 Console.Write(username);
                 return false;
             }
         }
-        private static void ShowMessageError(string message, int posLef, int posTop)
+        private static void WriteLogin(ConsoleColor fColor, ConsoleColor bColor)
+        {
+            Console.SetCursorPosition(1, POSITION + 10); Console.Write("{0, 55}", "");
+            Utility.PrintColor("███████████████", bColor, bColor);
+            Console.SetCursorPosition(1, POSITION + 11); Console.Write("{0,55}", "");
+            Utility.PrintColor("     LOGIN     ", fColor, bColor);
+            Console.SetCursorPosition(1, POSITION + 12); Console.Write("{0,55}", "");
+            Utility.PrintColor("███████████████", bColor, bColor);
+        }
+        private static void ShowMessage(string message, int posLef, int posTop)
         {
             Console.SetCursorPosition(1, posTop);
+            Console.Write("{0,38}{1}", "", "                                                               ");
             Console.ForegroundColor = ConsoleColor.Red;
+            Console.SetCursorPosition(1, posTop);
             Console.Write("{0," + posLef + "}{1}", "", message);
             Console.ForegroundColor = ConsoleColor.White;
         }
@@ -195,14 +209,14 @@ namespace ConsolePL
             try
             {
                 Staff.CheckPassword(password);
-                Console.SetCursorPosition(1, 21);
-                Console.Write("{0,38}{1}", "", "                                                           ");
+                Console.SetCursorPosition(1, POSITION + 8);
+                Console.Write("{0,38}{1}", "", "                                                               ");
                 return true;
             }
             catch (Exception e)
             {
-                ShowMessageError(e.Message, 38, 21);
-                Console.SetCursorPosition(1, 19); Console.Write("{0,46}", "Password:     │ ");
+                ShowMessage(e.Message, 38, POSITION + 8);
+                Console.SetCursorPosition(1, POSITION + 6); Console.Write("{0,46}", "Password:     │ ");
                 for (int i = 0; i < password.Length; i++) Console.Write("*");
                 return false;
             }
