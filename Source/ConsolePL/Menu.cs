@@ -1,48 +1,98 @@
 using System;
-using System.Text;
-
 namespace ConsolePL
 {
     public class Menu
     {
-       public static short Display(string title, string[] menuItems)
+        private string[] storeName =
+            {"██╗      █████╗ ██████╗ ████████╗ ██████╗ ██████╗     ███████╗████████╗ ██████╗ ██████╗ ███████╗",
+             "██║     ██╔══██╗██╔══██╗╚══██╔══╝██╔═══██╗██╔══██╗    ██╔════╝╚══██╔══╝██╔═══██╗██╔══██╗██╔════╝",
+             "██║     ███████║██████╔╝   ██║   ██║   ██║██████╔╝    ███████╗   ██║   ██║   ██║██████╔╝█████╗  ",
+             "██║     ██╔══██║██╔═══╝    ██║   ██║   ██║██╔═══╝     ╚════██║   ██║   ██║   ██║██╔══██╗██╔══╝  ",
+             "███████╗██║  ██║██║        ██║   ╚██████╔╝██║         ███████║   ██║   ╚██████╔╝██║  ██║███████╗",
+             "╚══════╝╚═╝  ╚═╝╚═╝        ╚═╝    ╚═════╝ ╚═╝         ╚══════╝   ╚═╝    ╚═════╝ ╚═╝  ╚═╝╚══════╝"};
+        private int positionY;
+        private string title;
+        private string[] menu;
+        private int width = 119;
+        private int height = 29;
+        public Menu(string title, string[] menu)
         {
-            short choose = 0;
-            string input;
+            this.title = title;
+            this.menu = menu;
+            int padding = (height - storeName.Length - 5 - menu.Length * 2) / 2;
+            this.positionY = padding + storeName.Length + 4;
+        }
+        public int Run()
+        {
+            ShowForm();
+            return Handle();
+        }
+        public void ShowForm()
+        {
             Console.Clear();
-            Console.WriteLine(GetMenu(title, menuItems));
-            Console.Write("\n → Your choice: ");
-            while (true)
+            Utility.PrintBorder(width, height);
+            int positionX = Utility.GetPosition(storeName[0], width) - 1;
+            Console.ForegroundColor = ConsoleColor.DarkCyan;
+            for (int i = 0; i < storeName.Length; i++)
             {
-                input = Console.ReadLine();
-                if (short.TryParse(input, out choose) && choose >= 1 && choose <= menuItems.Length) return choose;
-                Console.ForegroundColor = ConsoleColor.Red;
-                Console.WriteLine(" Entered incorrectly!");
-                Console.ResetColor();
-                Console.Write(" → re-enter: ");
+                Console.SetCursorPosition(1, i + 2);
+                Console.Write("{0," + positionX + "}", storeName[i]);
+            }
+            Console.ResetColor();
+            Console.SetCursorPosition(1, positionY - 3);
+            positionX = Utility.GetPosition(title, width);
+            Console.ForegroundColor = ConsoleColor.Green;
+            Console.Write("{0," + positionX + "}", title);
+            Console.ResetColor();
+            for (int i = 0; i < menu.Length; i++)
+            {
+                positionX = Utility.GetPosition(menu[i], width);
+                Console.SetCursorPosition(1, positionY + i * 2);
+                Console.Write("{0," + positionX + "}", menu[i]);
             }
         }
-        private static string GetMenu(string title, string[] menuItems)
+        public int Handle()
         {
-            StringBuilder builder = new StringBuilder();
-            string line = "╟───────────────────────────────────────────────╢\n";
-            int position = line.Length / 2 + title.Length / 2 - 1;
-            builder.Append("╔═══════════════════════════════════════════════╗\n");
-            builder.Append("║                                               ║\n");
-            builder.Append(String.Format("║{0," + position + "}{1," + (line.Length - position - 2) + "}\n", title, "║"));
-            builder.Append("║                                               ║\n");
-            builder.Append(line);
-            for (int index = 0; index < menuItems.Length; index++)
+            Console.CursorVisible = false;
+            int choose = 0;
+            ConsoleKey keyPressed;
+            int posLeft;
+            posLeft = Utility.GetPosition(menu[choose], width) - menu[choose].Length;
+            Console.SetCursorPosition(1, choose * 2 + positionY);
+            Utility.PrintColor(menu[choose], posLeft, ConsoleColor.Black, ConsoleColor.White);
+            do
             {
-                position = line.Length - menuItems[index].Length - (index + 1).ToString().Length - 6;
-                builder.Append(String.Format("║  {0}. {1}{2," + position + "}\n", index + 1, menuItems[index], "║"));
-                if (index < menuItems.Length - 1)
+                ConsoleKeyInfo keyInfo = Console.ReadKey(true);
+                keyPressed = keyInfo.Key;
+                if (keyPressed == ConsoleKey.UpArrow || keyPressed == ConsoleKey.DownArrow)
                 {
-                    builder.Append(line);
+                    Console.SetCursorPosition(1, Console.CursorTop);
+                    posLeft = Utility.GetPosition(menu[choose], width) - menu[choose].Length;
+                    Utility.PrintColor(menu[choose], posLeft, ConsoleColor.White, ConsoleColor.Black);
+                    if (keyPressed == ConsoleKey.UpArrow)
+                    {
+                        choose--;
+                        if (choose == -1)
+                        {
+                            choose = menu.Length - 1;
+                        }
+                    }
+                    else
+                    {
+                        choose++;
+                        if (choose > menu.Length- 1)
+                        {
+                            choose = 0;
+                        }
+                    }
+                    posLeft = Utility.GetPosition(menu[choose], width) - menu[choose].Length;
+                    Console.SetCursorPosition(1, choose * 2 + positionY);
+                    Utility.PrintColor(menu[choose], posLeft, ConsoleColor.Black, ConsoleColor.White);
                 }
-            }
-            builder.Append("╚═══════════════════════════════════════════════╝");
-            return builder.ToString();
+            } while (keyPressed != ConsoleKey.Enter);
+            Console.CursorVisible = true;
+            return choose + 1;
         }
     }
 }
+

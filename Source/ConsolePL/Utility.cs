@@ -237,6 +237,17 @@ namespace ConsolePL
             Console.Write(".\b");
             Console.ResetColor();
         }
+        public static void PrintColor(string content, int posleft, ConsoleColor fColor, ConsoleColor bColor)
+        {
+            Console.Write("{0," + posleft + "}", "");
+            Console.BackgroundColor = bColor;
+            Console.ForegroundColor = fColor;
+            Console.Write(content);
+            Console.BackgroundColor = ConsoleColor.Black;
+            Console.ForegroundColor = ConsoleColor.Black;
+            Console.Write(".\b");
+            Console.ResetColor();
+        }
         public static void PrintBorder(int width, int height)
         {
             Console.ForegroundColor = ConsoleColor.Green;

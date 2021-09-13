@@ -38,7 +38,6 @@ namespace ConsolePL
             Console.SetCursorPosition(1, POSITION + 6); Console.Write("{0,78}", "Password:     │                                │");
             Console.SetCursorPosition(1, POSITION + 7); Console.Write("{0,78}", "└────────────────────────────────┘");
             WriteLogin(ConsoleColor.White, ConsoleColor.DarkCyan);
-
         }
         private static Staff Handle()
         {

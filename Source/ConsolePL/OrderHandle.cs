@@ -32,21 +32,22 @@ namespace ConsolePL
                     if (laptop.Quantity <= 0)
                     {
                         Utility.PrintColor(" Laptop is out of stock, please choose another laptop!", ConsoleColor.Red, ConsoleColor.Black);
+                        Console.WriteLine();
                     }
                     else
                     {
                         bool result;
-                        do
-                        {
-                            Console.Write(" → Input quantity: ");
-                            laptop.Quantity = Utility.GetNumber(1);
-                            result = AddLaptopToOrder(laptop);
-                            Utility.PrintColor(result ? " Add laptop to order completed!" : " The number of laptop in the store is not enough!",
-                            result ? ConsoleColor.Green : ConsoleColor.Red, ConsoleColor.Black);
-                            Console.WriteLine();
-                        } while (!result);
+                        // do
+                        // {
+                        Console.Write(" → Input quantity: ");
+                        laptop.Quantity = Utility.GetNumber(1);
+                        result = AddLaptopToOrder(laptop);
+                        Utility.PrintColor(result ? " Add laptop to order completed!" : " The store doesn't have enough laptops in stock!!",
+                        result ? ConsoleColor.Green : ConsoleColor.Red, ConsoleColor.Black);
+                        Console.WriteLine();
+                        // } while (!result);
                         // Console.WriteLine(" Press any key to continue...");
-                        // Console.ReadKey(true);
+                        // Console.ReadKey(true); 
                     }
                 }
             } while (id != 0);

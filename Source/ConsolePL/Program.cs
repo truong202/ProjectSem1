@@ -13,19 +13,23 @@ namespace ConsolePL
         {
             Console.OutputEncoding = System.Text.Encoding.Unicode;
             Console.InputEncoding = System.Text.Encoding.Unicode;
+
             Staff staff = Login.Run();
-            short choose;
+            int choose;
             string title;
             string[] menu;
             switch (staff.Role)
             {
                 case Staff.SELLER:
                     title = "MENU SELLER";
-                    menu = new[] { "SEARCH LAPTOPS", "EXIT" };
+                    // menu = new[] { "SEARCH LAPTOPS", "EXIT" };
+                    menu = new[] { "Search Laptops", "Exit" };
                     LaptopHandle laptopH = new LaptopHandle();
+                    Menu sellerMenu = new Menu(title, menu);
                     do
                     {
-                        choose = Menu.Display(title, menu);
+                        // choose = Menu.Display(title, menu);
+                        choose = sellerMenu.Run();
                         switch (choose)
                         {
                             case 1:
@@ -38,18 +42,6 @@ namespace ConsolePL
                     Console.WriteLine("accountance");
 
                     break;
-            }
-        }
-        static ConsoleKey PressYN()
-        {
-            ConsoleKey key = new ConsoleKey();
-            while (true)
-            {
-                Console.CursorVisible = false;
-                var keyInfo = Console.ReadKey(true);
-                key = keyInfo.Key;
-                if (key == ConsoleKey.N || key == ConsoleKey.Y)
-                    return key;
             }
         }
     }
