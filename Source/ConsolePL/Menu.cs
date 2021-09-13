@@ -90,7 +90,6 @@ namespace ConsolePL
                     Utility.PrintColor(menu[choose], posLeft, ConsoleColor.Black, ConsoleColor.White);
                 }
             } while (keyPressed != ConsoleKey.Enter);
-            Console.CursorVisible = true;
             return choose + 1;
         }
     }

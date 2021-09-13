@@ -37,7 +37,7 @@ namespace ConsolePL
             Console.SetCursorPosition(1, POSITION + 5); Console.Write("{0,78}", "┌────────────────────────────────┐");
             Console.SetCursorPosition(1, POSITION + 6); Console.Write("{0,78}", "Password:     │                                │");
             Console.SetCursorPosition(1, POSITION + 7); Console.Write("{0,78}", "└────────────────────────────────┘");
-            WriteLogin(ConsoleColor.White, ConsoleColor.DarkCyan);
+            WriteLogin(ConsoleColor.White, ConsoleColor.Red);
         }
         private static Staff Handle()
         {
@@ -48,8 +48,7 @@ namespace ConsolePL
             Console.SetCursorPosition(1, POSITION + 1); Console.Write("{0,46}", "Username:     │ ");
             while (true)
             {
-                if (choose == 1 || choose == 2)
-                    Console.CursorVisible = true;
+                Console.CursorVisible = true;
                 var keyInfo = Console.ReadKey(true);
                 Console.CursorVisible = false;
                 key = keyInfo.Key;
@@ -69,8 +68,6 @@ namespace ConsolePL
                         {
                             if (IsValidPassword(password))
                             {
-                                WriteLogin(ConsoleColor.White, ConsoleColor.Red);
-
                                 staff = new StaffBL().Login(new Staff { Username = username, Password = password });
                                 if (staff == null)
                                 {
@@ -81,20 +78,9 @@ namespace ConsolePL
                                 }
                                 else
                                 {
-                                    Console.CursorVisible = true;
+                                    // Console.CursorVisible = true;
                                     return staff;
                                 }
-                            }
-                        }
-                        else
-                        {
-                            staff = new StaffBL().Login(new Staff { Username = username, Password = password });
-                            if (staff == null)
-                                ShowMessage("Incorrect Username or Password!", 44, POSITION + 8);
-                            else
-                            {
-                                Console.CursorVisible = true;
-                                return staff;
                             }
                         }
                         break;
@@ -108,14 +94,6 @@ namespace ConsolePL
                                 choose = 2;
                             }
                         }
-                        else if (choose == 2)
-                        {
-                            if (IsValidPassword(password))
-                            {
-                                WriteLogin(ConsoleColor.White, ConsoleColor.Red);
-                                choose = 3;
-                            }
-                        }
                         break;
                     case ConsoleKey.UpArrow:
                         if (choose == 2)
@@ -126,13 +104,6 @@ namespace ConsolePL
                                 Console.Write(username);
                                 choose = 1;
                             }
-                        }
-                        else if (choose == 3)
-                        {
-                            WriteLogin(ConsoleColor.White, ConsoleColor.DarkCyan);
-                            Console.SetCursorPosition(1, POSITION + 6); Console.Write("{0,46}", "Password:     │ ");
-                            Console.Write(pass);
-                            choose = 2;
                         }
                         break;
                     case ConsoleKey.Backspace:

@@ -40,9 +40,9 @@ namespace ConsolePL
                     break;
                 case Staff.ACCOUNTANCE:
                     Console.WriteLine("accountance");
-
                     break;
             }
+            Console.CursorVisible = true;
         }
     }
 }
