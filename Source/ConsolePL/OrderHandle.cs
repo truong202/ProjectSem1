@@ -42,7 +42,7 @@ namespace ConsolePL
                         Console.Write(" → Input quantity: ");
                         laptop.Quantity = Utility.GetNumber(1);
                         result = AddLaptopToOrder(laptop);
-                        Utility.PrintColor(result ? " Add laptop to order completed!" : " The store doesn't have enough laptops in stock!!",
+                        Utility.PrintColor(result ? " Add laptop to order completed!" : " The store doesn't have enough laptops in stock!",
                         result ? ConsoleColor.Green : ConsoleColor.Red, ConsoleColor.Black);
                         Console.WriteLine();
                         // } while (!result);

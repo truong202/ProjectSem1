@@ -10,7 +10,7 @@ namespace ConsolePL
              "██║     ██╔══██║██╔═══╝    ██║   ██║   ██║██╔═══╝     ╚════██║   ██║   ██║   ██║██╔══██╗██╔══╝  ",
              "███████╗██║  ██║██║        ██║   ╚██████╔╝██║         ███████║   ██║   ╚██████╔╝██║  ██║███████╗",
              "╚══════╝╚═╝  ╚═╝╚═╝        ╚═╝    ╚═════╝ ╚═╝         ╚══════╝   ╚═╝    ╚═════╝ ╚═╝  ╚═╝╚══════╝"};
-        private int positionY;
+        private int posTop;
         private string title;
         private string[] menu;
         private int width = 119;
@@ -20,7 +20,7 @@ namespace ConsolePL
             this.title = title;
             this.menu = menu;
             int padding = (height - storeName.Length - 5 - menu.Length * 2) / 2;
-            this.positionY = padding + storeName.Length + 4;
+            this.posTop = padding + storeName.Length + 4;
         }
         public int Run()
         {
@@ -31,24 +31,20 @@ namespace ConsolePL
         {
             Console.Clear();
             Utility.PrintBorder(width, height);
-            int positionX = Utility.GetPosition(storeName[0], width) - 1;
-            Console.ForegroundColor = ConsoleColor.DarkCyan;
+            int posLeft = Utility.GetPosition(storeName[0], width);
             for (int i = 0; i < storeName.Length; i++)
             {
                 Console.SetCursorPosition(1, i + 2);
-                Console.Write("{0," + positionX + "}", storeName[i]);
+                Utility.PrintColor(storeName[i], posLeft, ConsoleColor.DarkCyan, ConsoleColor.Black);
             }
-            Console.ResetColor();
-            Console.SetCursorPosition(1, positionY - 3);
-            positionX = Utility.GetPosition(title, width);
-            Console.ForegroundColor = ConsoleColor.Green;
-            Console.Write("{0," + positionX + "}", title);
-            Console.ResetColor();
+            Console.SetCursorPosition(1, posTop - 3);
+            posLeft = Utility.GetPosition(title, width);
+            Utility.PrintColor(title, posLeft, ConsoleColor.Green, ConsoleColor.Black);
             for (int i = 0; i < menu.Length; i++)
             {
-                positionX = Utility.GetPosition(menu[i], width);
-                Console.SetCursorPosition(1, positionY + i * 2);
-                Console.Write("{0," + positionX + "}", menu[i]);
+                posLeft = Utility.GetPosition(menu[i], width);
+                Console.SetCursorPosition(1, posTop + i * 2);
+                Console.Write("{0," + posLeft + "}{1}", "", menu[i]);
             }
         }
         public int Handle()
@@ -57,8 +53,8 @@ namespace ConsolePL
             int choose = 0;
             ConsoleKey keyPressed;
             int posLeft;
-            posLeft = Utility.GetPosition(menu[choose], width) - menu[choose].Length;
-            Console.SetCursorPosition(1, choose * 2 + positionY);
+            posLeft = Utility.GetPosition(menu[choose], width);
+            Console.SetCursorPosition(1, choose * 2 + posTop);
             Utility.PrintColor(menu[choose], posLeft, ConsoleColor.Black, ConsoleColor.White);
             do
             {
@@ -67,26 +63,20 @@ namespace ConsolePL
                 if (keyPressed == ConsoleKey.UpArrow || keyPressed == ConsoleKey.DownArrow)
                 {
                     Console.SetCursorPosition(1, Console.CursorTop);
-                    posLeft = Utility.GetPosition(menu[choose], width) - menu[choose].Length;
+                    posLeft = Utility.GetPosition(menu[choose], width);
                     Utility.PrintColor(menu[choose], posLeft, ConsoleColor.White, ConsoleColor.Black);
                     if (keyPressed == ConsoleKey.UpArrow)
                     {
                         choose--;
-                        if (choose == -1)
-                        {
-                            choose = menu.Length - 1;
-                        }
+                        if (choose == -1) choose = menu.Length - 1;
                     }
                     else
                     {
                         choose++;
-                        if (choose > menu.Length- 1)
-                        {
-                            choose = 0;
-                        }
+                        if (choose > menu.Length - 1) choose = 0;
                     }
-                    posLeft = Utility.GetPosition(menu[choose], width) - menu[choose].Length;
-                    Console.SetCursorPosition(1, choose * 2 + positionY);
+                    posLeft = Utility.GetPosition(menu[choose], width);
+                    Console.SetCursorPosition(1, choose * 2 + posTop);
                     Utility.PrintColor(menu[choose], posLeft, ConsoleColor.Black, ConsoleColor.White);
                 }
             } while (keyPressed != ConsoleKey.Enter);

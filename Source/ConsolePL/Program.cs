@@ -13,7 +13,7 @@ namespace ConsolePL
         {
             Console.OutputEncoding = System.Text.Encoding.Unicode;
             Console.InputEncoding = System.Text.Encoding.Unicode;
-
+            Console.Title = "LAPTOP STORE";
             Staff staff = Login.Run();
             int choose;
             string title;
@@ -21,7 +21,7 @@ namespace ConsolePL
             switch (staff.Role)
             {
                 case Staff.SELLER:
-                    title = "MENU SELLER";
+                    title = "[MENU SELLER]";
                     // menu = new[] { "SEARCH LAPTOPS", "EXIT" };
                     menu = new[] { "Search Laptops", "Exit" };
                     LaptopHandle laptopH = new LaptopHandle();
@@ -42,6 +42,7 @@ namespace ConsolePL
                     Console.WriteLine("accountance");
                     break;
             }
+            Console.Clear();
             Console.CursorVisible = true;
         }
     }

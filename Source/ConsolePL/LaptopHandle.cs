@@ -104,11 +104,11 @@ namespace ConsolePL
                 }
                 string[] table = Utility.GetTable(lines);
                 foreach (string line in table) Console.WriteLine("  " + line);
-                string nextPage = (page > 0 && page < pageCount) ? "►" : " ";
-                string prePage = (page > 1) ? "◄" : " ";
-                string pages = prePage + $"      [{page}/{pageCount}]      " + nextPage;
-                if (page > 0 && pageCount > 1)
+                if (pageCount > 1)
                 {
+                    string nextPage = (page > 0 && page < pageCount) ? "►" : " ";
+                    string prePage = (page > 1) ? "◄" : " ";
+                    string pages = prePage + $"      [{page}/{pageCount}]      " + nextPage;
                     int position = table[0].Length / 2 + pages.Length / 2 + 1;
                     Console.WriteLine(String.Format("{0," + position + "}", pages));
                 }
@@ -117,8 +117,7 @@ namespace ConsolePL
             Utility.PrintColor("F", ConsoleColor.Yellow, ConsoleColor.Black);
             Console.Write("' to search laptops, '");
             Utility.PrintColor("D", ConsoleColor.Yellow, ConsoleColor.Black);
-            Console.WriteLine("' to view laptop details,");
-            Console.Write("         '");
+            Console.Write("' to view laptop details, '");
             Utility.PrintColor("C", ConsoleColor.Yellow, ConsoleColor.Black);
             Console.Write("' to Create Order, '");
             Utility.PrintColor("ESC", ConsoleColor.Red, ConsoleColor.Black);
@@ -139,9 +138,10 @@ namespace ConsolePL
             string line = "──────────────────────────────────────────────────────────────────────────────────────────────────────────────────";
             string title = "LAPTOP INFORMATION";
             int lengthLine = line.Length + 2;
-            int position = lengthLine / 2 + title.Length / 2 - 1;
+            int posLeft = Utility.GetPosition(title, lengthLine);
             Console.WriteLine("  ┌{0}┐", line);
-            Console.WriteLine("  │{0," + position + "}{1," + (lengthLine - position - 1) + "}", title, "│");
+            Console.Write("  │{0," + (posLeft - 1) + "}", ""); Utility.PrintColor(title, ConsoleColor.Green, ConsoleColor.Black);
+            Console.WriteLine("{0," + (lengthLine - title.Length - posLeft) + "}", "│");
             Console.WriteLine("  ├{0}┤", line);
             Console.WriteLine("  │ Laptop Id:   {0}{1," + (lengthLine - 15 - laptop.LaptopId.ToString().Length) + "}", laptop.LaptopId, "│");
             Console.WriteLine("  │ Laptop name: {0}{1," + (lengthLine - 15 - laptop.LaptopName.Length) + "}", laptop.LaptopName, "│");
