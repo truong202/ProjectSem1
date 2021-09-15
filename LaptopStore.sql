@@ -21,6 +21,11 @@ CREATE TABLE customers (
     PRIMARY KEY (customer_id)
 );
 
+Insert into customers(customer_name, address, phone)
+values ('Phạm Công Hưng', 'Nam Định', '0904844014'),
+		('Phạm Công Hà', 'Nam Định', '0906450904');
+
+
 CREATE TABLE categories (
     category_id INT AUTO_INCREMENT,
     category_name VARCHAR(50) NOT NULL UNIQUE,
@@ -112,13 +117,13 @@ INSERT INTO categories(category_name)
 VALUES ('Gaming'), ('Office'), ('Multimedia'), ('Workstation');
 
 INSERT INTO manufactories(manufactory_name, website, address)
-VALUES ('ASUS', 'https://www.asus.com/vn/', '117-119-121 Nguyễn Du, Phường Bến Thành, Quận 1, Thành phố Hồ Chí Minh'),
-	   ('MSI', 'https://vn.msi.com/', 'Phòng L802, Tầng 8, số 99 Nguyễn Thị Minh Khai - Phường Bến Thành - Quận 1 - TP Hồ Chí Minh'),
-	   ('Acer', 'https://www.acervietnam.com.vn/', 'Tầng 1, Tòa nhà Đào Duy Anh, Số 9A đường Đào Duy Anh, Phường Phương Liên, Quận Đống đa, Hà Nội'), 
-	   ('Apple', 'https://www.apple.com/vn/', 'Phòng 901, Ngôi Nhà Đức Tại Tp. Hồ Chí Minh, số 33, đường Lê, Phường Bến Nghé, Quận 1, TP Hồ Chí Minh'), 
-	   ('LG', 'https://www.lg.com/vn', 'Lô CN2, KCN Tràng Duệ, xã Lê Lợi, huyện An Dương, thành phố Hải Phòng'),
-	   ('Lenovo', 'https://www.lenovo.com/vn/vn/', 'Phòng 709A, Tầng 7, Oriental Tower, No. 324 Tây Sơn, Ngã Tư Sở, Quận Đống Đa, Hà Nội'),
-       ('Dell', 'https://www.dell.com/vn/p/', 'P1402A,T14,tòa nhà VP IPH Indochina Plaza HN,241 Xuân Thủy - Phường Dịch Vọng Hậu - Quận Cầu Giấy - Hà Nội');
+VALUES ('ASUS', 'https://www.asus.com/vn/', '117-119-121 Nguyen Du, Ben Thanh Ward, Distric 1, Ho Chi Minh City'),
+	   ('MSI', 'https://vn.msi.com/', 'Zoom L802, 8th Floor, 99 Nguyen Thi Minh Khai - Ben Thanh Ward - Distric 1 - Ho Chi Minh City'),
+	   ('Acer', 'https://www.acervietnam.com.vn/', '1st Floor, Dao Duy Anh building, 9A Dao Duy Anh, Phuong Lien Ward, Dong Da Distric, Hanoi'), 
+	   ('Apple', 'https://www.apple.com/vn/', 'Zoom 901, Deutsches Haus Ho Chi Minh City, 33 Le Duan Street, Ben Nghe Ward, Distric 1, Ho Chi Minh City'), 
+	   ('LG', 'https://www.lg.com/vn', 'industrial lot 2, Trang Due Industrial Park, Le Loi commune, An Duong Distric, Hai Phong City'),
+	   ('Lenovo', 'https://www.lenovo.com/vn/vn/', 'Zoom 709A, 7th Floor, Oriental Tower, 324 Tay Son Street, Nga Tu So, Dong Da Distric, Hanoi'),
+       ('Dell', 'https://www.dell.com/vn/p/', 'P1402A,14th Floor, IPH Indochina Plaza HN, 241 Xuan Thuy, Dich Vong Hau Ward, Cau Giay Distric, Hanoi');
 
 INSERT INTO laptops(laptop_name, manufactory_id, category_id, CPU, Ram, hard_drive, VGA, display, battery, weight, materials, ports,
 			 network_and_connection, security, keyboard, audio, size, warranty_period, OS, price, quantity)
@@ -406,6 +411,20 @@ END $$
 DELIMITER ;
 
 DELIMITER $$
+CREATE PROCEDURE sp_getOrderCount(IN searchValue VARCHAR(255))
+BEGIN
+SELECT 
+    COUNT(*) as count
+FROM
+	orders o
+        INNER JOIN customers c ON o.customer_id = c.customer_id
+WHERE 
+	c.customer_name LIKE CONCAT('%', searchValue, '%') OR
+	o.order_id = searchValue;
+END $$
+DELIMITER ;
+
+DELIMITER $$
 CREATE PROCEDURE sp_getLaptopById(IN laptopId int)
 BEGIN 
 SELECT 
@@ -474,6 +493,53 @@ UPDATE LAPTOPS SET quantity = quantity - _quantity WHERE laptop_id = laptopId;
 END $$
 DELIMITER ;
 
+DELIMITER $$
+CREATE PROCEDURE sp_updateQuantityInLaptops2(IN _quantity INT, IN laptopId INT)
+BEGIN
+UPDATE LAPTOPS SET quantity = quantity + _quantity WHERE laptop_id = laptopId;
+END $$
+DELIMITER ;
+
+DELIMITER $$
+CREATE PROCEDURE sp_getOrders(IN searchValue VARCHAR(255), IN _offset INT)
+BEGIN
+SELECT 
+    o.order_id, c.customer_id, o.accountance_id, o.seller_id, c.phone, c.customer_name, IFNULL(o.order_date, '') AS order_date, o.order_status
+FROM
+    orders o
+    INNER JOIN customers c ON o.customer_id = c.customer_id
+WHERE 
+	o.order_status = 1 AND
+    (c.customer_name LIKE CONCAT('%', searchValue, '%')
+	OR o.order_id = searchValue)
+ORDER BY o.order_id
+LIMIT 10 OFFSET _offset;
+END $$
+DELIMITER ;
+
+
+DELIMITER $$
+CREATE PROCEDURE sp_getOrdersById(IN order_id int)
+BEGIN 
+SELECT 
+    o.order_id, c.customer_id, c.customer_name, l.laptop_id, l.laptop_name, IFNULL(o.order_date, '') AS order_date, od.unit_price, od.quantity
+FROM
+    order_details od
+        INNER JOIN orders o ON od.order_id = o.order_id
+        INNER JOIN customers c ON o.customer_id = c.customer_id
+        INNER JOIN laptops l ON od.laptop_id = l.laptop_id
+
+WHERE o.order_id = order_id;
+END $$
+DELIMITER ;
+
+DELIMITER $$
+CREATE PROCEDURE sp_changeOrderStatusAf(IN orderStatus INT, IN orderId INT)
+BEGIN
+	UPDATE orders SET order_id = orderId WHERE order_id = orderId;
+END $$
+DELIMITER ;
+
 DROP USER IF EXISTS 'laptop'@'localhost';
 CREATE USER IF NOT EXISTS 'laptop'@'localhost' IDENTIFIED BY 'vtcacademy'; 
 GRANT EXECUTE ON PROCEDURE laptop_store.sp_login TO 'laptop'@'localhost';
@@ -487,9 +553,13 @@ GRANT EXECUTE ON PROCEDURE laptop_store.sp_insertToOrderDetails TO 'laptop'@'loc
 GRANT EXECUTE ON PROCEDURE laptop_store.sp_addAccountanceToOrder TO 'laptop'@'localhost';
 GRANT EXECUTE ON PROCEDURE laptop_store.sp_changeOrderStatus TO 'laptop'@'localhost';
 GRANT EXECUTE ON PROCEDURE laptop_store.sp_updateQuantityInLaptops TO 'laptop'@'localhost';
+GRANT EXECUTE ON PROCEDURE laptop_store.sp_updateQuantityInLaptops2 TO 'laptop'@'localhost';
 GRANT EXECUTE ON PROCEDURE laptop_store.sp_getCount TO 'laptop'@'localhost';
 GRANT EXECUTE ON PROCEDURE laptop_store.sp_getLaptops TO 'laptop'@'localhost';
 GRANT EXECUTE ON PROCEDURE laptop_store.sp_getLaptopById TO 'laptop'@'localhost';
+GRANT EXECUTE ON PROCEDURE laptop_store.sp_getOrders TO 'laptop'@'localhost';
+GRANT EXECUTE ON PROCEDURE laptop_store.sp_getOrdersById TO 'laptop'@'localhost';
+GRANT EXECUTE ON PROCEDURE laptop_store.sp_getOrderCount TO 'laptop'@'localhost';
 GRANT LOCK TABLES ON laptop_store.* TO 'laptop'@'localhost';
 GRANT SELECT ON laptop_store.customers TO 'laptop'@'localhost';
 GRANT SELECT ON laptop_store.laptops TO 'laptop'@'localhost';
@@ -533,4 +603,34 @@ FROM
         INNER JOIN
     manufactories m ON l.manufactory_id = m.manufactory_id
 ORDER BY laptop_id;
+
+INSERT INTO orders(order_id, seller_id, customer_id, accountance_id, order_status)
+VALUES (1, 1, 1, 1, 1);
+
+INSERT INTO orders(order_id, seller_id, customer_id, accountance_id, order_status)
+VALUES (2, 1, 2, 1, 1);
+
+INSERT INTO order_details(order_id, laptop_id, unit_price, quantity)
+VALUES (1, 1, 24990000, 1);
+
+INSERT INTO order_details(order_id, laptop_id, unit_price, quantity)
+VALUES (2, 2, 27990000, 2);
+
+SELECT 
+    o.order_id, c.customer_id, o.accountance_id, o.seller_id, c.phone, c.customer_name, IFNULL(o.order_date, '') AS order_date, o.order_status
+FROM
+    orders o
+    INNER JOIN customers c ON o.customer_id = c.customer_id;
+    
+SELECT 
+    o.order_id, c.customer_id, c.customer_name, l.laptop_id, l.laptop_name, IFNULL(o.order_date, '') AS order_date, od.unit_price, od.quantity
+FROM
+    order_details od
+        INNER JOIN orders o ON od.order_id = o.order_id
+        INNER JOIN customers c ON o.customer_id = c.customer_id
+        INNER JOIN laptops l ON od.laptop_id = l.laptop_id
+
+
+
+
     
