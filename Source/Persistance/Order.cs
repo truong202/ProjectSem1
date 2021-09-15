@@ -12,7 +12,6 @@ namespace Persistance
         public List<Laptop> Laptops { get; set; }
         public DateTime Date { get; set; }
         public int Status { get; set; }
-        public Decimal Price { get; set; }
 
         public Order()
         {

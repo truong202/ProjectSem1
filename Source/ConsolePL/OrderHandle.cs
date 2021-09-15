@@ -19,7 +19,7 @@ namespace ConsolePL
             Console.WriteLine("\n ■ Input List Laptop");
             do
             {
-                Console.Write(" → Input ID(input 0 to cannel): ");
+                Console.Write(" → Input ID(input 0 to cancel): ");
                 id = Utility.GetNumber(0);
                 if (id == 0) break;
                 laptop = laptopBL.GetById(id);
@@ -142,7 +142,7 @@ namespace ConsolePL
                         break;
                     case ConsoleKey.D:
                         Console.WriteLine();
-                        Console.Write(" → Input order ID(input 0 to cannel): ");
+                        Console.Write(" → Input order ID(input 0 to cancel): ");
                         int id = Utility.GetNumber(1);
                         if (id != 0)
                         {

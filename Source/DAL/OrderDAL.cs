@@ -224,7 +224,7 @@ namespace DAL
             order.Date = reader.GetDateTime("order_date");
             order.Status = reader.GetInt32("order_status");
             order.Seller.StaffId = reader.GetInt32("seller_id");
-            
+            or
             try{
             order.Accountance.StaffId = reader.GetInt32("accountance_id");
             }catch{
