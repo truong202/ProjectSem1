@@ -39,7 +39,20 @@ namespace ConsolePL
                     } while (choose != menu.Length);
                     break;
                 case Staff.ACCOUNTANCE:
-                    Console.WriteLine("accountance");
+                    title = "ACCOUNTANCE";
+                    menu = new[] { "PAYMENT", "EXIT" };
+                    OrderHandle orderH = new OrderHandle();
+                    Menu accountMenu = new Menu(title, menu);
+                    do{
+                        choose = accountMenu.Run();
+                        switch (choose)
+                        {
+                        case 1:
+                            orderH.Payment(staff);
+                            break;
+                        }
+
+                } while (choose != menu.Length);
                     break;
             }
             Console.Clear();

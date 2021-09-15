@@ -17,9 +17,18 @@ namespace BL
         {
             return orderDAL.ChangeStatus(status);
         }
-        public List<Order> GetOrders()
+        public List<Order> GetOrders(string searchValue, int offset)
         {
-            return orderDAL.GetOrders();
+            return orderDAL.GetOrders(searchValue, offset);
+        }
+        public Order GetOrderById(int OrderId)
+        {
+            return orderDAL.GetOrderById(OrderId);
+        }
+
+        public int GetOrderCount(string searchValue)
+        {
+            return orderDAL.GetOrderCount(searchValue);
         }
     }
 }

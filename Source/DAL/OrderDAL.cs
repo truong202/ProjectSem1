@@ -137,16 +137,99 @@ namespace DAL
 
             return result;
         }
-        public List<Order> GetOrders()
+        public Order GetOrderById(int orderId)
+        {
+            Order order = null;
+            lock (connection)
+            {
+                try
+                {
+                    connection.Open();
+                    MySqlCommand command = new MySqlCommand("call sp_getOrdersById(@orderId)", connection);
+                    command.Parameters.AddWithValue("@orderId", orderId);
+                    reader = command.ExecuteReader();
+                    if (reader.Read())
+                    {
+                        order = new Order();
+                        order = GetOrder(reader);
+                    }
+                    reader.Close();
+                    connection.Close();
+                }
+                catch
+                {
+                }
+            }
+            return order;
+        }
+
+         public int GetOrderCount(string searchValue)
+        {
+            int result = 0;
+            lock (connection)
+                try
+                {
+                    connection.Open();
+                    MySqlCommand command = new MySqlCommand("call sp_getOrderCount(@searchValue)", connection);
+                    command.Parameters.AddWithValue("@searchValue", searchValue);
+                    reader = command.ExecuteReader();
+                    if (reader.Read())
+                    {
+                        result = reader.GetInt32("count");
+                    }
+                    reader.Close();
+                    connection.Close();
+                }
+                catch
+                {
+                }
+            return result;
+        }
+
+     
+        public List<Order> GetOrders(string searchValue, int offset)
         {
             List<Order> orders = new List<Order>();
-
+            lock (connection)
+            {
+                try
+                {
+                    connection.Open();
+                    MySqlCommand command = new MySqlCommand("call sp_getOrders(@searchValue, @offset)", connection);
+                    command.Parameters.AddWithValue("@searchValue", searchValue);
+                    command.Parameters.AddWithValue("@offset", offset);
+                    reader = command.ExecuteReader();
+                    while (reader.Read())
+                    {
+                        orders.Add(GetOrder(reader));
+                    }
+                    reader.Close();
+                    connection.Close();
+                }
+                catch
+                {
+                }
+            }
+            if (orders.Count == 0) orders = null;
             return orders;
+
         }
-        public Order GetOrder(MySqlDataReader reader)
+
+        private Order GetOrder(MySqlDataReader reader)
         {
             Order order = new Order();
-
+            order.OrderId = reader.GetInt32("order_id");
+            order.CustomerInfo.CustomerName = reader.GetString("customer_name");
+            order.CustomerInfo.Phone = reader.GetString("phone");
+            order.Date = reader.GetDateTime("order_date");
+            order.Status = reader.GetInt32("order_status");
+            order.Seller.StaffId = reader.GetInt32("seller_id");
+            
+            try{
+            order.Accountance.StaffId = reader.GetInt32("accountance_id");
+            }catch{
+                order.Accountance.StaffId = null;
+            }
             return order;
         }
     }
