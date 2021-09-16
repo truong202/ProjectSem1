@@ -25,13 +25,13 @@ namespace ConsolePL
                 laptop = laptopBL.GetById(id);
                 if (laptop == null)
                 {
-                    Console.WriteLine(" Laptop not found!");
+                    Console.WriteLine("  Laptop not found!");
                 }
                 else
                 {
                     if (laptop.Quantity <= 0)
                     {
-                        Utility.PrintColor(" Laptop is out of stock, please choose another laptop!", ConsoleColor.Red, ConsoleColor.Black);
+                        Utility.PrintColor("  Laptop is out of stock, please choose another laptop!", ConsoleColor.Red, ConsoleColor.Black);
                         Console.WriteLine();
                     }
                     else
@@ -42,7 +42,7 @@ namespace ConsolePL
                         Console.Write(" → Input quantity: ");
                         laptop.Quantity = Utility.GetNumber(1);
                         result = AddLaptopToOrder(laptop);
-                        Utility.PrintColor(result ? " Add laptop to order completed!" : " The store doesn't have enough laptops in stock!",
+                        Utility.PrintColor(result ? "  Add laptop to order completed!" : "  The store doesn't have enough laptops in stock!",
                         result ? ConsoleColor.Green : ConsoleColor.Red, ConsoleColor.Black);
                         Console.WriteLine();
                         // } while (!result);
@@ -57,33 +57,33 @@ namespace ConsolePL
                 order.CustomerInfo = GetCustomer();
                 bool result = orderBL.CreateOrder(order);
                 Console.ForegroundColor = result ? ConsoleColor.Green : ConsoleColor.Red;
-                Console.WriteLine(" Create order " + (result ? "completed!" : "not complete!"));
+                Console.WriteLine("  Create order " + (result ? "completed!" : "not complete!"));
                 order = new Order();
                 Console.ResetColor();
                 Console.CursorVisible = false;
-                Console.Write(" Press any key to back..."); Console.ReadKey(true);
+                Console.Write("  Press any key to back..."); Console.ReadKey(true);
             }
         }
 
         private Customer GetCustomer()
         {
-            Console.WriteLine("\n ■ Customer information");
+            Console.WriteLine("\n  ■ Customer information");
             Customer customer = new Customer();
             Console.CursorVisible = true;
-            Console.Write(" → Phone: ");
+            Console.Write("  → Phone: ");
             customer.Phone = Utility.GetPhone();
             var cus = new CustomerBL().GetByPhone(customer.Phone);
             if (cus != null)
             {
                 customer = cus;
-                Console.WriteLine(" → Customer name: " + customer.CustomerName);
-                Console.WriteLine(" → Address: " + customer.Address);
+                Console.WriteLine("  → Customer name: " + customer.CustomerName);
+                Console.WriteLine("  → Address: " + customer.Address);
             }
             else
             {
-                Console.Write(" → Customer name: ");
+                Console.Write("  → Customer name: ");
                 customer.CustomerName = Utility.Standardize(Utility.GetName());
-                Console.Write(" → Address: ");
+                Console.Write("  → Address: ");
                 customer.Address = Console.ReadLine();
             }
             return customer;
@@ -115,8 +115,8 @@ namespace ConsolePL
             int orderCount = orderBL.GetOrderCount(searchValue);
             if (orderCount == 0)
             {
-                Console.WriteLine(" Order not found!");
-                Console.Write(" Press any key to back..."); Console.ReadKey();
+                Console.WriteLine("  Order not found!");
+                Console.Write("  Press any key to back..."); Console.ReadKey();
                 return;
             }
             int pageCount = (orderCount % 10 == 0) ? orderCount / 10 : orderCount / 10 + 1;
