@@ -25,7 +25,6 @@ namespace BL
         {
             return orderDAL.GetOrderById(OrderId);
         }
-
         public int GetOrderCount(string searchValue)
         {
             return orderDAL.GetOrderCount(searchValue);

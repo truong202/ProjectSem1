@@ -11,6 +11,18 @@ namespace DAL
 
         public static MySqlConnection GetConnection()
         {
+            if (connection == null)
+            {
+                connection = new MySqlConnection()
+                {
+                    ConnectionString = GetConString()
+                };
+            }
+            // connection.ConnectionString = conString;
+            return connection;
+        }
+        private static string GetConString()
+        {
             try
             {
                 string conString;
@@ -21,21 +33,12 @@ namespace DAL
                         conString = reader.ReadLine();
                     }
                 }
-                return GetConnection(conString);
+                return conString;
             }
             catch
             {
-                return null;
+                return "server=localhost;user id=laptop;password=vtcacademy;port=3306;database=laptop_store;";
             }
-        }
-        public static MySqlConnection GetConnection(string conString)
-        {
-            if (connection == null)
-            {
-                connection = new MySqlConnection();
-            }
-            connection.ConnectionString = conString;
-            return connection;
         }
     }
 }

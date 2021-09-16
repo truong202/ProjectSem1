@@ -158,9 +158,9 @@ VALUES ('Asus ROG Zephyrus G14 Alan Walker Edition GA401QEC K2064T', 1, 1, 'AMD 
 INSERT INTO laptops(laptop_name, manufactory_id, category_id, CPU, Ram, hard_drive, VGA, display, battery, weight, materials, ports,
 			 network_and_connection, security, keyboard, audio, size, warranty_period, OS, price, quantity)
 VALUES ('ASUS D515DA EJ711T', 1, 2, 'AMD Ryzen 3-3250U', '4GB DDR4 on board', '512GB M.2 NVMe PCIe 3.0 SSD', 'AMD Radeon Graphics',
-'15.6-inch, FHD (1920 x 1080) 16:9, 200nits, Screen-to-body ratio: 83%', '2-cell 37WHrs', '1.80 kg', 'Plastic', '1x USB 3.2 Gen 1 Type-A,
- 1x USB 3.2 Gen 1 Type-C, 2x USB 2.0 Type-A, 1x HDMI 1.4, 1x 3.5mm Combo Audio Jack','LAN, Wi-Fi 5(802.11ac), Bluetooth v4.2', 'PIN',
- 'No led', 'No infor', '36.00 x 23.50 x 1.99 cm', '12 month', 'Windows 10 Home', 11990000, 24);
+'15.6-inch, FHD (1920 x 1080) 16:9, 200nits, Screen-to-body ratio: 83%', '2-cell 37WHrs', '1.80 kg', 'Plastic',
+'1x USB 3.2 Gen 1 Type-A, 1x USB 3.2 Gen 1 Type-C, 2x USB 2.0 Type-A, 1x HDMI 1.4, 1x 3.5mm Combo Audio Jack','LAN, Wi-Fi 5(802.11ac), Bluetooth v4.2', 'PIN',
+'No led', 'No infor', '36.00 x 23.50 x 1.99 cm', '12 month', 'Windows 10 Home', 11990000, 24);
 
 INSERT INTO laptops(laptop_name, manufactory_id, category_id, CPU, Ram, hard_drive, VGA, display, battery, weight, materials, ports,
 			 network_and_connection, security, keyboard, audio, size, warranty_period, OS, price, quantity)
@@ -461,7 +461,7 @@ WHERE l.laptop_name LIKE CONCAT('%', searchValue, '%') OR
       m.manufactory_name LIKE  CONCAT('%', searchValue, '%')
       OR l.laptop_id = searchValue
 ORDER BY l.laptop_id
-LIMIT 10 OFFSET _offset;
+LIMIT 8 OFFSET _offset;
 END $$
 DELIMITER ;
 
@@ -532,6 +532,8 @@ FROM
 WHERE o.order_id = order_id;
 END $$
 DELIMITER ;
+
+call sp_getOrdersById(1);
 
 DELIMITER $$
 CREATE PROCEDURE sp_changeOrderStatusAf(IN orderStatus INT, IN orderId INT)
@@ -611,7 +613,7 @@ INSERT INTO orders(order_id, seller_id, customer_id, accountance_id, order_statu
 VALUES (2, 1, 2, 1, 1);
 
 INSERT INTO order_details(order_id, laptop_id, unit_price, quantity)
-VALUES (1, 1, 24990000, 1);
+VALUES (1, 2, 24990000, 1);
 
 INSERT INTO order_details(order_id, laptop_id, unit_price, quantity)
 VALUES (2, 2, 27990000, 2);

@@ -17,7 +17,7 @@ namespace ConsolePL
         }
         private static void LoginFrom()
         {
-            string[] title = {"██       ██████   ██████  ██ ███    ██", 
+            string[] title = {"██       ██████   ██████  ██ ███    ██",
                               "██      ██    ██ ██       ██ ████   ██",
                               "██      ██    ██ ██   ███ ██ ██ ██  ██",
                               "██      ██    ██ ██    ██ ██ ██  ██ ██",
@@ -75,7 +75,7 @@ namespace ConsolePL
                                 staff = new StaffBL().Login(new Staff { Username = username, Password = password });
                                 if (staff == null)
                                 {
-                                    ShowMessage("Incorrect Username or Password!", 44, POSITION_TOP + 8);
+                                    ShowMessage("Incorrect Username or Password!", 45, POSITION_TOP + 8);
                                     Console.SetCursorPosition(1, POSITION_TOP + 6); Console.Write("{0,46}", "Password:     │ ");
                                     Console.Write(pass);
                                 }
@@ -140,7 +140,6 @@ namespace ConsolePL
                         break;
                 }
             }
-
         }
         private static bool IsValidUsername(string username)
         {
@@ -148,12 +147,12 @@ namespace ConsolePL
             {
                 Staff.CheckUsername(username);
                 Console.SetCursorPosition(1, POSITION_TOP + 3);
-                Console.Write("{0,38}{1}", "", "                                                          ");
+                Console.Write("{0,45}{1}", "", "                                                          ");
                 return true;
             }
             catch (Exception e)
             {
-                ShowMessage(e.Message, 38, POSITION_TOP + 3);
+                ShowMessage(e.Message, 45, POSITION_TOP + 3);
                 Console.SetCursorPosition(1, POSITION_TOP + 1); Console.Write("{0,46}", "Username:     │ ");
                 Console.Write(username);
                 return false;
@@ -162,7 +161,7 @@ namespace ConsolePL
         private static void ShowMessage(string message, int posLef, int posTop)
         {
             Console.SetCursorPosition(1, posTop);
-            Console.Write("{0,38}{1}", "", "                                                               ");
+            Console.Write("{0,45}{1}", "", "                                                               ");
             Console.SetCursorPosition(1, posTop);
             Utility.PrintColor(message, posLef, ConsoleColor.Red, ConsoleColor.Black);
         }
@@ -172,12 +171,12 @@ namespace ConsolePL
             {
                 Staff.CheckPassword(password);
                 Console.SetCursorPosition(1, POSITION_TOP + 8);
-                Console.Write("{0,38}{1}", "", "                                                               ");
+                Console.Write("{0,45}{1}", "", "                                                               ");
                 return true;
             }
             catch (Exception e)
             {
-                ShowMessage(e.Message, 38, POSITION_TOP + 8);
+                ShowMessage(e.Message, 45, POSITION_TOP + 8);
                 Console.SetCursorPosition(1, POSITION_TOP + 6); Console.Write("{0,46}", "Password:     │ ");
                 for (int i = 0; i < password.Length; i++) Console.Write("*");
                 return false;

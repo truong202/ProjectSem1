@@ -11,18 +11,11 @@ namespace ConsolePL
         private OrderHandle orderH = new OrderHandle();
         public void SearchLaptops(Staff staff)
         {
-            int offset = 0;
+            int offset = 0, page = 1;
             ConsoleKey key = new ConsoleKey();
             string searchValue = "";
             int laptopCount = laptopBL.GetCount(searchValue);
-            if (laptopCount == 0)
-            {
-                Console.WriteLine(" Laptop not found!");
-                Console.Write(" Press any key to back..."); Console.ReadKey();
-                return;
-            }
-            int pageCount = (laptopCount % 10 == 0) ? laptopCount / 10 : laptopCount / 10 + 1;
-            int page = (laptopCount > 0) ? 1 : 0;
+            int pageCount = (laptopCount % 8 == 0) ? laptopCount / 8 : laptopCount / 8 + 1;
             var laptops = laptopBL.Search(searchValue, offset);
             Display(laptops, page, pageCount);
             do
@@ -34,11 +27,11 @@ namespace ConsolePL
                     case ConsoleKey.F:
                         offset = 0; page = 1;
                         Console.WriteLine();
-                        Console.Write(" → Input search value: ");
+                        Console.Write("  → Input search value: ");
                         Console.CursorVisible = true;
                         searchValue = Console.ReadLine().Trim();
                         laptopCount = laptopBL.GetCount(searchValue);
-                        pageCount = (laptopCount % 10 == 0) ? laptopCount / 10 : laptopCount / 10 + 1;
+                        pageCount = (laptopCount % 8 == 0) ? laptopCount / 8 : laptopCount / 8 + 1;
                         laptops = laptopBL.Search(searchValue, offset);
                         Display(laptops, page, pageCount);
                         break;
@@ -51,7 +44,7 @@ namespace ConsolePL
                         break;
                     case ConsoleKey.D:
                         Console.WriteLine();
-                        Console.Write(" → Input Id to view details: ");
+                        Console.Write("  → Input Id to view details: ");
                         int id = Utility.GetNumber(1);
                         Laptop laptop = laptopBL.GetById(id);
                         ViewLaptopDetails(laptop);
@@ -61,7 +54,7 @@ namespace ConsolePL
                         if (page > 1)
                         {
                             page--;
-                            offset -= 10;
+                            offset -= 8;
                             laptops = laptopBL.Search(searchValue, offset);
                             Display(laptops, page, pageCount);
                         }
@@ -70,7 +63,7 @@ namespace ConsolePL
                         if (page < pageCount)
                         {
                             page++;
-                            offset += 10;
+                            offset += 8;
                             laptops = laptopBL.Search(searchValue, offset);
                             Display(laptops, page, pageCount);
                         }
@@ -83,14 +76,15 @@ namespace ConsolePL
         {
             Console.Clear();
             Console.CursorVisible = false;
+            Utility.PrintTitle("▬▬▬▬ SEARCH LAPTOP ▬▬▬▬");
             if (laptops == null || laptops.Count == 0)
             {
-                Console.WriteLine(" Laptop not found!");
+                Console.WriteLine("\n  Laptop not found!");
             }
             else
             {
                 List<string[]> lines = new List<string[]>();
-                lines.Add(new[] { "ID", "Laptop Name", "Manufactory", "Category", "CPU", "RAM", "Price(VNĐ)" });
+                lines.Add(new[] { "ID", "Laptop Name", "Manufactory", "Category   ", "CPU", "RAM  ", "Price(VNĐ)  " });
                 foreach (var laptop in laptops)
                 {
                     int lengthName = 30;
@@ -113,7 +107,7 @@ namespace ConsolePL
                     Console.WriteLine(String.Format("{0," + position + "}", pages));
                 }
             }
-            Console.Write("\n ● Press '");
+            Console.Write("\n  ● Press '");
             Utility.PrintColor("F", ConsoleColor.Yellow, ConsoleColor.Black);
             Console.Write("' to search laptops, '");
             Utility.PrintColor("D", ConsoleColor.Yellow, ConsoleColor.Black);
@@ -128,8 +122,8 @@ namespace ConsolePL
             Console.CursorVisible = false;
             if (laptop == null)
             {
-                Console.WriteLine(" Laptop not found!");
-                Console.Write("Press any key to continue...");
+                Console.WriteLine("  Laptop not found!");
+                Console.Write("  Press any key to continue...");
                 Console.ReadKey(true);
                 return;
             }

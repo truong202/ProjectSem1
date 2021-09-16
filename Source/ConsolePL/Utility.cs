@@ -18,8 +18,7 @@ namespace ConsolePL
                 builder.Append("│ ");
                 for (int i = 0; i < line.Length - 1; i++)
                     builder.Append(line[i].PadRight(lengthDatas[i] + 1) + "│ ");
-                builder.Append(line[line.Length - 1].PadRight(lengthDatas[line.Length - 1] + 1) + "│");
-                builder.AppendLine();
+                builder.Append(line[line.Length - 1].PadRight(lengthDatas[line.Length - 1] + 1) + "│\n");
                 if (index < lines.Count - 1)
                     builder.Append(GetLine(lengthDatas, "├", "─", "┼", "┤\n"));
                 else
@@ -111,9 +110,9 @@ namespace ConsolePL
             {
                 if (int.TryParse(Console.ReadLine(), out number) && number >= numberStart) return number;
                 Console.ForegroundColor = ConsoleColor.Red;
-                Console.WriteLine(" Entered incorrectly");
+                Console.WriteLine("  Entered incorrectly");
                 Console.ResetColor();
-                Console.Write(" → Re-enter: ");
+                Console.Write("  → Re-enter: ");
             }
         }
         public static string GetName()
@@ -130,9 +129,9 @@ namespace ConsolePL
                 catch (Exception e)
                 {
                     Console.ForegroundColor = ConsoleColor.Red;
-                    Console.WriteLine(" " + e.Message);
+                    Console.WriteLine("  " + e.Message);
                     Console.ResetColor();
-                    Console.Write(" → Re-enter customer name: ");
+                    Console.Write("  → Re-enter customer name: ");
                 }
             }
         }
@@ -151,9 +150,9 @@ namespace ConsolePL
                 catch (Exception e)
                 {
                     Console.ForegroundColor = ConsoleColor.Red;
-                    Console.WriteLine(" " + e.Message);
+                    Console.WriteLine("  " + e.Message);
                     Console.ResetColor();
-                    Console.Write(" → Re-enter phone: ");
+                    Console.Write("  → Re-enter phone: ");
                 }
             }
         }
@@ -182,6 +181,18 @@ namespace ConsolePL
                 line += i < (column - 1) ? c3 : c4;
             }
             return line;
+        }
+        public static void PrintTitle(string title)
+        {
+            string line = "══════════════════════════════════════════════════════════════════════════════════════════════════════════════════";
+            int lengthLine = line.Length + 2;
+            int posLeft = Utility.GetPosition(title, lengthLine);
+            Console.WriteLine("  ╔{0}╗", line);
+            Console.WriteLine("  ║{0," + (lengthLine - 1) + "}", "║");
+            Console.Write("  ║{0," + (posLeft - 1) + "}", ""); Utility.PrintColor(title, ConsoleColor.Green, ConsoleColor.Black);
+            Console.WriteLine("{0," + (lengthLine - title.Length - posLeft) + "}", "║");
+            Console.WriteLine("  ║{0," + (lengthLine - 1) + "}", "║");
+            Console.WriteLine("  ╚{0}╝", line);
         }
         public static void PrintColor(string content, ConsoleColor fColor, ConsoleColor bColor)
         {

@@ -244,8 +244,7 @@ namespace ConsolePL
             }
                 string[] table = Utility.GetTable(lines);
                 foreach (string line in table) Console.WriteLine(" " + line);
-
-            
+            Console.ReadLine();
         }
     }
 }

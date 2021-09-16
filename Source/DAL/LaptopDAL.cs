@@ -30,9 +30,7 @@ namespace DAL
                     }
                     connection.Close();
                 }
-                catch
-                {
-                }
+                catch { }
             }
             if (laptops.Count == 0) laptops = null;
             return laptops;
@@ -58,9 +56,7 @@ namespace DAL
                     }
                     connection.Close();
                 }
-                catch
-                {
-                }
+                catch { }
             }
             return laptop;
         }
@@ -83,7 +79,7 @@ namespace DAL
                 catch { }
             return result;
         }
-        private Laptop GetLaptop(MySqlDataReader reader)
+        protected internal Laptop GetLaptop(MySqlDataReader reader)
         {
             Laptop laptop = new Laptop();
             laptop.LaptopId = reader.GetInt32("laptop_id");

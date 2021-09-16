@@ -44,7 +44,7 @@ namespace ConsolePL
             {
                 posLeft = Utility.GetPosition(menu[i], width);
                 Console.SetCursorPosition(1, posTop + i * 2);
-                Console.Write("{0," + posLeft + "}{1}", "", menu[i]);
+                Console.Write("{0," + (posLeft - 1) + "}{1}", "", menu[i]);
             }
         }
         public int Handle()

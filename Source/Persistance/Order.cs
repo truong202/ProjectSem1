@@ -12,6 +12,7 @@ namespace Persistance
         public List<Laptop> Laptops { get; set; }
         public DateTime Date { get; set; }
         public int Status { get; set; }
+        public const int  UNPAID =1;
 
         public Order()
         {
@@ -20,9 +21,5 @@ namespace Persistance
             Accountance = new Staff();
             Laptops = new List<Laptop>();
         }
-    }
-    public static class OrderStatus
-    {
-        public const int CREATED = 1;
     }
 }

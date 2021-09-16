@@ -120,23 +120,12 @@ namespace TestDAL
                 };
             }
         }
-        // [Theory]
-        // [InlineData(1)]
-        // [InlineData(5)]
+       
         [Theory, MemberData(nameof(SplitCountData))]
         public void GetLaptopByIdTest1(int laptopId, Laptop expected)
         {
             Laptop result = laptopDAL.GetById(laptopId);
             Assert.Equal(result, expected);
         }
-
-        // [Theory]
-        // [InlineData(1000)]
-        // [InlineData(0)]
-        // public void Test2(int laptopId)
-        // {
-        //     Laptop result = laptopDAL.GetById(laptopId);
-        //     Assert.True(result == null);
-        // }
     }
 }
