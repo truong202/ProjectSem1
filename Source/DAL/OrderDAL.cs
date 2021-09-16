@@ -218,13 +218,18 @@ namespace DAL
         private Order GetOrder(MySqlDataReader reader)
         {
             Order order = new Order();
+            foreach (var laptop in order.Laptops)
+            {
+                laptop.LaptopId = reader.GetInt32("laptop_id");
+                laptop.Quantity = reader.GetInt32("quantity");
+                laptop.Price = reader.GetDecimal("price");
+            }
             order.OrderId = reader.GetInt32("order_id");
             order.CustomerInfo.CustomerName = reader.GetString("customer_name");
             order.CustomerInfo.Phone = reader.GetString("phone");
             order.Date = reader.GetDateTime("order_date");
             order.Status = reader.GetInt32("order_status");
             order.Seller.StaffId = reader.GetInt32("seller_id");
-            or
             try{
             order.Accountance.StaffId = reader.GetInt32("accountance_id");
             }catch{

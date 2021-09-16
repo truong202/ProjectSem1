@@ -130,25 +130,22 @@ namespace ConsolePL
                 switch (key)
                 {
                     case ConsoleKey.F:
-                        offset = 0; page = 1;
-                        Console.WriteLine();
-                        Console.Write(" → Input search value: ");
-                        Console.CursorVisible = true;
-                        searchValue = Console.ReadLine().Trim();
-                        orderCount = orderBL.GetOrderCount(searchValue);
-                        pageCount = (orderCount % 10 == 0) ? orderCount / 10 : orderCount / 10 + 1;
-                        orders = orderBL.GetOrders(searchValue, offset);
-                        DisplayOrder(orders, page, pageCount);
+                        // offset = 0; page = 1;
+                        // Console.WriteLine();
+                        // Console.Write(" → Input search value: ");
+                        // Console.CursorVisible = true;
+                        // searchValue = Console.ReadLine().Trim();
+                        // orderCount = orderBL.GetOrderCount(searchValue);
+                        // pageCount = (orderCount % 10 == 0) ? orderCount / 10 : orderCount / 10 + 1;
+                        // orders = orderBL.GetOrders(searchValue, offset);
+                        // DisplayOrder(orders, page, pageCount);
                         break;
                     case ConsoleKey.D:
                         Console.WriteLine();
                         Console.Write(" → Input order ID(input 0 to cancel): ");
                         int id = Utility.GetNumber(1);
-                        if (id != 0)
-                        {
-                            Order order = new OrderBL().GetOrderById(id);
-                            ViewOrderDetails(order);
-                        }
+                        Order order = orderBL.GetOrderById(id);
+                        ViewOrderDetails(order);
                         DisplayOrder(orders, page, pageCount);
                         break;
                     case ConsoleKey.LeftArrow:
@@ -226,28 +223,29 @@ namespace ConsolePL
                 return;
             }
             Console.Clear();
-            string data;
-            string line = "──────────────────────────────────────────────────────────────────────────────────────────────────────────────────";
-            string title = "Order infomation";
-            int lengthLine = line.Length + 2;
-            int position = lengthLine / 2 + title.Length / 2 - 1;
-            Console.WriteLine(" ┌{0}┐", line);
-            Console.WriteLine(" │{0," + position + "}{1," + (lengthLine - position - 1) + "}", title, "│");
-            Console.WriteLine(" ├{0}┤", line);
-            Console.WriteLine(" │ Order Id:   {0}{1," + (lengthLine - 15 - order.OrderId.ToString().Length) + "}", order.OrderId, "│");
-            // Console.WriteLine(" │ Laptop name: {0}{1," + (lengthLine - 15 - order.Laptops.LaptopName.Length) + "}", order.Laptops.LaptopName, "│");
-            Console.WriteLine(" │ Customer name: {0}{1," + (lengthLine - 15 - order.CustomerInfo.CustomerName.Length) + "}", order.CustomerInfo.CustomerName, "│");
-            // Console.WriteLine(" │ Order date:    {0}{1," + (lengthLine - 15 - order.Date.DateTime.Length) + "}", order.Date, "│");
-            // Console.WriteLine(" │ Unit price:         {0}{1," + (lengthLine - 15 - order.Laptops.Price.Length) + "}", order.Laptops.Price, "│");
-            // Console.WriteLine(" │ Quantity:    {0}{1," + (lengthLine - 15 - order.Laptops.Count.ToString().Length) + "}", order.Laptops.Count, "│");
-            // string price = order.Laptops.Price.ToString("N0") + " VNĐ";
-            // Console.WriteLine(" │ Price:       {0}{1," + (lengthLine - 15 - price.Length) + "}", price, "│");
-            Console.WriteLine(" └{0}┘", line);
-            // Console.ForegroundColor = result ? ConsoleColor.Green : ConsoleColor.Red;
-            // Console.WriteLine((result ? " Add laptop to order completed!" : " The number of laptop in the store is not enough!"));
-            // Console.ResetColor();
-            // Console.Write(" Press any key to continue...");
-            // Console.ReadKey(true);
+            // string line = "──────────────────────────────────────────────────────────────────────────────────────────────────────────────────";
+            // string title = "ORDER INFORMATION";
+            // string line = "──────────────────────────────────────────────────────────────────────────────────────────────────────────────────";
+            List<string[]> lines = new List<string[]>();
+            lines.Add(new[] {"Laptop name", "Unit", "Unit Price", "Quantity"});
+            foreach (var laptop in order.Laptops)
+            {
+                int lengthName = 30;
+                // int num = 1;
+                string name = (laptop.LaptopName.Length > lengthName) ?
+                laptop.LaptopName.Remove(lengthName, laptop.LaptopName.Length - lengthName) + "..." : laptop.LaptopName;
+                string unit = "pcs";
+                string price = laptop.Price.ToString("N0");
+                string quantity = laptop.Quantity.ToString();
+                // string Imoney = price * quantity;
+                // Imoney.ToString("N0");
+                lines.Add(new[] {name,  unit, price, quantity});
+                // num++;
+            }
+                string[] table = Utility.GetTable(lines);
+                foreach (string line in table) Console.WriteLine(" " + line);
+
+            
         }
     }
 }
