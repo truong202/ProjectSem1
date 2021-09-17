@@ -6,45 +6,28 @@ using System.Collections.Generic;
 
 namespace TestDAL
 {
-
     public class LoginTest
     {
         private StaffDAL staffDAL = new StaffDAL();
-        private static Staff staff1 = new Staff
+
+        [Theory]
+        [InlineData("seller001", "12345678")]
+        [InlineData("accountance003", "12345678")]
+        public void LoginTest1(string userName, string password)
         {
-            StaffId = 1,
-            Username = "seller001",
-            Password = "25d55ad283aa400af464c76d713c07ad",
-            StaffName = "Nguyễn Văn A",
-            Role = 1
-        };
-        private static Staff staff2 = new Staff
-        {
-            StaffId = 6,
-            Username = "accountance003",
-            Password = "25d55ad283aa400af464c76d713c07ad",
-            StaffName = "Nguyễn Văn F",
-            Role = 2
-        };
-        public static IEnumerable<object[]> SplitCountData
-        {
-            get
-            {
-                return new[]
-                {
-                new object[] { "seller001", "12345678", staff1 },
-                new object[] { "accountance003", "12345678", staff2 },
-                new object[] { "seller00fdsj", "12345678", null },
-                new object[] { "seller002", "ddf12345678", null },
-                new object[] { "SEller002", "12345678", null }
-                };
-            }
+            Staff result = staffDAL.Login(new Staff { Username = userName, Password = password });
+            Assert.True(result != null);
+            Assert.True(result.Username == userName);
         }
-        [Theory, MemberData(nameof(SplitCountData))]
-        public void LoginTest1(string username, string password, Staff expected)
+
+        [Theory]
+        [InlineData("seller00fdsj", "12345678")]
+        [InlineData("seller002", "ddf12345678")]
+        [InlineData("SEller002", "12345678")]
+        public void TestLogin2(string userName, string password)
         {
-            Staff result = staffDAL.Login(new Staff { Username = username, Password = password });
-            Assert.Equal(result, expected);
+            Staff result = staffDAL.Login(new Staff { Username = userName, Password = password });
+            Assert.True(result == null);
         }
     }
 }
