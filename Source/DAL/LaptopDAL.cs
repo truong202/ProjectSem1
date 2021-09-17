@@ -24,9 +24,7 @@ namespace DAL
                     using (MySqlDataReader reader = command.ExecuteReader())
                     {
                         while (reader.Read())
-                        {
                             laptops.Add(GetLaptop(reader));
-                        }
                     }
                     connection.Close();
                 }
@@ -49,10 +47,7 @@ namespace DAL
                     using (MySqlDataReader reader = command.ExecuteReader())
                     {
                         if (reader.Read())
-                        {
-                            laptop = new Laptop();
                             laptop = GetLaptop(reader);
-                        }
                     }
                     connection.Close();
                 }

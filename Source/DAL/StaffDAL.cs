@@ -11,7 +11,7 @@ namespace DAL
         public Staff Login(Staff staff)
         {
             Staff _staff = null;
-            lock (connection)   
+            lock (connection)
             {
                 try
                 {
@@ -22,10 +22,7 @@ namespace DAL
                     using (MySqlDataReader reader = command.ExecuteReader())
                     {
                         if (reader.Read())
-                        {
-                            _staff = new Staff();
                             _staff = GetStaff(reader);
-                        }
                     }
                     connection.Close();
                 }

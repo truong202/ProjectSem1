@@ -99,13 +99,12 @@ namespace TestDAL
             Security = "PIN, Touch ID",
             Keyboard = "No led",
             Audio = "Stereo speakers",
-            Size = "304.1 x 212.4 x 4.1  mm",
+            Size = "304.1 x 212.4 x 4.1 mm",
             OS = "MAC OS",
             Quantity = 20,
             Price = 27259000,
             WarrantyPeriod = "12 month"
         };
-        private Category a = new Category();
         public static IEnumerable<object[]> SplitCountData
         {
             get

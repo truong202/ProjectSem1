@@ -227,7 +227,6 @@ namespace ConsolePL
             {
                 Console.WriteLine("█{0," + (width - 1) + "}", "█");
             }
-            Console.SetCursorPosition(0, height);
             for (int i = 0; i < width; i++)
             {
                 Console.Write("▀");

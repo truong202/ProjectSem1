@@ -24,5 +24,21 @@ namespace Persistance
             if (name.Trim() == "")
                 throw new Exception("Customer name cannot be empty!");
         }
+        public override bool Equals(object obj)
+        {
+            if (obj is Customer)
+            {
+                Customer c = (Customer)obj;
+                return CustomerId.Equals(c.CustomerId) &&
+                CustomerName.Equals(c.CustomerName) &&
+                Phone.Equals(c.Phone) &&
+                Address.Equals(c.Address);
+            }
+            return false;
+        }
+        public override int GetHashCode()
+        {
+            return CustomerId.GetHashCode();
+        }
     }
 }

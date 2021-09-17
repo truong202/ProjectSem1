@@ -32,15 +32,16 @@ namespace Persistance
         }
         public override bool Equals(object obj)
         {
-            if (obj == null || GetType() != obj.GetType()) return false;
-
-            var staff = (Staff)obj;
-
-            return StaffId.Equals(staff.StaffId)
-                   && Username.Equals(staff.Username)
-                   && Password.Equals(staff.Password)
-                   && StaffName.Equals(staff.StaffName)
-                   && Role.Equals(staff.Role);
+            if (obj is Staff)
+            {
+                var staff = (Staff)obj;
+                return StaffId.Equals(staff.StaffId)
+                       && Username.Equals(staff.Username)
+                       && Password.Equals(staff.Password)
+                       && StaffName.Equals(staff.StaffName)
+                       && Role.Equals(staff.Role);
+            }
+            return false;
         }
         public override int GetHashCode()
         {

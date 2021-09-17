@@ -10,13 +10,13 @@ namespace TestDAL
     {
         private static Customer customer1 = new Customer
         {
-            CustomerName = "Customer1",
+            CustomerName = "CustomerA",
             Phone = "0836984302",
             Address = "Bac Giang"
         };
         private static Customer customer2 = new Customer
         {
-            CustomerName = "Customer2",
+            CustomerName = "CustomerB",
             Phone = "0836984301",
             Address = "Bac Giang"
         };
@@ -70,25 +70,8 @@ namespace TestDAL
         [Theory, MemberData(nameof(SplitCountData))]
         public void CreateOrderTest1(Order order, bool expected)
         {
-            // order.CustomerInfo.CustomerName = "test1";
-            // order.CustomerInfo.Phone = "0836984306";
-            // order.CustomerInfo.Address = "fasjfjak";
-            // order.Seller.StaffId = 1;
-            // order.Laptops.Add(new Laptop { LaptopId = 1, Quantity = 1 });
-            // order.Laptops.Add(new Laptop { LaptopId = 2, Quantity = 1 });
             bool result = new OrderDAL().CreateOrder(order);
             Assert.True(result == expected);
         }
-        // [Fact]
-        //     public void CreateOrderTest2()
-        //     {
-        //         order.CustomerInfo.CustomerName = "test2";
-        //         order.CustomerInfo.Phone = "0836984303";
-        //         order.CustomerInfo.Address = "fasjfjak";
-        //         order.Seller.StaffId = 2;
-        //         order.Laptops.Add(new Laptop { LaptopId = 4, Quantity = 100 });
-        //         bool result = new OrderDAL().CreateOrder(order);
-        //         Assert.True(result == false);
-        //     }
     }
 }

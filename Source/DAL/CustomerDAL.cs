@@ -10,19 +10,22 @@ namespace DAL
         public Customer GetByPhone(string phone)
         {
             Customer customer = null;
-            try
+            lock (connection)
             {
-                connection.Open();
-                MySqlCommand command = new MySqlCommand("call sp_getCustomerByPhone(@phone)", connection);
-                command.Parameters.AddWithValue("@phone", phone);
-                using (MySqlDataReader reader = command.ExecuteReader())
+                try
                 {
-                    if (reader.Read())
-                        customer = GetCustomer(reader);
+                    connection.Open();
+                    MySqlCommand command = new MySqlCommand("call sp_getCustomerByPhone(@phone)", connection);
+                    command.Parameters.AddWithValue("@phone", phone);
+                    using (MySqlDataReader reader = command.ExecuteReader())
+                    {
+                        if (reader.Read())
+                            customer = GetCustomer(reader);
+                    }
+                    connection.Close();
                 }
-                connection.Close();
+                catch { }
             }
-            catch { }
             return customer;
         }
         private Customer GetCustomer(MySqlDataReader reader)

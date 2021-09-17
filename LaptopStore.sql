@@ -21,10 +21,6 @@ CREATE TABLE customers (
     PRIMARY KEY (customer_id)
 );
 
-Insert into customers(customer_name, address, phone)
-values ('Phạm Công Hưng', 'Nam Định', '0904844014'),
-		('Phạm Công Hà', 'Nam Định', '0906450904');
-
 
 CREATE TABLE categories (
     category_id INT AUTO_INCREMENT,
@@ -112,6 +108,17 @@ INSERT INTO staffs(staff_name, username, password, role)
 VALUES ('Nguyễn Văn E', 'accountance002', '25d55ad283aa400af464c76d713c07ad', 2);
 INSERT INTO staffs(staff_name, username, password, role)
 VALUES ('Nguyễn Văn F', 'accountance003', '25d55ad283aa400af464c76d713c07ad', 2);
+
+INSERT INTO customers(customer_name, address, phone)
+VALUES ('Phạm Công Hưng', 'Nam Định', '0904844014');
+INSERT INTO customers(customer_name, address, phone)
+VALUES ('Phạm Công Hà', 'Nam Định', '0906450904');
+INSERT INTO customers(customer_name, phone, address)
+VALUES ('Customer1', '0836984311', 'Ho Chi Minh');
+INSERT INTO customers(customer_name, phone, address)
+VALUES ('Customer2', '0836984312', 'Bac Giang');
+INSERT INTO customers(customer_name, phone, address)
+VALUES ('Customer3', '0836984313', 'Ha Noi');
 
 INSERT INTO categories(category_name)
 VALUES ('Gaming'), ('Office'), ('Multimedia'), ('Workstation');
@@ -300,19 +307,19 @@ INSERT INTO laptops(laptop_name, manufactory_id, category_id, CPU, Ram, hard_dri
 VALUES ('LG Gram 14ZD90P-G.AX51A5', 5, 3, 'Intel Core i5-1135G7', '8GB LPDDR4X 4266MHz', '256GB PCIe NVMe SSD', 'Intel Iris Xe Graphics',
 '14.0 inch (30.2cm) WUXGA (1920*1200) IPS LCD', '72WHrs', '0.999 kg', 'Metal',
 'HP-Out(4Pole Headset, US type), USB 3.2 Gen2x1 (x2), HDMI,  USB 4 Gen3x2 Type C (x2, with Power Delivery, Display Port, Thunderbolt 4)',
-'Intel Wi-Fi 6 AX201D2W; Bluetooth 5.0', 'PIN, Fingerprint', 'No led', 'DTS: X Ultra', '313.4 x 215.2 x 16.8  mm', '12 month', 'No OS', 14439000, 5);
+'Intel Wi-Fi 6 AX201D2W; Bluetooth 5.0', 'PIN, Fingerprint', 'No led', 'DTS: X Ultra', '313.4 x 215.2 x 16.8 mm', '12 month', 'No OS', 14439000, 5);
 
 INSERT INTO laptops(laptop_name, manufactory_id, category_id, CPU, Ram, hard_drive, VGA, display, battery, weight, materials, ports,
 			 network_and_connection, security, keyboard, audio, size, warranty_period, OS, price, quantity)
 VALUES ('Macbook Pro 13 Touchbar Z11D000E5', 4, 3, 'Apple M1', '16GB', '256GB PCIe NVMe SSD', '8 core GPU',
 'Retina 13.3 inch (2560x1600) IPS Led Backlit True Tone', '58.2WHrs', '1.4 kg', 'Metal', 'USB 3.1 Gen2, 2x Thunder Bolt 3',
-'Wifi 802.11ac - Bluetooth 5.0', 'PIN, Touch ID', 'No led', 'Stereo speakers', '304.1 x 212.4 x 15.6  mm', '12 month', 'MAC OS', 38989000, 20);
+'Wifi 802.11ac - Bluetooth 5.0', 'PIN, Touch ID', 'No led', 'Stereo speakers', '304.1 x 212.4 x 15.6 mm', '12 month', 'MAC OS', 38989000, 20);
 
 INSERT INTO laptops(laptop_name, manufactory_id, category_id, CPU, Ram, hard_drive, VGA, display, battery, weight, materials, ports,
 			 network_and_connection, security, keyboard, audio, size, warranty_period, OS, price, quantity)
 VALUES ('Macbook Air 13 MVFM2', 4, 3, 'Intel Core i5 8th', '8GB LPDDR3', '128 PCIe NVMe SSD', 'Intel UHD 617',
 'Retina 13.3 inch (2560x1600) IPS Led Backlit True Tone', '49.9WHrs', '1.25 kg', 'Metal', 'USB 3.1 Gen2, 2x Thunder Bolt 3',
-'Wifi 802.11ac - Bluetooth 4.2', 'PIN, Touch ID', 'No led', 'Stereo speakers', '304.1 x 212.4 x 4.1  mm', '12 month', 'MAC OS', 27259000, 20);
+'Wifi 802.11ac - Bluetooth 4.2', 'PIN, Touch ID', 'No led', 'Stereo speakers', '304.1 x 212.4 x 4.1 mm', '12 month', 'MAC OS', 27259000, 20);
 
 DELIMITER $$
 CREATE PROCEDURE sp_login(IN username VARCHAR(255), IN password VARCHAR(255))
@@ -342,6 +349,7 @@ FROM customers c
 WHERE c.phone = phone;
 END $$
 DELIMITER ;
+
 
 DELIMITER $$
 CREATE PROCEDURE sp_getNewCustomerId()
@@ -533,8 +541,6 @@ WHERE o.order_id = order_id;
 END $$
 DELIMITER ;
 
-call sp_getOrdersById(1);
-
 DELIMITER $$
 CREATE PROCEDURE sp_changeOrderStatusAf(IN orderStatus INT, IN orderId INT)
 BEGIN
@@ -630,9 +636,6 @@ FROM
     order_details od
         INNER JOIN orders o ON od.order_id = o.order_id
         INNER JOIN customers c ON o.customer_id = c.customer_id
-        INNER JOIN laptops l ON od.laptop_id = l.laptop_id
-
-
-
-
+        INNER JOIN laptops l ON od.laptop_id = l.laptop_id;
+        
     

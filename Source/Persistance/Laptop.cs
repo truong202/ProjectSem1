@@ -67,7 +67,7 @@ namespace Persistance
                 this.Audio.Equals(laptop.Audio) &&
                 this.Size.Equals(laptop.Size) &&
                 this.OS.Equals(laptop.OS) &&
-                // this.Quantity.Equals(laptop.Quantity) &&
+                // // this.Quantity.Equals(laptop.Quantity) &&
                 this.Price.Equals(laptop.Price) &&
                 this.WarrantyPeriod.Equals(laptop.WarrantyPeriod);
             }
