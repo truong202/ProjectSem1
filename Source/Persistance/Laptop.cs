@@ -32,44 +32,13 @@ namespace Persistance
             CategoryInfo = new Category();
             ManufactoryInfo = new Manufactory();
         }
-        // public override bool Equals(object obj)
-        // {
-        //     if (obj is Laptop)
-        //     {
-        //         Laptop laptop = (Laptop)obj;
-        //         return this.LaptopId.Equals(laptop.LaptopId);
-        //     }
-        //     return false;
-        // }
 
         public override bool Equals(object obj)
         {
             if (obj is Laptop)
             {
                 Laptop laptop = (Laptop)obj;
-                return
-                this.LaptopId.Equals(laptop.LaptopId) &&
-                this.LaptopName.Equals(laptop.LaptopName) &&
-                this.CategoryInfo.Equals(laptop.CategoryInfo) &&
-                this.ManufactoryInfo.Equals(laptop.ManufactoryInfo) &&
-                this.CPU.Equals(laptop.CPU) &&
-                this.Ram.Equals(laptop.Ram) &&
-                this.HardDrive.Equals(laptop.HardDrive) &&
-                this.VGA.Equals(laptop.VGA) &&
-                this.Display.Equals(laptop.Display) &&
-                this.Battery.Equals(laptop.Battery) &&
-                this.Weight.Equals(laptop.Weight) &&
-                this.Materials.Equals(laptop.Materials) &&
-                this.Ports.Equals(laptop.Ports) &&
-                this.NetworkAndConnection.Equals(laptop.NetworkAndConnection) &&
-                this.Security.Equals(laptop.Security) &&
-                this.Keyboard.Equals(laptop.Keyboard) &&
-                this.Audio.Equals(laptop.Audio) &&
-                this.Size.Equals(laptop.Size) &&
-                this.OS.Equals(laptop.OS) &&
-                // // this.Quantity.Equals(laptop.Quantity) &&
-                this.Price.Equals(laptop.Price) &&
-                this.WarrantyPeriod.Equals(laptop.WarrantyPeriod);
+                return this.LaptopId.Equals(laptop.LaptopId);
             }
             return false;
         }

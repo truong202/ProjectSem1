@@ -30,22 +30,5 @@ namespace Persistance
             if (password.Length < 8)
                 throw new Exception("Password must be at least 8 characters long!");
         }
-        public override bool Equals(object obj)
-        {
-            if (obj is Staff)
-            {
-                var staff = (Staff)obj;
-                return StaffId.Equals(staff.StaffId)
-                       && Username.Equals(staff.Username)
-                       && Password.Equals(staff.Password)
-                       && StaffName.Equals(staff.StaffName)
-                       && Role.Equals(staff.Role);
-            }
-            return false;
-        }
-        public override int GetHashCode()
-        {
-            return StaffId.GetHashCode();
-        }
     }
 }
