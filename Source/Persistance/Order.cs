@@ -12,7 +12,9 @@ namespace Persistance
         public List<Laptop> Laptops { get; set; }
         public DateTime Date { get; set; }
         public int Status { get; set; }
-        public const int  UNPAID =1;
+        public const int UNPAID =1;
+        public const int PAID =2;
+        public const int CANCEL =3;
 
         public Order()
         {

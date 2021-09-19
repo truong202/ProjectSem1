@@ -21,6 +21,10 @@ CREATE TABLE customers (
     PRIMARY KEY (customer_id)
 );
 
+Insert into customers(customer_name, address, phone)
+values ('Phạm Công Hưng', 'Nam Định', '0904844014'),
+		('Phạm Công Hà', 'Nam Định', '0906450904');
+
 
 CREATE TABLE categories (
     category_id INT AUTO_INCREMENT,
@@ -109,17 +113,6 @@ VALUES ('Nguyễn Văn E', 'accountance002', '25d55ad283aa400af464c76d713c07ad',
 INSERT INTO staffs(staff_name, username, password, role)
 VALUES ('Nguyễn Văn F', 'accountance003', '25d55ad283aa400af464c76d713c07ad', 2);
 
-INSERT INTO customers(customer_name, address, phone)
-VALUES ('Phạm Công Hưng', 'Nam Định', '0904844014');
-INSERT INTO customers(customer_name, address, phone)
-VALUES ('Phạm Công Hà', 'Nam Định', '0906450904');
-INSERT INTO customers(customer_name, phone, address)
-VALUES ('Customer1', '0836984311', 'Ho Chi Minh');
-INSERT INTO customers(customer_name, phone, address)
-VALUES ('Customer2', '0836984312', 'Bac Giang');
-INSERT INTO customers(customer_name, phone, address)
-VALUES ('Customer3', '0836984313', 'Ha Noi');
-
 INSERT INTO categories(category_name)
 VALUES ('Gaming'), ('Office'), ('Multimedia'), ('Workstation');
 
@@ -165,9 +158,9 @@ VALUES ('Asus ROG Zephyrus G14 Alan Walker Edition GA401QEC K2064T', 1, 1, 'AMD 
 INSERT INTO laptops(laptop_name, manufactory_id, category_id, CPU, Ram, hard_drive, VGA, display, battery, weight, materials, ports,
 			 network_and_connection, security, keyboard, audio, size, warranty_period, OS, price, quantity)
 VALUES ('ASUS D515DA EJ711T', 1, 2, 'AMD Ryzen 3-3250U', '4GB DDR4 on board', '512GB M.2 NVMe PCIe 3.0 SSD', 'AMD Radeon Graphics',
-'15.6-inch, FHD (1920 x 1080) 16:9, 200nits, Screen-to-body ratio: 83%', '2-cell 37WHrs', '1.80 kg', 'Plastic',
-'1x USB 3.2 Gen 1 Type-A, 1x USB 3.2 Gen 1 Type-C, 2x USB 2.0 Type-A, 1x HDMI 1.4, 1x 3.5mm Combo Audio Jack','LAN, Wi-Fi 5(802.11ac), Bluetooth v4.2', 'PIN',
-'No led', 'No infor', '36.00 x 23.50 x 1.99 cm', '12 month', 'Windows 10 Home', 11990000, 24);
+'15.6-inch, FHD (1920 x 1080) 16:9, 200nits, Screen-to-body ratio: 83%', '2-cell 37WHrs', '1.80 kg', 'Plastic', '1x USB 3.2 Gen 1 Type-A,
+ 1x USB 3.2 Gen 1 Type-C, 2x USB 2.0 Type-A, 1x HDMI 1.4, 1x 3.5mm Combo Audio Jack','LAN, Wi-Fi 5(802.11ac), Bluetooth v4.2', 'PIN',
+ 'No led', 'No infor', '36.00 x 23.50 x 1.99 cm', '12 month', 'Windows 10 Home', 11990000, 24);
 
 INSERT INTO laptops(laptop_name, manufactory_id, category_id, CPU, Ram, hard_drive, VGA, display, battery, weight, materials, ports,
 			 network_and_connection, security, keyboard, audio, size, warranty_period, OS, price, quantity)
@@ -307,19 +300,19 @@ INSERT INTO laptops(laptop_name, manufactory_id, category_id, CPU, Ram, hard_dri
 VALUES ('LG Gram 14ZD90P-G.AX51A5', 5, 3, 'Intel Core i5-1135G7', '8GB LPDDR4X 4266MHz', '256GB PCIe NVMe SSD', 'Intel Iris Xe Graphics',
 '14.0 inch (30.2cm) WUXGA (1920*1200) IPS LCD', '72WHrs', '0.999 kg', 'Metal',
 'HP-Out(4Pole Headset, US type), USB 3.2 Gen2x1 (x2), HDMI,  USB 4 Gen3x2 Type C (x2, with Power Delivery, Display Port, Thunderbolt 4)',
-'Intel Wi-Fi 6 AX201D2W; Bluetooth 5.0', 'PIN, Fingerprint', 'No led', 'DTS: X Ultra', '313.4 x 215.2 x 16.8 mm', '12 month', 'No OS', 14439000, 5);
+'Intel Wi-Fi 6 AX201D2W; Bluetooth 5.0', 'PIN, Fingerprint', 'No led', 'DTS: X Ultra', '313.4 x 215.2 x 16.8  mm', '12 month', 'No OS', 14439000, 5);
 
 INSERT INTO laptops(laptop_name, manufactory_id, category_id, CPU, Ram, hard_drive, VGA, display, battery, weight, materials, ports,
 			 network_and_connection, security, keyboard, audio, size, warranty_period, OS, price, quantity)
 VALUES ('Macbook Pro 13 Touchbar Z11D000E5', 4, 3, 'Apple M1', '16GB', '256GB PCIe NVMe SSD', '8 core GPU',
 'Retina 13.3 inch (2560x1600) IPS Led Backlit True Tone', '58.2WHrs', '1.4 kg', 'Metal', 'USB 3.1 Gen2, 2x Thunder Bolt 3',
-'Wifi 802.11ac - Bluetooth 5.0', 'PIN, Touch ID', 'No led', 'Stereo speakers', '304.1 x 212.4 x 15.6 mm', '12 month', 'MAC OS', 38989000, 20);
+'Wifi 802.11ac - Bluetooth 5.0', 'PIN, Touch ID', 'No led', 'Stereo speakers', '304.1 x 212.4 x 15.6  mm', '12 month', 'MAC OS', 38989000, 20);
 
 INSERT INTO laptops(laptop_name, manufactory_id, category_id, CPU, Ram, hard_drive, VGA, display, battery, weight, materials, ports,
 			 network_and_connection, security, keyboard, audio, size, warranty_period, OS, price, quantity)
 VALUES ('Macbook Air 13 MVFM2', 4, 3, 'Intel Core i5 8th', '8GB LPDDR3', '128 PCIe NVMe SSD', 'Intel UHD 617',
 'Retina 13.3 inch (2560x1600) IPS Led Backlit True Tone', '49.9WHrs', '1.25 kg', 'Metal', 'USB 3.1 Gen2, 2x Thunder Bolt 3',
-'Wifi 802.11ac - Bluetooth 4.2', 'PIN, Touch ID', 'No led', 'Stereo speakers', '304.1 x 212.4 x 4.1 mm', '12 month', 'MAC OS', 27259000, 20);
+'Wifi 802.11ac - Bluetooth 4.2', 'PIN, Touch ID', 'No led', 'Stereo speakers', '304.1 x 212.4 x 4.1  mm', '12 month', 'MAC OS', 27259000, 20);
 
 DELIMITER $$
 CREATE PROCEDURE sp_login(IN username VARCHAR(255), IN password VARCHAR(255))
@@ -349,7 +342,6 @@ FROM customers c
 WHERE c.phone = phone;
 END $$
 DELIMITER ;
-
 
 DELIMITER $$
 CREATE PROCEDURE sp_getNewCustomerId()
@@ -469,7 +461,7 @@ WHERE l.laptop_name LIKE CONCAT('%', searchValue, '%') OR
       m.manufactory_name LIKE  CONCAT('%', searchValue, '%')
       OR l.laptop_id = searchValue
 ORDER BY l.laptop_id
-LIMIT 8 OFFSET _offset;
+LIMIT 10 OFFSET _offset;
 END $$
 DELIMITER ;
 
@@ -508,6 +500,8 @@ UPDATE LAPTOPS SET quantity = quantity + _quantity WHERE laptop_id = laptopId;
 END $$
 DELIMITER ;
 
+
+
 DELIMITER $$
 CREATE PROCEDURE sp_getOrders(IN searchValue VARCHAR(255), IN _offset INT)
 BEGIN
@@ -530,21 +524,35 @@ DELIMITER $$
 CREATE PROCEDURE sp_getOrdersById(IN order_id int)
 BEGIN 
 SELECT 
-    o.order_id, c.customer_id, c.customer_name, l.laptop_id, l.laptop_name, IFNULL(o.order_date, '') AS order_date, od.unit_price, od.quantity
+    o.order_id, c.customer_id, c.customer_name, o.accountance_id, o.seller_id, IFNULL(o.order_date, '') AS order_date, od.unit_price, od.quantity, o.order_status
 FROM
     order_details od
         INNER JOIN orders o ON od.order_id = o.order_id
         INNER JOIN customers c ON o.customer_id = c.customer_id
-        INNER JOIN laptops l ON od.laptop_id = l.laptop_id
-
 WHERE o.order_id = order_id;
 END $$
 DELIMITER ;
 
 DELIMITER $$
-CREATE PROCEDURE sp_changeOrderStatusAf(IN orderStatus INT, IN orderId INT)
+CREATE PROCEDURE sp_getLaptopInOrder(IN order_id int)
+BEGIN 
+SELECT 
+    o.order_id, l.laptop_id, l.laptop_name, od.unit_price, od.quantity
+FROM
+    order_details od
+        INNER JOIN orders o ON od.order_id = o.order_id
+        INNER JOIN laptops l ON od.laptop_id = l.laptop_id
+WHERE o.order_id = o.order_id;
+END $$
+DELIMITER ;
+
+DELIMITER $$
+CREATE PROCEDURE sp_confirmPayment(IN orderStatus INT, IN orderId INT, IN accountanceId INT)
 BEGIN
-	UPDATE orders SET order_id = orderId WHERE order_id = orderId;
+	UPDATE orders SET order_id = orderId WHERE order_id = orderId; 
+    
+	INSERT INTO orders(accountance_id)
+	VALUES(accountanceId);
 END $$
 DELIMITER ;
 
@@ -568,6 +576,8 @@ GRANT EXECUTE ON PROCEDURE laptop_store.sp_getLaptopById TO 'laptop'@'localhost'
 GRANT EXECUTE ON PROCEDURE laptop_store.sp_getOrders TO 'laptop'@'localhost';
 GRANT EXECUTE ON PROCEDURE laptop_store.sp_getOrdersById TO 'laptop'@'localhost';
 GRANT EXECUTE ON PROCEDURE laptop_store.sp_getOrderCount TO 'laptop'@'localhost';
+GRANT EXECUTE ON PROCEDURE laptop_store.sp_getLaptopInOrder TO 'laptop'@'localhost';
+GRANT EXECUTE ON PROCEDURE laptop_store.sp_confirmPayment TO 'laptop'@'localhost';
 GRANT LOCK TABLES ON laptop_store.* TO 'laptop'@'localhost';
 GRANT SELECT ON laptop_store.customers TO 'laptop'@'localhost';
 GRANT SELECT ON laptop_store.laptops TO 'laptop'@'localhost';
@@ -619,7 +629,7 @@ INSERT INTO orders(order_id, seller_id, customer_id, accountance_id, order_statu
 VALUES (2, 1, 2, 1, 1);
 
 INSERT INTO order_details(order_id, laptop_id, unit_price, quantity)
-VALUES (1, 2, 24990000, 1);
+VALUES (1, 1, 24990000, 1);
 
 INSERT INTO order_details(order_id, laptop_id, unit_price, quantity)
 VALUES (2, 2, 27990000, 2);
@@ -631,11 +641,23 @@ FROM
     INNER JOIN customers c ON o.customer_id = c.customer_id;
     
 SELECT 
-    o.order_id, c.customer_id, c.customer_name, l.laptop_id, l.laptop_name, IFNULL(o.order_date, '') AS order_date, od.unit_price, od.quantity
+    o.order_id, c.customer_id, c.customer_name, c.phone, l.laptop_id, l.laptop_name, IFNULL(o.order_date, '') AS order_date, od.unit_price, od.quantity
 FROM
     order_details od
         INNER JOIN orders o ON od.order_id = o.order_id
         INNER JOIN customers c ON o.customer_id = c.customer_id
         INNER JOIN laptops l ON od.laptop_id = l.laptop_id;
         
+SELECT 
+    o.order_id, l.laptop_id, l.laptop_name, od.unit_price, od.quantity
+FROM
+    order_details od
+        INNER JOIN orders o ON od.order_id = o.order_id
+        INNER JOIN laptops l ON od.laptop_id = l.laptop_id
+WHERE o.order_id = 3;
+
+
+
+
+
     

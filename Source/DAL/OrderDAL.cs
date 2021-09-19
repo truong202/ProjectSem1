@@ -142,7 +142,26 @@ namespace DAL
                     }
                     reader.Close();
                     // lấy list laptop....
-                    // command.CommandTex = "call .....";
+                    foreach (var laptop in order.Laptops)
+                    {
+                        command.CommandText = "call sp_getLaptopInOrder(@orderId);";
+                        command.Parameters.Clear();
+                        command.Parameters.AddWithValue("@orderId", order.OrderId);
+                        command.Parameters.AddWithValue("@laptopId", laptop.LaptopId);
+                        command.Parameters.AddWithValue("@laptopName", laptop.LaptopName);
+                        command.Parameters.AddWithValue("@price", laptop.Price);
+                        command.Parameters.AddWithValue("@quantity", laptop.Quantity);
+                        reader = command.ExecuteReader();
+                        if (reader.Read())
+                        {
+                            laptop.LaptopId = reader.GetInt32("laptop_id");
+                            laptop.Price = reader.GetDecimal("price");
+                            laptop.LaptopName = reader.GetString("laptop_name");
+                            laptop.Quantity = reader.GetInt32("quantity");
+                        }
+                        reader.Close();
+                    }
+                    // reader.Close();
                     connection.Close();
                 }
                 catch
@@ -170,6 +189,49 @@ namespace DAL
                     connection.Close();
                 }
                 catch { }
+            return result;
+        }
+
+        public bool ConfirmPayment(Order order)
+        {
+            lock (connection)
+            {
+                try
+                {
+                    connection.Open();
+                    MySqlCommand command = connection.CreateCommand();
+                    command.Connection = connection;
+                    command.CommandText = "lock tables orders write;";
+                    command.ExecuteNonQuery();
+                    MySqlTransaction transaction = connection.BeginTransaction();
+                    command.Transaction = transaction;
+                    try
+                    {
+                        command.CommandText = "call sp_confirmPayment(@orderStatus, @orderId, @accountanceId);";
+                        command.Parameters.Clear();
+                        command.Parameters.AddWithValue("@orderStatus", Order.PAID);
+                        command.Parameters.AddWithValue("@orderId", order.orderId);
+                        command.Parameters.AddWithValue("@sellerId", order.Accountance.StaffId);
+                        command.ExecuteNonQuery();
+                        transaction.Commit();
+                        result = true;
+                    }
+                    catch (Exception)
+                    {
+                        // Console.WriteLine(e.Message);
+                        result = false;
+                        try { transaction.Rollback(); }
+                        catch { }
+                    }
+                    finally
+                    {
+                        command.CommandText = "unlock tables;";
+                        command.ExecuteNonQuery();
+                        connection.Close();
+                    }
+                }
+                catch { }
+            }
             return result;
         }
 

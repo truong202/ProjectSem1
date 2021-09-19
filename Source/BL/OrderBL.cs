@@ -29,5 +29,9 @@ namespace BL
         {
             return orderDAL.GetOrderCount(searchValue);
         }
+        public bool ConfirmPayment(Order order)
+        {
+            return orderDAL.ConfirmPayment(order);
+        }
     }
 }
