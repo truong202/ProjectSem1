@@ -21,9 +21,9 @@ namespace BL
         {
             return orderDAL.GetOrders(searchValue, offset);
         }
-        public Order GetOrderById(int OrderId)
+        public Order GetOrderById(int orderId)
         {
-            return orderDAL.GetOrderById(OrderId);
+            return orderDAL.GetOrderById(orderId);
         }
         public int GetOrderCount(string searchValue)
         {
@@ -33,5 +33,10 @@ namespace BL
         {
             return orderDAL.ConfirmPayment(order);
         }
+        public bool CancelPayment(Order order)
+        {
+            return orderDAL.CancelPayment(order);
+        }
+
     }
 }

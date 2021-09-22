@@ -21,7 +21,7 @@ namespace TestDAL
             OrderId = 1,
             CustomerInfo = Customers[1],
 
-            // Date = "2021-09-16 20:45:46",
+            // Date = DateTime.(2021, 09, 21, 18, 37, 57),
 
         };
 

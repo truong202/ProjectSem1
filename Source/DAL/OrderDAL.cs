@@ -135,33 +135,19 @@ namespace DAL
                     MySqlCommand command = new MySqlCommand("call sp_getOrdersById(@orderId)", connection);
                     command.Parameters.AddWithValue("@orderId", orderId);
                     reader = command.ExecuteReader();
-                    if (reader.Read())
-                    {
-                        order = new Order();
+                    if(reader.Read()){
                         order = GetOrder(reader);
-                    }
-                    reader.Close();
-                    // lấy list laptop....
-                    foreach (var laptop in order.Laptops)
-                    {
+                        reader.Close();
                         command.CommandText = "call sp_getLaptopInOrder(@orderId);";
                         command.Parameters.Clear();
-                        command.Parameters.AddWithValue("@orderId", order.OrderId);
-                        command.Parameters.AddWithValue("@laptopId", laptop.LaptopId);
-                        command.Parameters.AddWithValue("@laptopName", laptop.LaptopName);
-                        command.Parameters.AddWithValue("@price", laptop.Price);
-                        command.Parameters.AddWithValue("@quantity", laptop.Quantity);
+                        command.Parameters.AddWithValue("@orderId", orderId);
                         reader = command.ExecuteReader();
-                        if (reader.Read())
-                        {
-                            laptop.LaptopId = reader.GetInt32("laptop_id");
-                            laptop.Price = reader.GetDecimal("price");
-                            laptop.LaptopName = reader.GetString("laptop_name");
-                            laptop.Quantity = reader.GetInt32("quantity");
-                        }
+                        while (reader.Read())
+                        
+                            order.Laptops.Add(GetLaptopInOrder(reader));
+                        
                         reader.Close();
                     }
-                    // reader.Close();
                     connection.Close();
                 }
                 catch
@@ -194,31 +180,55 @@ namespace DAL
 
         public bool ConfirmPayment(Order order)
         {
+            bool result = false;
             lock (connection)
             {
                 try
                 {
+                        connection.Open();
+                        MySqlCommand command = new MySqlCommand("call sp_confirmPayment(@orderStatus, @orderId, @accountanceId)", connection);
+                        command.Parameters.AddWithValue("@orderStatus", Order.PAID);
+                        command.Parameters.AddWithValue("@orderId", order.OrderId);
+                        command.Parameters.AddWithValue("@sellerId", order.Accountance.StaffId);
+                        command.ExecuteNonQuery();
+                        result = true;
+                        connection.Close();
+                }
+                catch { }
+            }
+            return result;
+        }
+
+        public bool CancelPayment(Order order)
+        {
+            bool result = false;
+            lock(connection){
+                try{
                     connection.Open();
                     MySqlCommand command = connection.CreateCommand();
                     command.Connection = connection;
-                    command.CommandText = "lock tables orders write;";
+                    command.CommandText = "lock tables orders write, laptops write;";
                     command.ExecuteNonQuery();
                     MySqlTransaction transaction = connection.BeginTransaction();
                     command.Transaction = transaction;
-                    try
-                    {
-                        command.CommandText = "call sp_confirmPayment(@orderStatus, @orderId, @accountanceId);";
-                        command.Parameters.Clear();
-                        command.Parameters.AddWithValue("@orderStatus", Order.PAID);
-                        command.Parameters.AddWithValue("@orderId", order.orderId);
-                        command.Parameters.AddWithValue("@sellerId", order.Accountance.StaffId);
+                    try{
+                        command.CommandText = "call sp_changeOrderStatus(@orderStatus, @orderId);";
+                        command.Parameters.AddWithValue("@orderStatus", Order.CANCEL);
+                        command.Parameters.AddWithValue("@orderId", order.OrderId);
                         command.ExecuteNonQuery();
+                    foreach (var laptop in order.Laptops)
+                        {
+                            command.CommandText = "call sp_updateQuantityInLaptopsAf(@quantity, @laptopId);";
+                            command.Parameters.Clear();
+                            command.Parameters.AddWithValue("@quantity", laptop.Quantity);
+                            command.Parameters.AddWithValue("@laptopId", laptop.LaptopId);
+                            command.ExecuteNonQuery();
+                        }
                         transaction.Commit();
                         result = true;
                     }
                     catch (Exception)
                     {
-                        // Console.WriteLine(e.Message);
                         result = false;
                         try { transaction.Rollback(); }
                         catch { }
@@ -268,6 +278,7 @@ namespace DAL
             order.OrderId = reader.GetInt32("order_id");
             order.CustomerInfo.CustomerName = reader.GetString("customer_name");
             order.CustomerInfo.Phone = reader.GetString("phone");
+            order.CustomerInfo.Address = reader.GetString("address");
             order.Date = reader.GetDateTime("order_date");
             order.Status = reader.GetInt32("order_status");
             order.Seller.StaffId = reader.GetInt32("seller_id");
@@ -281,5 +292,17 @@ namespace DAL
             }
             return order;
         }
+
+        private Laptop GetLaptopInOrder(MySqlDataReader reader)
+        {
+            Laptop laptop = new Laptop();
+            laptop.LaptopId = reader.GetInt32("laptop_id");
+            laptop.LaptopName = reader.GetString("laptop_name");
+            laptop.Quantity = reader.GetInt32("quantity");
+            laptop.Price = reader.GetDecimal("unit_price");
+            return laptop;
+        }
+
+        
     }
 }

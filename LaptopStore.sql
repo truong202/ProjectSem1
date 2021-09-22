@@ -383,7 +383,7 @@ DELIMITER ;
 DELIMITER $$
 CREATE PROCEDURE sp_changeOrderStatus(IN orderStatus INT, IN orderId INT)
 BEGIN
-	UPDATE orders SET order_id = orderId WHERE order_id = orderId;
+	UPDATE orders SET order_status = orderStatus WHERE order_id = orderId;
 END $$
 DELIMITER ;
 
@@ -494,7 +494,7 @@ END $$
 DELIMITER ;
 
 DELIMITER $$
-CREATE PROCEDURE sp_updateQuantityInLaptops2(IN _quantity INT, IN laptopId INT)
+CREATE PROCEDURE sp_updateQuantityInLaptopsAf(IN _quantity INT, IN laptopId INT)
 BEGIN
 UPDATE LAPTOPS SET quantity = quantity + _quantity WHERE laptop_id = laptopId;
 END $$
@@ -506,7 +506,7 @@ DELIMITER $$
 CREATE PROCEDURE sp_getOrders(IN searchValue VARCHAR(255), IN _offset INT)
 BEGIN
 SELECT 
-    o.order_id, c.customer_id, o.accountance_id, o.seller_id, c.phone, c.customer_name, IFNULL(o.order_date, '') AS order_date, o.order_status
+    o.order_id, c.customer_id, o.accountance_id, o.seller_id, c.phone, c.address, c.customer_name, IFNULL(o.order_date, '') AS order_date, o.order_status
 FROM
     orders o
     INNER JOIN customers c ON o.customer_id = c.customer_id
@@ -524,7 +524,7 @@ DELIMITER $$
 CREATE PROCEDURE sp_getOrdersById(IN order_id int)
 BEGIN 
 SELECT 
-    o.order_id, c.customer_id, c.customer_name, o.accountance_id, o.seller_id, IFNULL(o.order_date, '') AS order_date, od.unit_price, od.quantity, o.order_status
+    o.order_id, c.customer_id, c.customer_name, c.phone, c.address, o.accountance_id, o.seller_id, IFNULL(o.order_date, '') AS order_date, o.order_status
 FROM
     order_details od
         INNER JOIN orders o ON od.order_id = o.order_id
@@ -537,7 +537,7 @@ DELIMITER $$
 CREATE PROCEDURE sp_getLaptopInOrder(IN order_id int)
 BEGIN 
 SELECT 
-    o.order_id, l.laptop_id, l.laptop_name, od.unit_price, od.quantity
+	l.laptop_id, l.laptop_name, od.unit_price, od.quantity
 FROM
     order_details od
         INNER JOIN orders o ON od.order_id = o.order_id
@@ -549,10 +549,9 @@ DELIMITER ;
 DELIMITER $$
 CREATE PROCEDURE sp_confirmPayment(IN orderStatus INT, IN orderId INT, IN accountanceId INT)
 BEGIN
-	UPDATE orders SET order_id = orderId WHERE order_id = orderId; 
+	UPDATE orders SET order_status = orderStatus WHERE order_id = orderId; 
     
-	INSERT INTO orders(accountance_id)
-	VALUES(accountanceId);
+	UPDATE orders SET accountance_id = accountanceId WHERE order_id = orderId;
 END $$
 DELIMITER ;
 
@@ -569,7 +568,7 @@ GRANT EXECUTE ON PROCEDURE laptop_store.sp_insertToOrderDetails TO 'laptop'@'loc
 GRANT EXECUTE ON PROCEDURE laptop_store.sp_addAccountanceToOrder TO 'laptop'@'localhost';
 GRANT EXECUTE ON PROCEDURE laptop_store.sp_changeOrderStatus TO 'laptop'@'localhost';
 GRANT EXECUTE ON PROCEDURE laptop_store.sp_updateQuantityInLaptops TO 'laptop'@'localhost';
-GRANT EXECUTE ON PROCEDURE laptop_store.sp_updateQuantityInLaptops2 TO 'laptop'@'localhost';
+GRANT EXECUTE ON PROCEDURE laptop_store.sp_updateQuantityInLaptopsAf TO 'laptop'@'localhost';
 GRANT EXECUTE ON PROCEDURE laptop_store.sp_getCount TO 'laptop'@'localhost';
 GRANT EXECUTE ON PROCEDURE laptop_store.sp_getLaptops TO 'laptop'@'localhost';
 GRANT EXECUTE ON PROCEDURE laptop_store.sp_getLaptopById TO 'laptop'@'localhost';
@@ -622,39 +621,41 @@ FROM
     manufactories m ON l.manufactory_id = m.manufactory_id
 ORDER BY laptop_id;
 
-INSERT INTO orders(order_id, seller_id, customer_id, accountance_id, order_status)
-VALUES (1, 1, 1, 1, 1);
+-- INSERT INTO orders(order_id, seller_id, customer_id, accountance_id, order_status)
+-- VALUES (1, 1, 1, 1, 1);
 
-INSERT INTO orders(order_id, seller_id, customer_id, accountance_id, order_status)
-VALUES (2, 1, 2, 1, 1);
+-- INSERT INTO orders(order_id, seller_id, customer_id, accountance_id, order_status)
+-- VALUES (2, 1, 2, 1, 1);
 
-INSERT INTO order_details(order_id, laptop_id, unit_price, quantity)
-VALUES (1, 1, 24990000, 1);
+-- INSERT INTO order_details(order_id, laptop_id, unit_price, quantity)
+-- VALUES (1, 1, 24990000, 1);
 
-INSERT INTO order_details(order_id, laptop_id, unit_price, quantity)
-VALUES (2, 2, 27990000, 2);
+-- INSERT INTO order_details(order_id, laptop_id, unit_price, quantity)
+-- VALUES (2, 2, 27990000, 2);
 
+-- SELECT 
+--     o.order_id, c.customer_id, o.accountance_id, o.seller_id, c.phone, c.customer_name, IFNULL(o.order_date, '') AS order_date, o.order_status
+-- FROM
+--     orders o
+--     INNER JOIN customers c ON o.customer_id = c.customer_id;
+--     
 SELECT 
-    o.order_id, c.customer_id, o.accountance_id, o.seller_id, c.phone, c.customer_name, IFNULL(o.order_date, '') AS order_date, o.order_status
-FROM
-    orders o
-    INNER JOIN customers c ON o.customer_id = c.customer_id;
-    
-SELECT 
-    o.order_id, c.customer_id, c.customer_name, c.phone, l.laptop_id, l.laptop_name, IFNULL(o.order_date, '') AS order_date, od.unit_price, od.quantity
+    o.order_id, c.customer_id, c.customer_name, c.phone, c.address, o.accountance_id, o.seller_id, IFNULL(o.order_date, '') AS order_date, o.order_status
 FROM
     order_details od
         INNER JOIN orders o ON od.order_id = o.order_id
         INNER JOIN customers c ON o.customer_id = c.customer_id
-        INNER JOIN laptops l ON od.laptop_id = l.laptop_id;
-        
+WHERE o.order_id = 1;
+--         
 SELECT 
-    o.order_id, l.laptop_id, l.laptop_name, od.unit_price, od.quantity
+	l.laptop_id, l.laptop_name, od.unit_price, od.quantity
 FROM
     order_details od
         INNER JOIN orders o ON od.order_id = o.order_id
         INNER JOIN laptops l ON od.laptop_id = l.laptop_id
-WHERE o.order_id = 3;
+WHERE o.order_id = 2;
+
+
 
 
 

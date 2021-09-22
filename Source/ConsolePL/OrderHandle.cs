@@ -175,6 +175,7 @@ namespace ConsolePL
         {
             Console.Clear();
             Console.CursorVisible = false;
+            Utility.PrintTitle("▬▬▬▬ LIST ORDERS ▬▬▬▬");
             if (orders == null || orders.Count == 0)
             {
                 Console.WriteLine(" Order not found!");
@@ -214,7 +215,9 @@ namespace ConsolePL
         }
         private void ViewOrderDetails(Order order)
         {
+            Console.Clear();
             Console.CursorVisible = false;
+            Utility.PrintTitle("▬▬▬▬ ORDER DETAILS ▬▬▬▬");
             if (order == null)
             {
                 Console.WriteLine(" Order not found!");
@@ -222,29 +225,40 @@ namespace ConsolePL
                 Console.ReadKey(true);
                 return;
             }
-            Console.Clear();
-            // string line = "──────────────────────────────────────────────────────────────────────────────────────────────────────────────────";
-            // string title = "ORDER INFORMATION";
-            // string line = "──────────────────────────────────────────────────────────────────────────────────────────────────────────────────";
-            List<string[]> lines = new List<string[]>();
-            lines.Add(new[] {"Laptop name", "Unit", "Unit Price", "Quantity"});
-            foreach (var laptop in order.Laptops)
+             else
             {
-                int lengthName = 30;
-                // int num = 1;
-                string name = (laptop.LaptopName.Length > lengthName) ?
-                laptop.LaptopName.Remove(lengthName, laptop.LaptopName.Length - lengthName) + "..." : laptop.LaptopName;
-                string unit = "pcs";
-                string price = laptop.Price.ToString("N0");
-                string quantity = laptop.Quantity.ToString();
-                // string Imoney = price * quantity;
-                // Imoney.ToString("N0");
-                lines.Add(new[] {name,  unit, price, quantity});
-                // num++;
-            }
+                Console.WriteLine("Customer name: ",  order.CustomerInfo.CustomerName);
+                Console.WriteLine("Phone: ", order.CustomerInfo.Phone);
+                Console.WriteLine("Address: ", order.CustomerInfo.Address);
+                int totalPrice=0;
+                List<string[]> lines = new List<string[]>();
+                lines.Add(new[] { "Laptop name", "Unit", "Unit Price", "Quantity", "Total"});
+                foreach (var laptop in order.Laptops)
+                {
+                    int lengthName = 30;
+                    string name = (laptop.LaptopName.Length > lengthName) ?
+                    laptop.LaptopName.Remove(lengthName, laptop.LaptopName.Length - lengthName) + "..." : laptop.LaptopName;
+                    string unit = "pcs";
+                    string price = laptop.Price.ToString("N0");
+                    string quantity = laptop.Quantity.ToString();
+                    int Iprice = Int32.Parse(price);
+                    int Iquantity = Int32.Parse(quantity);
+                    int Imoney = Iprice * Iquantity;
+                    string tMoney = Convert.ToString(Imoney);
+                    lines.Add(new[] { name, unit, price, quantity, tMoney });
+                    totalPrice = totalPrice + Imoney;
+                }
+                Console.WriteLine("Total price: " + totalPrice);
+                Console.Write("Enter the amount given by the customer  ");
+                int cMoney = Utility.GetNumber(1);
+                int excessCash = cMoney - totalPrice;
+                Console.WriteLine("Excess cash: " + excessCash);
+                Console.WriteLine("Do you want to confirm the order has been paid?(Y/N)");
+    
                 string[] table = Utility.GetTable(lines);
                 foreach (string line in table) Console.WriteLine(" " + line);
-
+                
+            }
         }
     }
 }
