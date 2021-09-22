@@ -111,10 +111,17 @@ namespace DAL
                     {
                         command.CommandText = "unlock tables;";
                         command.ExecuteNonQuery();
-                        connection.Close();
                     }
                 }
                 catch { }
+                finally
+                {
+                    try
+                    {
+                        connection.Close();
+                    }
+                    catch { }
+                }
             }
             return result;
         }
@@ -135,7 +142,8 @@ namespace DAL
                     MySqlCommand command = new MySqlCommand("call sp_getOrdersById(@orderId)", connection);
                     command.Parameters.AddWithValue("@orderId", orderId);
                     reader = command.ExecuteReader();
-                    if(reader.Read()){
+                    if (reader.Read())
+                    {
                         order = GetOrder(reader);
                         reader.Close();
                         command.CommandText = "call sp_getLaptopInOrder(@orderId);";
@@ -143,9 +151,9 @@ namespace DAL
                         command.Parameters.AddWithValue("@orderId", orderId);
                         reader = command.ExecuteReader();
                         while (reader.Read())
-                        
+
                             order.Laptops.Add(GetLaptopInOrder(reader));
-                        
+
                         reader.Close();
                     }
                     connection.Close();
@@ -185,14 +193,14 @@ namespace DAL
             {
                 try
                 {
-                        connection.Open();
-                        MySqlCommand command = new MySqlCommand("call sp_confirmPayment(@orderStatus, @orderId, @accountanceId)", connection);
-                        command.Parameters.AddWithValue("@orderStatus", Order.PAID);
-                        command.Parameters.AddWithValue("@orderId", order.OrderId);
-                        command.Parameters.AddWithValue("@sellerId", order.Accountance.StaffId);
-                        command.ExecuteNonQuery();
-                        result = true;
-                        connection.Close();
+                    connection.Open();
+                    MySqlCommand command = new MySqlCommand("call sp_confirmPayment(@orderStatus, @orderId, @accountanceId)", connection);
+                    command.Parameters.AddWithValue("@orderStatus", Order.PAID);
+                    command.Parameters.AddWithValue("@orderId", order.OrderId);
+                    command.Parameters.AddWithValue("@sellerId", order.Accountance.StaffId);
+                    command.ExecuteNonQuery();
+                    result = true;
+                    connection.Close();
                 }
                 catch { }
             }
@@ -202,8 +210,10 @@ namespace DAL
         public bool CancelPayment(Order order)
         {
             bool result = false;
-            lock(connection){
-                try{
+            lock (connection)
+            {
+                try
+                {
                     connection.Open();
                     MySqlCommand command = connection.CreateCommand();
                     command.Connection = connection;
@@ -211,12 +221,13 @@ namespace DAL
                     command.ExecuteNonQuery();
                     MySqlTransaction transaction = connection.BeginTransaction();
                     command.Transaction = transaction;
-                    try{
+                    try
+                    {
                         command.CommandText = "call sp_changeOrderStatus(@orderStatus, @orderId);";
                         command.Parameters.AddWithValue("@orderStatus", Order.CANCEL);
                         command.Parameters.AddWithValue("@orderId", order.OrderId);
                         command.ExecuteNonQuery();
-                    foreach (var laptop in order.Laptops)
+                        foreach (var laptop in order.Laptops)
                         {
                             command.CommandText = "call sp_updateQuantityInLaptopsAf(@quantity, @laptopId);";
                             command.Parameters.Clear();
@@ -303,6 +314,6 @@ namespace DAL
             return laptop;
         }
 
-        
+
     }
 }

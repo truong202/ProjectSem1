@@ -191,7 +191,7 @@ namespace ConsolePL
                     string CusName = (order.CustomerInfo.CustomerName.Length > lengthName) ?
                     order.CustomerInfo.CustomerName.Remove(lengthName, order.CustomerInfo.CustomerName.Length - lengthName) + "..." : order.CustomerInfo.CustomerName;
                     string date = order.Date.ToString();
-                    lines.Add(new[] { id, order.CustomerInfo.CustomerName,  order.CustomerInfo.Phone, date});
+                    lines.Add(new[] { id, order.CustomerInfo.CustomerName, order.CustomerInfo.Phone, date });
                 }
                 string[] table = Utility.GetTable(lines);
                 foreach (string line in table) Console.WriteLine(" " + line);
@@ -211,7 +211,7 @@ namespace ConsolePL
             Console.Write("' to payment, '");
             Utility.PrintColor("ESC", ConsoleColor.Red, ConsoleColor.Black);
             Console.WriteLine("' to exit");
-            
+
         }
         private void ViewOrderDetails(Order order)
         {
@@ -225,14 +225,14 @@ namespace ConsolePL
                 Console.ReadKey(true);
                 return;
             }
-             else
+            else
             {
-                Console.WriteLine("Customer name: ",  order.CustomerInfo.CustomerName);
+                Console.WriteLine("Customer name: ", order.CustomerInfo.CustomerName);
                 Console.WriteLine("Phone: ", order.CustomerInfo.Phone);
                 Console.WriteLine("Address: ", order.CustomerInfo.Address);
-                int totalPrice=0;
+                decimal totalPrice = 0;
                 List<string[]> lines = new List<string[]>();
-                lines.Add(new[] { "Laptop name", "Unit", "Unit Price", "Quantity", "Total"});
+                lines.Add(new[] { "Laptop name", "Unit", "Unit Price", "Quantity", "Total" });
                 foreach (var laptop in order.Laptops)
                 {
                     int lengthName = 30;
@@ -240,24 +240,20 @@ namespace ConsolePL
                     laptop.LaptopName.Remove(lengthName, laptop.LaptopName.Length - lengthName) + "..." : laptop.LaptopName;
                     string unit = "pcs";
                     string price = laptop.Price.ToString("N0");
-                    string quantity = laptop.Quantity.ToString();
-                    int Iprice = Int32.Parse(price);
-                    int Iquantity = Int32.Parse(quantity);
-                    int Imoney = Iprice * Iquantity;
-                    string tMoney = Convert.ToString(Imoney);
-                    lines.Add(new[] { name, unit, price, quantity, tMoney });
+                    decimal Imoney = laptop.Price * (decimal)laptop.Quantity;
+                    lines.Add(new[] { name, unit, price, laptop.Quantity.ToString(), Imoney.ToString("N0") });
                     totalPrice = totalPrice + Imoney;
                 }
+                string[] table = Utility.GetTable(lines);
+                foreach (string line in table) Console.WriteLine(" " + line);
                 Console.WriteLine("Total price: " + totalPrice);
                 Console.Write("Enter the amount given by the customer  ");
                 int cMoney = Utility.GetNumber(1);
-                int excessCash = cMoney - totalPrice;
+                decimal excessCash = cMoney - totalPrice;
                 Console.WriteLine("Excess cash: " + excessCash);
                 Console.WriteLine("Do you want to confirm the order has been paid?(Y/N)");
-    
-                string[] table = Utility.GetTable(lines);
-                foreach (string line in table) Console.WriteLine(" " + line);
-                
+
+
             }
         }
     }

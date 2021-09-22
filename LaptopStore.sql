@@ -21,11 +21,6 @@ CREATE TABLE customers (
     PRIMARY KEY (customer_id)
 );
 
-Insert into customers(customer_name, address, phone)
-values ('Phạm Công Hưng', 'Nam Định', '0904844014'),
-		('Phạm Công Hà', 'Nam Định', '0906450904');
-
-
 CREATE TABLE categories (
     category_id INT AUTO_INCREMENT,
     category_name VARCHAR(50) NOT NULL UNIQUE,
@@ -113,6 +108,17 @@ VALUES ('Nguyễn Văn E', 'accountance002', '25d55ad283aa400af464c76d713c07ad',
 INSERT INTO staffs(staff_name, username, password, role)
 VALUES ('Nguyễn Văn F', 'accountance003', '25d55ad283aa400af464c76d713c07ad', 2);
 
+INSERT INTO customers(customer_name, address, phone)
+VALUES ('Phạm Công Hưng', 'Nam Định', '0904844014');
+INSERT INTO customers(customer_name, address, phone)
+VALUES ('Phạm Công Hà', 'Nam Định', '0906450904');
+INSERT INTO customers(customer_name, phone, address)
+VALUES ('Customer1', '0836984311', 'Ho Chi Minh');
+INSERT INTO customers(customer_name, phone, address)
+VALUES ('Customer2', '0836984312', 'Bac Giang');
+INSERT INTO customers(customer_name, phone, address)
+VALUES ('Customer3', '0836984313', 'Ha Noi');
+
 INSERT INTO categories(category_name)
 VALUES ('Gaming'), ('Office'), ('Multimedia'), ('Workstation');
 
@@ -158,8 +164,8 @@ VALUES ('Asus ROG Zephyrus G14 Alan Walker Edition GA401QEC K2064T', 1, 1, 'AMD 
 INSERT INTO laptops(laptop_name, manufactory_id, category_id, CPU, Ram, hard_drive, VGA, display, battery, weight, materials, ports,
 			 network_and_connection, security, keyboard, audio, size, warranty_period, OS, price, quantity)
 VALUES ('ASUS D515DA EJ711T', 1, 2, 'AMD Ryzen 3-3250U', '4GB DDR4 on board', '512GB M.2 NVMe PCIe 3.0 SSD', 'AMD Radeon Graphics',
-'15.6-inch, FHD (1920 x 1080) 16:9, 200nits, Screen-to-body ratio: 83%', '2-cell 37WHrs', '1.80 kg', 'Plastic', '1x USB 3.2 Gen 1 Type-A,
- 1x USB 3.2 Gen 1 Type-C, 2x USB 2.0 Type-A, 1x HDMI 1.4, 1x 3.5mm Combo Audio Jack','LAN, Wi-Fi 5(802.11ac), Bluetooth v4.2', 'PIN',
+'15.6-inch, FHD (1920 x 1080) 16:9, 200nits, Screen-to-body ratio: 83%', '2-cell 37WHrs', '1.80 kg', 'Plastic',
+'1x USB 3.2 Gen 1 Type-A, 1x USB 3.2 Gen 1 Type-C, 2x USB 2.0 Type-A, 1x HDMI 1.4, 1x 3.5mm Combo Audio Jack','LAN, Wi-Fi 5(802.11ac), Bluetooth v4.2', 'PIN',
  'No led', 'No infor', '36.00 x 23.50 x 1.99 cm', '12 month', 'Windows 10 Home', 11990000, 24);
 
 INSERT INTO laptops(laptop_name, manufactory_id, category_id, CPU, Ram, hard_drive, VGA, display, battery, weight, materials, ports,
@@ -461,7 +467,7 @@ WHERE l.laptop_name LIKE CONCAT('%', searchValue, '%') OR
       m.manufactory_name LIKE  CONCAT('%', searchValue, '%')
       OR l.laptop_id = searchValue
 ORDER BY l.laptop_id
-LIMIT 10 OFFSET _offset;
+LIMIT 8 OFFSET _offset;
 END $$
 DELIMITER ;
 
