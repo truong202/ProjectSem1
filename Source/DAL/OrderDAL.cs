@@ -150,10 +150,7 @@ namespace DAL
                         command.Parameters.Clear();
                         command.Parameters.AddWithValue("@orderId", orderId);
                         reader = command.ExecuteReader();
-                        while (reader.Read())
-
-                            order.Laptops.Add(GetLaptopInOrder(reader));
-
+                        while (reader.Read())order.Laptops.Add(GetLaptopInOrder(reader));
                         reader.Close();
                     }
                     connection.Close();

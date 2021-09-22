@@ -527,7 +527,7 @@ DELIMITER ;
 
 
 DELIMITER $$
-CREATE PROCEDURE sp_getOrdersById(IN order_id int)
+CREATE PROCEDURE sp_getOrdersById(IN orderId int)
 BEGIN 
 SELECT 
     o.order_id, c.customer_id, c.customer_name, c.phone, c.address, o.accountance_id, o.seller_id, IFNULL(o.order_date, '') AS order_date, o.order_status
@@ -535,12 +535,12 @@ FROM
     order_details od
         INNER JOIN orders o ON od.order_id = o.order_id
         INNER JOIN customers c ON o.customer_id = c.customer_id
-WHERE o.order_id = order_id;
+WHERE o.order_id = orderId;
 END $$
 DELIMITER ;
 
 DELIMITER $$
-CREATE PROCEDURE sp_getLaptopInOrder(IN order_id int)
+CREATE PROCEDURE sp_getLaptopInOrder(IN orderId int)
 BEGIN 
 SELECT 
 	l.laptop_id, l.laptop_name, od.unit_price, od.quantity
@@ -548,7 +548,7 @@ FROM
     order_details od
         INNER JOIN orders o ON od.order_id = o.order_id
         INNER JOIN laptops l ON od.laptop_id = l.laptop_id
-WHERE o.order_id = o.order_id;
+WHERE o.order_id = orderId;
 END $$
 DELIMITER ;
 
@@ -627,39 +627,10 @@ FROM
     manufactories m ON l.manufactory_id = m.manufactory_id
 ORDER BY laptop_id;
 
--- INSERT INTO orders(order_id, seller_id, customer_id, accountance_id, order_status)
--- VALUES (1, 1, 1, 1, 1);
 
--- INSERT INTO orders(order_id, seller_id, customer_id, accountance_id, order_status)
--- VALUES (2, 1, 2, 1, 1);
 
--- INSERT INTO order_details(order_id, laptop_id, unit_price, quantity)
--- VALUES (1, 1, 24990000, 1);
 
--- INSERT INTO order_details(order_id, laptop_id, unit_price, quantity)
--- VALUES (2, 2, 27990000, 2);
 
--- SELECT 
---     o.order_id, c.customer_id, o.accountance_id, o.seller_id, c.phone, c.customer_name, IFNULL(o.order_date, '') AS order_date, o.order_status
--- FROM
---     orders o
---     INNER JOIN customers c ON o.customer_id = c.customer_id;
---     
-SELECT 
-    o.order_id, c.customer_id, c.customer_name, c.phone, c.address, o.accountance_id, o.seller_id, IFNULL(o.order_date, '') AS order_date, o.order_status
-FROM
-    order_details od
-        INNER JOIN orders o ON od.order_id = o.order_id
-        INNER JOIN customers c ON o.customer_id = c.customer_id
-WHERE o.order_id = 1;
---         
-SELECT 
-	l.laptop_id, l.laptop_name, od.unit_price, od.quantity
-FROM
-    order_details od
-        INNER JOIN orders o ON od.order_id = o.order_id
-        INNER JOIN laptops l ON od.laptop_id = l.laptop_id
-WHERE o.order_id = 2;
 
 
 

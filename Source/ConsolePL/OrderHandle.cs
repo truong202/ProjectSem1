@@ -227,9 +227,9 @@ namespace ConsolePL
             }
             else
             {
-                Console.WriteLine("Customer name: ", order.CustomerInfo.CustomerName);
-                Console.WriteLine("Phone: ", order.CustomerInfo.Phone);
-                Console.WriteLine("Address: ", order.CustomerInfo.Address);
+                Console.WriteLine("Customer name: "+ order.CustomerInfo.CustomerName);
+                Console.WriteLine("Phone: "+  order.CustomerInfo.Phone);
+                Console.WriteLine("Address: "+ order.CustomerInfo.Address);
                 decimal totalPrice = 0;
                 List<string[]> lines = new List<string[]>();
                 lines.Add(new[] { "Laptop name", "Unit", "Unit Price", "Quantity", "Total" });
