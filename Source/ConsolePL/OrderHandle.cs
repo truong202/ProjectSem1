@@ -122,6 +122,7 @@ namespace ConsolePL
             int pageCount = (orderCount % 10 == 0) ? orderCount / 10 : orderCount / 10 + 1;
             int page = (orderCount > 0) ? 1 : 0;
             var orders = orderBL.GetOrders(searchValue, offset);
+            order.Accountance.StaffId = staff.StaffId;
             DisplayOrder(orders, page, pageCount);
             do
             {
