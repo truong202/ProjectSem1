@@ -13,10 +13,6 @@ namespace BL
         {
             return orderDAL.CreateOrder(order);
         }
-        public bool ChangeStatus(int status)
-        {
-            return orderDAL.ChangeStatus(status);
-        }
         public List<Order> GetOrders(string searchValue, int offset)
         {
             return orderDAL.GetOrders(searchValue, offset);
@@ -36,6 +32,10 @@ namespace BL
         public bool CancelPayment(Order order)
         {
             return orderDAL.CancelPayment(order);
+        }
+        public bool ChangeStatus(Order order)
+        {
+            return orderDAL.ChangeStatus(order);
         }
 
     }

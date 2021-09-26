@@ -125,10 +125,23 @@ namespace DAL
             }
             return result;
         }
-        public bool ChangeStatus(int status)
+        public bool ChangeStatus(Order order)
         {
             bool result = false;
-
+            lock (connection)
+            {
+                try
+                {
+                    connection.Open();
+                    MySqlCommand command = new MySqlCommand("call sp_changeOrderStatus(@orderStatus, @orderId)", connection);
+                    command.Parameters.AddWithValue("@orderStatus", Order.UNPAID);
+                    command.Parameters.AddWithValue("@orderId", order.OrderId);
+                    command.ExecuteNonQuery();
+                    result = true;
+                    connection.Close();
+                }
+                catch { }
+            }
             return result;
         }
         public Order GetOrderById(int orderId)
@@ -139,7 +152,8 @@ namespace DAL
                 try
                 {
                     connection.Open();
-                    MySqlCommand command = new MySqlCommand("call sp_getOrdersById(@orderId)", connection);
+                    MySqlCommand command = new MySqlCommand("call sp_getOrdersById(@orderStatus, @orderId)", connection);
+                    command.Parameters.AddWithValue("@orderStatus", Order.PROCESSING);
                     command.Parameters.AddWithValue("@orderId", orderId);
                     reader = command.ExecuteReader();
                     if (reader.Read())
@@ -194,7 +208,7 @@ namespace DAL
                     MySqlCommand command = new MySqlCommand("call sp_confirmPayment(@orderStatus, @orderId, @accountanceId)", connection);
                     command.Parameters.AddWithValue("@orderStatus", Order.PAID);
                     command.Parameters.AddWithValue("@orderId", order.OrderId);
-                    command.Parameters.AddWithValue("@sellerId", order.Accountance.StaffId);
+                    command.Parameters.AddWithValue("@accountanceId", order.Accountance.StaffId);
                     command.ExecuteNonQuery();
                     result = true;
                     connection.Close();

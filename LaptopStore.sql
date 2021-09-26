@@ -527,15 +527,16 @@ DELIMITER ;
 
 
 DELIMITER $$
-CREATE PROCEDURE sp_getOrdersById(IN orderId int)
-BEGIN 
+CREATE PROCEDURE sp_getOrdersById(IN orderStatus INT, IN orderId int)
+BEGIN
+UPDATE orders SET order_status = orderStatus WHERE order_id = orderId;  
 SELECT 
     o.order_id, c.customer_id, c.customer_name, c.phone, c.address, o.accountance_id, o.seller_id, IFNULL(o.order_date, '') AS order_date, o.order_status
 FROM
     order_details od
         INNER JOIN orders o ON od.order_id = o.order_id
         INNER JOIN customers c ON o.customer_id = c.customer_id
-WHERE o.order_id = orderId;
+WHERE o.order_id = orderId AND o.order_status = 2;
 END $$
 DELIMITER ;
 
@@ -627,6 +628,7 @@ FROM
     manufactories m ON l.manufactory_id = m.manufactory_id
 ORDER BY laptop_id;
 
+select * from orders;
 
 
 

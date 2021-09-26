@@ -13,8 +13,9 @@ namespace Persistance
         public DateTime Date { get; set; }
         public int Status { get; set; }
         public const int UNPAID =1;
-        public const int PAID =2;
-        public const int CANCEL =3;
+        public const int PROCESSING = 2;
+        public const int PAID =3;
+        public const int CANCEL =4;
 
         public Order()
         {

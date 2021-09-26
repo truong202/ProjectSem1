@@ -227,12 +227,13 @@ namespace ConsolePL
             }
             else
             {
-                Console.WriteLine("Customer name: "+ order.CustomerInfo.CustomerName);
-                Console.WriteLine("Phone: "+  order.CustomerInfo.Phone);
-                Console.WriteLine("Address: "+ order.CustomerInfo.Address);
+                Console.WriteLine("→Customer name: "+ order.CustomerInfo.CustomerName);
+                Console.WriteLine("→Phone: "+  order.CustomerInfo.Phone);
+                Console.WriteLine("→Address: "+ order.CustomerInfo.Address);
                 decimal totalPrice = 0;
+                int num = 1;
                 List<string[]> lines = new List<string[]>();
-                lines.Add(new[] { "Laptop name", "Unit", "Unit Price", "Quantity", "Total" });
+                lines.Add(new[] { "Num", "Laptop name", "Unit", "Unit Price", "Quantity", "Total" });
                 foreach (var laptop in order.Laptops)
                 {
                     int lengthName = 30;
@@ -241,17 +242,49 @@ namespace ConsolePL
                     string unit = "pcs";
                     string price = laptop.Price.ToString("N0");
                     decimal Imoney = laptop.Price * (decimal)laptop.Quantity;
-                    lines.Add(new[] { name, unit, price, laptop.Quantity.ToString(), Imoney.ToString("N0") });
+                    lines.Add(new[] { num.ToString(),name, unit, price, laptop.Quantity.ToString(), Imoney.ToString("N0") });
                     totalPrice = totalPrice + Imoney;
+                    num++;
                 }
                 string[] table = Utility.GetTable(lines);
                 foreach (string line in table) Console.WriteLine(" " + line);
-                Console.WriteLine("Total price: " + totalPrice);
-                Console.Write("Enter the amount given by the customer  ");
-                int cMoney = Utility.GetNumber(1);
+                Console.WriteLine("→Total price (VNĐ): " + totalPrice.ToString("N0"));
+                Console.CursorVisible = false;
+                Console.Write("→Enter the amount given by the customer:   ");
+                decimal cMoney = Utility.GetMoney(totalPrice);
                 decimal excessCash = cMoney - totalPrice;
-                Console.WriteLine("Excess cash: " + excessCash);
-                Console.WriteLine("Do you want to confirm the order has been paid?(Y/N)");
+                Console.WriteLine("→Excess cash (VNĐ): " + excessCash);
+                Console.WriteLine("\n──────────────────────────────────────────────────────────────────────────────────────────────────────────────────");
+                Console.Write("\n ● Press '");
+                Utility.PrintColor("Y", ConsoleColor.Yellow, ConsoleColor.Black);
+                Console.Write("' to confirm payment, '");
+                Utility.PrintColor("N", ConsoleColor.Yellow, ConsoleColor.Black);
+                Console.Write("' to cancel payment, '");
+                Utility.PrintColor("ESC", ConsoleColor.Red, ConsoleColor.Black);
+                Console.WriteLine("' to exit");
+                ConsoleKey key = new ConsoleKey();
+                key = Console.ReadKey(true).Key;
+                switch (key)
+                {
+                    case ConsoleKey.Y:
+                        bool result1 = orderBL.ConfirmPayment(order);
+                        Console.ForegroundColor = result1 ? ConsoleColor.Green : ConsoleColor.Red;
+                        Console.WriteLine("  Confirm payment " + (result1 ? "completed!" : "not complete!"));
+                        Console.ResetColor();
+                        Console.Write("  Press any key to back..."); Console.ReadKey(true);
+                        break;
+                    case ConsoleKey.N:
+                        bool result2 = orderBL.CancelPayment(order);
+                        Console.ForegroundColor = result2 ? ConsoleColor.Green : ConsoleColor.Red;
+                        Console.WriteLine("  Cancel payment " + (result2 ? "completed!" : "not complete!"));
+                        Console.ResetColor();
+                        Console.Write("  Press any key to back..."); Console.ReadKey(true);
+                        break;
+                    case ConsoleKey.Escape:
+                        orderBL.ChangeStatus(order);
+                        break;
+
+                }
 
 
             }

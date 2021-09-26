@@ -116,6 +116,20 @@ namespace ConsolePL
             }
         }
 
+        public static decimal GetMoney(decimal totalPrice)
+        {
+            decimal money;
+            Console.CursorVisible = true;
+            while (true)
+            {
+                if (Decimal.TryParse(Console.ReadLine(), out money) && money >= totalPrice) return money;
+                Console.ForegroundColor = ConsoleColor.Red;
+                Console.WriteLine("  Entered incorrectly");
+                Console.ResetColor();
+                Console.Write("  → Re-enter: ");
+            }
+        }
+
     
         public static string GetName()
         {
