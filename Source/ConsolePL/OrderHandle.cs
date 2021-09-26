@@ -122,7 +122,6 @@ namespace ConsolePL
             int pageCount = (orderCount % 10 == 0) ? orderCount / 10 : orderCount / 10 + 1;
             int page = (orderCount > 0) ? 1 : 0;
             var orders = orderBL.GetOrders(searchValue, offset);
-            order.Accountance.StaffId = staff.StaffId;
             DisplayOrder(orders, page, pageCount);
             do
             {
@@ -146,6 +145,7 @@ namespace ConsolePL
                         Console.Write(" → Input order ID(input 0 to cancel): ");
                         int id = Utility.GetNumber(1);
                         Order order = orderBL.GetOrderById(id);
+                        order.Accountance.StaffId = staff.StaffId;
                         ViewOrderDetails(order);
                         DisplayOrder(orders, page, pageCount);
                         break;
