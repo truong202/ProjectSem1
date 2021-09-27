@@ -238,6 +238,13 @@ namespace DAL
                         command.Parameters.AddWithValue("@orderStatus", Order.CANCEL);
                         command.Parameters.AddWithValue("@orderId", order.OrderId);
                         command.ExecuteNonQuery();
+
+                        command.CommandText = "call sp_updateAccountanceInfo(@orderId, @accountanceId);";
+                        command.Parameters.Clear();
+                        command.Parameters.AddWithValue("@orderId", order.OrderId);
+                        command.Parameters.AddWithValue("@accountanceId", order.Accountance.StaffId);
+                        command.ExecuteNonQuery();
+
                         foreach (var laptop in order.Laptops)
                         {
                             command.CommandText = "call sp_updateQuantityInLaptopsAf(@quantity, @laptopId);";

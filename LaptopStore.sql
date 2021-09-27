@@ -562,6 +562,13 @@ BEGIN
 END $$
 DELIMITER ;
 
+DELIMITER $$
+CREATE PROCEDURE sp_updateAccountanceInfo(IN orderId INT, IN accountanceId INT)
+BEGIN
+	UPDATE orders SET accountance_id = accountanceId WHERE order_id = orderId;
+END $$
+DELIMITER ;
+
 DROP USER IF EXISTS 'laptop'@'localhost';
 CREATE USER IF NOT EXISTS 'laptop'@'localhost' IDENTIFIED BY 'vtcacademy'; 
 GRANT EXECUTE ON PROCEDURE laptop_store.sp_login TO 'laptop'@'localhost';
@@ -584,6 +591,7 @@ GRANT EXECUTE ON PROCEDURE laptop_store.sp_getOrdersById TO 'laptop'@'localhost'
 GRANT EXECUTE ON PROCEDURE laptop_store.sp_getOrderCount TO 'laptop'@'localhost';
 GRANT EXECUTE ON PROCEDURE laptop_store.sp_getLaptopInOrder TO 'laptop'@'localhost';
 GRANT EXECUTE ON PROCEDURE laptop_store.sp_confirmPayment TO 'laptop'@'localhost';
+GRANT EXECUTE ON PROCEDURE laptop_store.sp_updateAccountanceInfo TO 'laptop'@'localhost';
 GRANT LOCK TABLES ON laptop_store.* TO 'laptop'@'localhost';
 GRANT SELECT ON laptop_store.customers TO 'laptop'@'localhost';
 GRANT SELECT ON laptop_store.laptops TO 'laptop'@'localhost';
@@ -627,8 +635,6 @@ FROM
         INNER JOIN
     manufactories m ON l.manufactory_id = m.manufactory_id
 ORDER BY laptop_id;
-
-select * from orders;
 
 
 
