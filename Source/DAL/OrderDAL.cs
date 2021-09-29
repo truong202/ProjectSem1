@@ -152,8 +152,7 @@ namespace DAL
                 try
                 {
                     connection.Open();
-                    MySqlCommand command = new MySqlCommand("call sp_getOrdersById(@orderStatus, @orderId)", connection);
-                    command.Parameters.AddWithValue("@orderStatus", Order.PROCESSING);
+                    MySqlCommand command = new MySqlCommand("call sp_getOrdersById(@orderId)", connection);
                     command.Parameters.AddWithValue("@orderId", orderId);
                     reader = command.ExecuteReader();
                     if (reader.Read())
@@ -170,8 +169,7 @@ namespace DAL
                     connection.Close();
                 }
                 catch
-                {
-                }
+                {}
             }
             return order;
         }

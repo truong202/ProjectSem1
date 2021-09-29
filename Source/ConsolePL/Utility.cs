@@ -11,18 +11,18 @@ namespace ConsolePL
         {
             int[] lengthDatas = GetLength(lines);
             StringBuilder builder = new StringBuilder();
-            builder.Append(GetLine(lengthDatas, "┌", "─", "┬", "┐\n"));
+            builder.Append(GetLine(lengthDatas, " ┌", "─", "┬", "┐\n"));
             for (int index = 0; index < lines.Count; index++)
             {
                 var line = lines[index];
-                builder.Append("│ ");
+                builder.Append(" │ ");
                 for (int i = 0; i < line.Length - 1; i++)
                     builder.Append(line[i].PadRight(lengthDatas[i] + 1) + "│ ");
                 builder.Append(line[line.Length - 1].PadRight(lengthDatas[line.Length - 1] + 1) + "│\n");
                 if (index < lines.Count - 1)
-                    builder.Append(GetLine(lengthDatas, "├", "─", "┼", "┤\n"));
+                    builder.Append(GetLine(lengthDatas, " ├", "─", "┼", "┤\n"));
                 else
-                    builder.Append(GetLine(lengthDatas, "└", "─", "┴", "┘"));
+                    builder.Append(GetLine(lengthDatas, " └", "─", "┴", "┘"));
             }
             string[] a = builder.ToString().Split('\n');
             return a;

@@ -143,11 +143,16 @@ namespace ConsolePL
                     case ConsoleKey.D:
                         Console.WriteLine();
                         Console.Write(" → Input order ID(input 0 to cancel): ");
-                        int id = Utility.GetNumber(1);
+                        int id = Utility.GetNumber(0);
+                        if(id == 0){
+                            DisplayOrder(orders, page, pageCount);
+                            break;
+                        }
                         Order order = orderBL.GetOrderById(id);
                         order.Accountance.StaffId = staff.StaffId;
                         ViewOrderDetails(order);
-                        DisplayOrder(orders, page, pageCount);
+                        var ordersAf = orderBL.GetOrders(searchValue, offset);
+                        DisplayOrder(ordersAf, page, pageCount);
                         break;
                     case ConsoleKey.LeftArrow:
                         if (page > 1)
@@ -184,7 +189,7 @@ namespace ConsolePL
             else
             {
                 List<string[]> lines = new List<string[]>();
-                lines.Add(new[] { "Order ID", "Customer name", "Phone", "Date" });
+                lines.Add(new[] { "Order ID", "Customer name", "Phone", "Date", "Total price" });
                 foreach (var order in orders)
                 {
                     int lengthName = 30;
@@ -216,9 +221,7 @@ namespace ConsolePL
         }
         private void ViewOrderDetails(Order order)
         {
-            Console.Clear();
             Console.CursorVisible = false;
-            Utility.PrintTitle("▬▬▬▬ ORDER DETAILS ▬▬▬▬");
             if (order == null)
             {
                 Console.WriteLine(" Order not found!");
@@ -226,15 +229,19 @@ namespace ConsolePL
                 Console.ReadKey(true);
                 return;
             }
-            else
-            {
-                Console.WriteLine("→Customer name: "+ order.CustomerInfo.CustomerName);
-                Console.WriteLine("→Phone: "+  order.CustomerInfo.Phone);
-                Console.WriteLine("→Address: "+ order.CustomerInfo.Address);
+                Console.Clear();
+                Utility.PrintTitle("▬▬▬▬ ORDER DETAILS ▬▬▬▬");
+                string line1 = "──────────────────────────────────────────────────────────────────────────────────────────────────────────────────";
+                int lengthLine = line1.Length + 2;
+                Console.WriteLine("  ┌{0}┐", line1);
+                Console.WriteLine("  │ Customer name: {0}{1," + (lengthLine - 17 - order.CustomerInfo.CustomerName.Length) + "}", order.CustomerInfo.CustomerName, "│");
+                Console.WriteLine("  │ Phone:       {0}{1," + (lengthLine - 15 - order.CustomerInfo.Phone.Length) + "}", order.CustomerInfo.Phone, "│");
+                Console.WriteLine("  │ Address:     {0}{1," + (lengthLine - 15 - order.CustomerInfo.Address.Length) + "}", order.CustomerInfo.Address, "│");
+                Console.WriteLine("  └{0}┘", line1);
                 decimal totalPrice = 0;
                 int num = 1;
                 List<string[]> lines = new List<string[]>();
-                lines.Add(new[] { "Num", "Laptop name", "Unit", "Unit Price", "Quantity", "Total" });
+                lines.Add(new[] { "Num", "Laptop name", "Unit", "Unit Price", "Quantity(VNĐ)", "Into money(VNĐ)" });
                 foreach (var laptop in order.Laptops)
                 {
                     int lengthName = 30;
@@ -243,18 +250,18 @@ namespace ConsolePL
                     string unit = "pcs";
                     string price = laptop.Price.ToString("N0");
                     decimal Imoney = laptop.Price * (decimal)laptop.Quantity;
-                    lines.Add(new[] { num.ToString(),name, unit, price, laptop.Quantity.ToString(), Imoney.ToString("N0") });
+                    lines.Add(new[] { num.ToString(),name, unit, price, laptop.Quantity.ToString(), Imoney.ToString("N0").PadLeft(15) });
                     totalPrice = totalPrice + Imoney;
                     num++;
                 }
                 string[] table = Utility.GetTable(lines);
-                foreach (string line in table) Console.WriteLine(" " + line);
-                Console.WriteLine("→Total price (VNĐ): " + totalPrice.ToString("N0"));
+                foreach (string line in table) Console.WriteLine(" " + line); 
+                Console.WriteLine("    →Total price (VNĐ): " + totalPrice.ToString("N0"));
                 Console.CursorVisible = false;
-                Console.Write("→Enter the amount given by the customer:   ");
+                Console.Write("    →Enter the amount given by the customer (VNĐ):   ");
                 decimal cMoney = Utility.GetMoney(totalPrice);
                 decimal excessCash = cMoney - totalPrice;
-                Console.WriteLine("→Excess cash (VNĐ): " + excessCash);
+                Console.WriteLine("    →Excess cash (VNĐ): " + excessCash);
                 Console.WriteLine("\n──────────────────────────────────────────────────────────────────────────────────────────────────────────────────");
                 Console.Write("\n ● Press '");
                 Utility.PrintColor("Y", ConsoleColor.Yellow, ConsoleColor.Black);
@@ -284,11 +291,8 @@ namespace ConsolePL
                     case ConsoleKey.Escape:
                         orderBL.ChangeStatus(order);
                         break;
-
                 }
-
-
             }
-        }
+        
     }
 }
