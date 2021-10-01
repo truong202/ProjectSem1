@@ -236,7 +236,7 @@ namespace ConsolePL
             decimal totalPayment = 0;
             bool result;
             foreach (var laptop in order.Laptops) totalPayment += laptop.Price * laptop.Quantity;
-            Console.Write("\n  ● Enter money to PAYMENT or Press combination ");
+            Console.Write("\n  ● Enter money to PAYMENT (input 0 to skip) or Press combination ");
             Utility.PrintColor("CTRL + X", ConsoleColor.Yellow, ConsoleColor.Black);
             Console.Write(" to CANCEL ORDER or press '");
             Utility.PrintColor("ESC", ConsoleColor.Red, ConsoleColor.Black);
@@ -248,13 +248,14 @@ namespace ConsolePL
                 key = keyInfo.Key;
                 if (key == ConsoleKey.Enter)
                 {
-                    if (money < totalPayment)
+                    if (money < totalPayment && money != 0)
                     {
                         Utility.PrintColor("  Invalid money!", ConsoleColor.Red, ConsoleColor.Black);
                         Console.Write("\n  → Enter money: ");
                     }
                     else
                     {
+                        if(money == 0) money = totalPayment;
                         order.Status = Order.PAID;
                         result = orderBL.Payment(order);
                         if (result)
@@ -364,7 +365,7 @@ namespace ConsolePL
             Console.WriteLine("  ║ Invoice Date   : {0," + -(lengthLine - 20) + "}║", order.Date);
             Console.WriteLine("  ╟{0}╢", line1);
             Console.WriteLine("  ║ Store          : {0," + -(lengthLine - 20) + "}║", "LAPTOP STORE");
-            Console.WriteLine("  ║ Address        : {0," + -(lengthLine - 20) + "}║", "18 Tam Trinh, Minh Khai Ward, District Hai Ba Trung, Ha Noi");
+            Console.WriteLine("  ║ Address        : {0," + -(lengthLine - 20) + "}║", "18 Tam Trinh, Minh Khai Ward, Hai Ba Trung District , Ha Noi");
             Console.WriteLine("  ║ Phone          : {0," + -(lengthLine - 20) + "}║", "0999999999");
             Console.WriteLine("  ║ Seller         : {0," + -(lengthLine - 20) + "}║", order.Seller.Name);
             Console.WriteLine("  ║ Accountance    : {0," + -(lengthLine - 20) + "}║", order.Accountance.Name);
