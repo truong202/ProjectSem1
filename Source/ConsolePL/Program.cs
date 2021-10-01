@@ -3,7 +3,7 @@ using Persistance;
 using BL;
 using System.Collections.Generic;
 
-// dotnet publish --configuration Release -o /Users/sinhnx/Desktop/LoginDemo
+// dotnet publish --configuration Release -o D:\APP
 namespace ConsolePL
 {
     class Program

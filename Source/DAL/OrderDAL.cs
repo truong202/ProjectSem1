@@ -26,6 +26,14 @@ namespace DAL
                 command.Transaction = transaction;
                 try
                 {
+                    command.CommandText = "call sp_getCustomerByPhone(@phone);";
+                    command.Parameters.AddWithValue("@phone", order.CustomerInfo.Phone);
+                    reader = command.ExecuteReader();
+                    if (reader.Read())
+                    {
+                        order.CustomerInfo.CustomerId = reader.GetInt32("customer_id");
+                    }
+                    reader.Close();
                     if (order.CustomerInfo.CustomerId == null)
                     {
                         //Insert new Customer
@@ -52,7 +60,6 @@ namespace DAL
                     command.Parameters.AddWithValue("@orderStatus", Order.UNPAID);
                     command.ExecuteNonQuery();
                     //get new Order_ID
-                    // cmd.CommandText = "select order_id from Orders order by order_id desc limit 1;";
                     command.CommandText = "call sp_getNewOrderId();";
                     reader = command.ExecuteReader();
                     if (reader.Read())

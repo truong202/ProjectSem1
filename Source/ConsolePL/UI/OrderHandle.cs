@@ -148,7 +148,7 @@ namespace ConsolePL
                             {
                                 Console.WriteLine();
                                 Console.WriteLine("  Order not found!");
-                                Console.Write("  → Input order id to payment: ");
+                                Utility.PressAnyKey("continue");
                                 input = string.Empty;
                             }
                             else
@@ -156,14 +156,14 @@ namespace ConsolePL
                                 if (order.Status == Order.CANCEL)
                                 {
                                     Console.WriteLine();
-                                    Utility.Write("  The order been cancelled!", ConsoleColor.Red);
+                                    Utility.Write("  The order has been cancelled!", ConsoleColor.Red);
                                     Console.WriteLine();
                                     Utility.PressAnyKey("continue");
                                 }
                                 else if (order.Status == Order.PAID)
                                 {
                                     Console.WriteLine();
-                                    Utility.Write("  The order been paid!", ConsoleColor.Red);
+                                    Utility.Write("  The order has been paid!", ConsoleColor.Red);
                                     Console.WriteLine();
                                     Utility.PressAnyKey("continue");
                                 }
@@ -255,7 +255,7 @@ namespace ConsolePL
                     }
                     else
                     {
-                        if(money == 0) money = totalPayment;
+                        if (money == 0) money = totalPayment;
                         order.Status = Order.PAID;
                         result = orderBL.Payment(order);
                         if (result)

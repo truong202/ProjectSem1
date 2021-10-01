@@ -121,7 +121,7 @@ namespace ConsolePL
             if (laptop == null)
             {
                 Console.WriteLine("  Laptop not found!");
-                Utility.PressAnyKey("back");
+                // Utility.PressAnyKey("back");
                 return;
             }
             Console.Clear();

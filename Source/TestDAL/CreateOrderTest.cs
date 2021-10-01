@@ -17,7 +17,7 @@ namespace TestDAL
                 CustomerInfo = new Customer { CustomerName = "cus1", Phone = "0836984111", Address = "Ha Noi" },
                 Seller = new Staff { Id = 1 },
                 Laptops = { new Laptop { LaptopId = 26, Quantity =1},
-                            new Laptop { LaptopId = 11, Quantity =2},
+                            new Laptop { LaptopId = 11, Quantity =1},
                             new Laptop { LaptopId = 22, Quantity =1},
                             new Laptop { LaptopId = 7, Quantity =1}}
             };
@@ -33,7 +33,7 @@ namespace TestDAL
                 CustomerInfo = new Customer { CustomerName = "cus2", Phone = "0836984222", Address = "Ha Noi" },
                 Seller = new Staff { Id = 1 },
                 Laptops = { new Laptop { LaptopId = 26, Quantity =1},
-                            new Laptop { LaptopId = 23, Quantity =2},
+                            new Laptop { LaptopId = 23, Quantity =1},
                             new Laptop { LaptopId = 2, Quantity =1},
                             new Laptop { LaptopId = 20, Quantity =1}}
             };
@@ -49,9 +49,9 @@ namespace TestDAL
                 CustomerInfo = new Customer { CustomerName = "cus3", Phone = "0836984333", Address = "Ha Noi" },
                 Seller = new Staff { Id = 1 },
                 Laptops = { new Laptop { LaptopId = 4, Quantity =1},
-                            new Laptop { LaptopId = 12, Quantity =2},
-                            new Laptop { LaptopId = 15, Quantity =2},
-                            new Laptop { LaptopId = 18, Quantity =2}}
+                            new Laptop { LaptopId = 12, Quantity =1},
+                            new Laptop { LaptopId = 15, Quantity =1},
+                            new Laptop { LaptopId = 18, Quantity =1}}
             };
             bool result = orderDAL.CreateOrder(order);
             Assert.True(result == true);
