@@ -5,8 +5,8 @@ namespace Persistance
 {
     public class Staff
     {
-        public int? StaffId { set; get; }
-        public string StaffName { set; get; }
+        public int? Id { set; get; }
+        public string Name { set; get; }
         public string Username { set; get; }
         public string Password { set; get; }
         public int Role { set; get; }
@@ -15,7 +15,7 @@ namespace Persistance
         public static void CheckUsername(string username)
         {
             if (username == null || username.Trim() == "")
-                throw new Exception("Username cannot be empty!");
+                throw new Exception("Password cannot be empty!");
             if (!Regex.IsMatch(username, @"^([A-Za-z-0-9])+$"))
                 throw new Exception("Only letters (a-Z), numbers (0-9) are allowed!");
             if (username.Length < 6)

@@ -16,7 +16,7 @@ namespace TestDAL
         [InlineData(3)]
         public void GetOrderByIdTest1(int orderId)
         {
-            Order result = orderDAL.GetOrderById(orderId);
+            Order result = orderDAL.GetById(orderId);
             Assert.True(result != null);
             Assert.True(result.OrderId == orderId);
         }
@@ -26,7 +26,7 @@ namespace TestDAL
         [InlineData(30)]
         public void GetOrderByIdTest2(int orderId)
         {
-            Order result = orderDAL.GetOrderById(orderId);
+            Order result = orderDAL.GetById(orderId);
             Assert.True(result == null);
         }
     }

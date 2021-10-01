@@ -9,26 +9,31 @@ namespace DAL
     public class LaptopDAL
     {
         private MySqlConnection connection = DbConfig.GetConnection();
-        // private MySqlDataReader reader;
         public List<Laptop> Search(string searchValue, int offset)
         {
             List<Laptop> laptops = new List<Laptop>();
-            lock (connection)
+
+            try
             {
-                try
+                connection.Open();
+                MySqlCommand command = new MySqlCommand("call sp_searchLaptops(@searchValue, @offset)", connection);
+                command.Parameters.AddWithValue("@searchValue", searchValue);
+                command.Parameters.AddWithValue("@offset", offset);
+                using (MySqlDataReader reader = command.ExecuteReader())
                 {
-                    connection.Open();
-                    MySqlCommand command = new MySqlCommand("call sp_getLaptops(@searchValue, @offset)", connection);
-                    command.Parameters.AddWithValue("@searchValue", searchValue);
-                    command.Parameters.AddWithValue("@offset", offset);
-                    using (MySqlDataReader reader = command.ExecuteReader())
+                    while (reader.Read())
                     {
-                        while (reader.Read())
-                            laptops.Add(GetLaptop(reader));
+                        laptops.Add(GetLaptop(reader));
                     }
-                    connection.Close();
                 }
-                catch { }
+                // connection.Close();
+            }
+            catch
+            {
+            }
+            finally
+            {
+                try { connection.Close(); } catch { }
             }
             if (laptops.Count == 0) laptops = null;
             return laptops;
@@ -37,52 +42,57 @@ namespace DAL
         public Laptop GetById(int laptopId)
         {
             Laptop laptop = null;
-            lock (connection)
+
+            try
             {
-                try
+                connection.Open();
+                MySqlCommand command = new MySqlCommand("call sp_GetLaptopById(@laptopId)", connection);
+                command.Parameters.AddWithValue("@laptopId", laptopId);
+                using (MySqlDataReader reader = command.ExecuteReader())
                 {
-                    connection.Open();
-                    MySqlCommand command = new MySqlCommand("call sp_GetLaptopById(@laptopId)", connection);
-                    command.Parameters.AddWithValue("@laptopId", laptopId);
-                    using (MySqlDataReader reader = command.ExecuteReader())
+                    if (reader.Read())
                     {
-                        if (reader.Read())
-                            laptop = GetLaptop(reader);
+                        laptop = new Laptop();
+                        laptop = GetLaptop(reader);
                     }
-                    connection.Close();
                 }
-                catch { }
+            }
+            catch { }
+            finally
+            {
+                try { connection.Close(); } catch { }
             }
             return laptop;
         }
         public int GetCount(string searchValue)
         {
             int result = 0;
-            lock (connection)
-                try
+            try
+            {
+                connection.Open();
+                MySqlCommand command = new MySqlCommand("call sp_getCount(@searchValue)", connection);
+                command.Parameters.AddWithValue("@searchValue", searchValue);
+                using (MySqlDataReader reader = command.ExecuteReader())
                 {
-                    connection.Open();
-                    MySqlCommand command = new MySqlCommand("call sp_getCount(@searchValue)", connection);
-                    command.Parameters.AddWithValue("@searchValue", searchValue);
-                    using (MySqlDataReader reader = command.ExecuteReader())
-                    {
-                        if (reader.Read())
-                            result = reader.GetInt32("count");
-                    }
-                    connection.Close();
+                    if (reader.Read())
+                        result = reader.GetInt32("count");
                 }
-                catch { }
+                // connection.Close();
+            }
+            catch { }
+            finally
+            {
+                try { connection.Close(); } catch { }
+            }
             return result;
         }
-        protected internal Laptop GetLaptop(MySqlDataReader reader)
+        internal Laptop GetLaptop(MySqlDataReader reader)
         {
             Laptop laptop = new Laptop();
             laptop.LaptopId = reader.GetInt32("laptop_id");
             laptop.LaptopName = reader.GetString("laptop_name");
             laptop.CategoryInfo.CategoryName = reader.GetString("category_name");
             laptop.ManufactoryInfo.ManufactoryName = reader.GetString("manufactory_name");
-            laptop.ManufactoryInfo.Website = reader.GetString("website");
-            laptop.ManufactoryInfo.Address = reader.GetString("address");
             laptop.CPU = reader.GetString("CPU");
             laptop.Ram = reader.GetString("Ram");
             laptop.HardDrive = reader.GetString("hard_drive");

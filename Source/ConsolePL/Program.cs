@@ -3,7 +3,6 @@ using Persistance;
 using BL;
 using System.Collections.Generic;
 
-
 // dotnet publish --configuration Release -o /Users/sinhnx/Desktop/LoginDemo
 namespace ConsolePL
 {
@@ -13,22 +12,22 @@ namespace ConsolePL
         {
             Console.OutputEncoding = System.Text.Encoding.Unicode;
             Console.InputEncoding = System.Text.Encoding.Unicode;
+            // Console.TreatControlCAsInput = true;
             Console.Title = "LAPTOP STORE";
             Staff staff = Login.Run();
+            // Staff staff = new Staff() { Role = Staff.SELLER, Id = 1 };
             int choose;
             string title;
-            string[] menu;
+            string[] menuItems;
             switch (staff.Role)
             {
                 case Staff.SELLER:
                     title = "[MENU SELLER]";
-                    // menu = new[] { "SEARCH LAPTOPS", "EXIT" };
-                    menu = new[] { "Search Laptops", "Exit" };
+                    menuItems = new[] { "Search Laptops", "Exit" };
+                    Menu sellerMenu = new Menu(title, menuItems);
                     LaptopHandle laptopH = new LaptopHandle();
-                    Menu sellerMenu = new Menu(title, menu);
                     do
                     {
-                        // choose = Menu.Display(title, menu);
                         choose = sellerMenu.Run();
                         switch (choose)
                         {
@@ -36,23 +35,23 @@ namespace ConsolePL
                                 laptopH.SearchLaptops(staff);
                                 break;
                         }
-                    } while (choose != menu.Length);
+                    } while (choose != menuItems.Length);
                     break;
                 case Staff.ACCOUNTANCE:
-                    title = "ACCOUNTANCE";
-                    menu = new[] { "PAYMENT", "EXIT" };
+                    title = "[MENU ACCOUNTANCE]";
+                    menuItems = new[] { "Payment", "Exit" };
+                    Menu accountanceMenu = new Menu(title, menuItems);
                     OrderHandle orderH = new OrderHandle();
-                    Menu accountMenu = new Menu(title, menu);
-                    do{
-                        choose = accountMenu.Run();
+                    do
+                    {
+                        choose = accountanceMenu.Run();
                         switch (choose)
                         {
-                        case 1:
-                            orderH.Payment(staff);
-                            break;
+                            case 1:
+                                orderH.Payment(staff);
+                                break;
                         }
-
-                } while (choose != menu.Length);
+                    } while (choose != menuItems.Length);
                     break;
             }
             Console.Clear();

@@ -330,6 +330,7 @@ WHERE s.username = BINARY username AND s.password = BINARY password;
 END $$
 DELIMITER ;
 
+
 DELIMITER $$
 CREATE PROCEDURE sp_createCustomer(IN customerName VARCHAR(50), IN address VARCHAR(100), 
  IN phone VARCHAR(10))
@@ -338,6 +339,7 @@ INSERT INTO Customers(customer_name, address, phone)
 VALUES(customerName, address, phone);
 END $$
 DELIMITER ;
+
 
 DELIMITER $$
 CREATE PROCEDURE sp_getCustomerByPhone(IN phone VARCHAR(10))
@@ -349,6 +351,7 @@ WHERE c.phone = phone;
 END $$
 DELIMITER ;
 
+
 DELIMITER $$
 CREATE PROCEDURE sp_getNewCustomerId()
 BEGIN
@@ -356,13 +359,15 @@ SELECT customer_id FROM customers ORDER BY customer_id DESC LIMIT 1;
 END $$
 DELIMITER ;
 
+
 DELIMITER $$
 CREATE PROCEDURE sp_createOrder(IN customerId INT, IN sellerId INT, IN orderStatus INT)
 BEGIN
-INSERT INTO orders(customer_id, seller_id, order_status)
-VALUES(customerId, sellerId, orderStatus);
+INSERT INTO orders(customer_id, seller_id, order_date, order_status)
+VALUES(customerId, sellerId, NOW(), orderStatus);
 END $$
 DELIMITER ;
+
 
 DELIMITER $$
 CREATE PROCEDURE sp_getNewOrderId()
@@ -371,12 +376,14 @@ SELECT order_id FROM orders ORDER BY order_id DESC LIMIT 1;
 END $$
 DELIMITER ;
 
+
 DELIMITER $$
 CREATE PROCEDURE sp_getPrice(IN laptopId INT)
 BEGIN
 	SELECT price FROM laptops WHERE laptop_id = laptopID;
 END $$
 DELIMITER ;
+
 
 DELIMITER $$
 CREATE PROCEDURE sp_insertToOrderDetails(IN orderId INT, IN laptopId INT, IN price DECIMAL, IN quantity INT)
@@ -386,25 +393,21 @@ VALUES (orderId, laptopId, price, quantity);
 END $$
 DELIMITER ;
 
-DELIMITER $$
-CREATE PROCEDURE sp_changeOrderStatus(IN orderStatus INT, IN orderId INT)
-BEGIN
-	UPDATE orders SET order_status = orderStatus WHERE order_id = orderId;
-END $$
-DELIMITER ;
 
-$$ DELIMITER $$
-CREATE PROCEDURE sp_addAccountanceToOrder(IN accountanceId INT, IN orderId INT)
+DELIMITER $$
+CREATE PROCEDURE sp_updateOrderAfterPayment(IN accountanceId INT, IN orderStatus INT, IN orderId INT)
 BEGIN
-	UPDATE orders SET accountance_id = accountanceId WHERE order_id = orderID;
+	UPDATE orders SET order_status = orderStatus, accountance_id = accountanceId WHERE order_id = orderId;
 END $$
 DELIMITER ;
+lock tables orders write; unlock tables;
+call sp_updateOrderAfterPayment(3, 1, 1);
 
 DELIMITER $$
 CREATE PROCEDURE sp_getCount(IN searchValue VARCHAR(255))
 BEGIN
 SELECT 
-    COUNT(*) as count
+    COUNT(*) AS count
 FROM
     laptops l
         INNER JOIN categories c ON l.category_id = c.category_id
@@ -416,19 +419,17 @@ WHERE l.laptop_name LIKE CONCAT('%', searchValue, '%') OR
 END $$
 DELIMITER ;
 
+
 DELIMITER $$
-CREATE PROCEDURE sp_getOrderCount(IN searchValue VARCHAR(255))
+CREATE PROCEDURE sp_getOrderCount(IN status INT)
 BEGIN
 SELECT 
     COUNT(*) as count
-FROM
-	orders o
-        INNER JOIN customers c ON o.customer_id = c.customer_id
-WHERE 
-	c.customer_name LIKE CONCAT('%', searchValue, '%') OR
-	o.order_id = searchValue;
+FROM orders o
+WHERE	o.order_status = status;
 END $$
 DELIMITER ;
+
 
 DELIMITER $$
 CREATE PROCEDURE sp_getLaptopById(IN laptopId int)
@@ -448,8 +449,9 @@ WHERE l.laptop_id = laptopId;
 END $$
 DELIMITER ;
 
+
 DELIMITER $$
-CREATE PROCEDURE sp_getLaptops(IN searchValue VARCHAR(255), IN _offset INT)
+CREATE PROCEDURE sp_searchLaptops(IN searchValue VARCHAR(255), IN _offset INT)
 BEGIN 
 SELECT 
 	l.laptop_id, l.laptop_name, c.category_id, c.category_name, m.manufactory_id, m.manufactory_name, IFNULL(m.website, '') AS website,
@@ -464,12 +466,13 @@ FROM
         INNER JOIN manufactories m ON l.manufactory_id = m.manufactory_id
 WHERE l.laptop_name LIKE CONCAT('%', searchValue, '%') OR 
 	  c.category_name LIKE CONCAT('%', searchValue, '%') OR
-      m.manufactory_name LIKE  CONCAT('%', searchValue, '%')
-      OR l.laptop_id = searchValue
+      m.manufactory_name LIKE  CONCAT('%', searchValue, '%') OR
+      l.laptop_id = searchValue
 ORDER BY l.laptop_id
-LIMIT 8 OFFSET _offset;
+LIMIT 10 OFFSET _offset;
 END $$
 DELIMITER ;
+
 
 DELIMITER $$
 CREATE TRIGGER tg_beforeInsert BEFORE INSERT
@@ -492,86 +495,104 @@ CREATE TRIGGER tg_checkQuantity
     END $$
 DELIMITER ;
 
+
 DELIMITER $$
-CREATE PROCEDURE sp_updateQuantityInLaptops(IN _quantity INT, IN laptopId INT)
+CREATE PROCEDURE sp_updateQuantityInLaptopsAfterCreateOrder(IN _quantity INT, IN laptopId INT)
 BEGIN
 UPDATE LAPTOPS SET quantity = quantity - _quantity WHERE laptop_id = laptopId;
 END $$
 DELIMITER ;
 
+
 DELIMITER $$
-CREATE PROCEDURE sp_updateQuantityInLaptopsAf(IN _quantity INT, IN laptopId INT)
+CREATE PROCEDURE sp_changeOrderStatus(IN status INT, IN orderId INT, IN staffId INT)
+BEGIN
+UPDATE orders SET order_status = status, accountance_id = staffId WHERE order_id = orderId;
+END $$
+DELIMITER ;
+
+
+DELIMITER $$
+CREATE PROCEDURE sp_updateQuantityInLaptopsAfterCancelOrder(IN _quantity INT, IN laptopId INT)
 BEGIN
 UPDATE LAPTOPS SET quantity = quantity + _quantity WHERE laptop_id = laptopId;
 END $$
 DELIMITER ;
 
 
-
 DELIMITER $$
-CREATE PROCEDURE sp_getOrders(IN searchValue VARCHAR(255), IN _offset INT)
+CREATE PROCEDURE sp_getOrdersUnpaid()
 BEGIN
 SELECT 
-    o.order_id, c.customer_id, o.accountance_id, o.seller_id, c.phone, c.address, c.customer_name, IFNULL(o.order_date, '') AS order_date, o.order_status
+    o.order_id, o.order_date, o.order_status, c.customer_id, c.customer_name, c.phone, c.address, sl.staff_id AS seller_id,
+    sl.staff_name AS seller_name, ac.staff_id AS accountance_id, ifnull(ac.staff_name,'') AS accountance_name
 FROM
     orders o
-    INNER JOIN customers c ON o.customer_id = c.customer_id
-WHERE 
-	o.order_status = 1 AND
-    (c.customer_name LIKE CONCAT('%', searchValue, '%')
-	OR o.order_id = searchValue)
-ORDER BY o.order_id
+        INNER JOIN customers c ON o.customer_id = c.customer_id
+        LEFT JOIN staffs sl ON o.seller_id = sl.staff_id
+        LEFT JOIN staffs ac ON o.accountance_id = ac.staff_id
+WHERE o.order_status = 1 OR o.order_status = 2;
+END $$
+DELIMITER ;
+
+
+DELIMITER $$
+CREATE PROCEDURE sp_getOrdersByStatus(IN status INT, IN _offset INT)
+BEGIN
+SELECT 
+    o.order_id, o.order_date, o.order_status, c.customer_id, c.customer_name, c.phone, c.address, sl.staff_id AS seller_id, 
+	sl.staff_name AS seller_name, ac.staff_id AS accountance_id
+FROM 
+    orders o
+        INNER JOIN customers c ON o.customer_id = c.customer_id
+        LEFT JOIN staffs sl ON o.seller_id = sl.staff_id
+        LEFT JOIN staffs ac ON o.accountance_id = ac.staff_id
+WHERE o.order_status = status
 LIMIT 10 OFFSET _offset;
 END $$
 DELIMITER ;
 
 
 DELIMITER $$
-CREATE PROCEDURE sp_getOrdersById(IN orderId int)
-BEGIN
+CREATE PROCEDURE sp_getOrderById(IN orderId int)
+BEGIN  
 SELECT 
-    o.order_id, c.customer_id, c.customer_name, c.phone, c.address, o.accountance_id, o.seller_id, IFNULL(o.order_date, '') AS order_date, o.order_status
+    o.order_id, o.order_date, o.order_status, c.customer_id, c.customer_name, c.phone, c.address, sl.staff_id AS seller_id,
+    sl.staff_name AS seller_name, ac.staff_id AS accountance_id, ifnull(ac.staff_name,'') AS accountance_name
 FROM
-    order_details od
-        INNER JOIN orders o ON od.order_id = o.order_id
+    orders o
         INNER JOIN customers c ON o.customer_id = c.customer_id
-WHERE o.order_id = orderId AND o.order_status = 1;
-UPDATE orders SET order_status = 2 WHERE order_id = orderId and order_status = 1;
+        LEFT JOIN staffs sl ON o.seller_id = sl.staff_id
+        LEFT JOIN staffs ac ON o.accountance_id = ac.staff_id
+WHERE o.order_id = orderId;
 END $$
 DELIMITER ;
 
+
 DELIMITER $$
-CREATE PROCEDURE sp_getLaptopInOrder(IN orderId int)
-BEGIN 
+CREATE PROCEDURE sp_getLaptopsInOrder(IN orderId INT)
+BEGIN  
 SELECT 
-	l.laptop_id, l.laptop_name, od.unit_price, od.quantity
+    od.laptop_id, od.quantity, od.unit_price as price, l.laptop_name, c.category_id, c.category_name, m.manufactory_id, m.manufactory_name, 
+    IFNULL(m.website, '') AS website, IFNULL(m.address, '') AS address, IFNULL(l.CPU, '') AS CPU, IFNULL(l.Ram,'') AS Ram, 
+    IFNULL(l.hard_drive, '') AS hard_drive, IFNULL(l.VGA, '') AS VGA, IFNULL(l.display, '') AS display, IFNULL(l.battery, '') AS battery, 
+    IFNULL(l.weight, '') AS weight, IFNULL(l.materials, '') AS materials, IFNULL(l.ports, '') AS ports, IFNULL(l.network_and_connection, '') 
+    AS network_and_connection, IFNULL(l.security, '') AS security, IFNULL(l.keyboard, '') AS keyboard, IFNULL(l.audio, '') AS audio,
+    IFNULL(l.size, '') AS size, IFNULL(l.warranty_period, '') AS warranty_period, IFNULL(l.OS, '') AS OS
 FROM
     order_details od
-        INNER JOIN orders o ON od.order_id = o.order_id
-        INNER JOIN laptops l ON od.laptop_id = l.laptop_id
-WHERE o.order_id = orderId and o.order_status = 2;
+    INNER JOIN laptops l ON od.laptop_id = l.laptop_id
+    INNER JOIN categories c ON l.category_id = c.category_id
+	INNER JOIN manufactories m ON l.manufactory_id = m.manufactory_id
+WHERE od.order_id = orderId;
 END $$
 DELIMITER ;
 
-DELIMITER $$
-CREATE PROCEDURE sp_confirmPayment(IN orderStatus INT, IN orderId INT, IN accountanceId INT)
-BEGIN
-	UPDATE orders SET order_status = orderStatus WHERE order_id = orderId; 
-    
-	UPDATE orders SET accountance_id = accountanceId WHERE order_id = orderId;
-END $$
-DELIMITER ;
-
-DELIMITER $$
-CREATE PROCEDURE sp_updateAccountanceInfo(IN orderId INT, IN accountanceId INT)
-BEGIN
-	UPDATE orders SET accountance_id = accountanceId WHERE order_id = orderId;
-END $$
-DELIMITER ;
 
 DROP USER IF EXISTS 'laptop'@'localhost';
-CREATE USER IF NOT EXISTS 'laptop'@'localhost' IDENTIFIED BY 'vtcacademy'; 
-GRANT EXECUTE ON PROCEDURE laptop_store.sp_login TO 'laptop'@'localhost';
+CREATE USER IF NOT EXISTS 'laptop'@'localhost' IDENTIFIED BY 'vtcacademy';
+
+GRANT EXECUTE ON PROCEDURE laptop_store.sp_login TO 'laptop'@'localhost'; 
 GRANT EXECUTE ON PROCEDURE laptop_store.sp_createCustomer TO 'laptop'@'localhost';
 GRANT EXECUTE ON PROCEDURE laptop_store.sp_getCustomerByPhone TO 'laptop'@'localhost';
 GRANT EXECUTE ON PROCEDURE laptop_store.sp_getNewCustomerId TO 'laptop'@'localhost';
@@ -579,24 +600,24 @@ GRANT EXECUTE ON PROCEDURE laptop_store.sp_createOrder TO 'laptop'@'localhost';
 GRANT EXECUTE ON PROCEDURE laptop_store.sp_getNewOrderId TO 'laptop'@'localhost';
 GRANT EXECUTE ON PROCEDURE laptop_store.sp_getPrice TO 'laptop'@'localhost';
 GRANT EXECUTE ON PROCEDURE laptop_store.sp_insertToOrderDetails TO 'laptop'@'localhost';
-GRANT EXECUTE ON PROCEDURE laptop_store.sp_addAccountanceToOrder TO 'laptop'@'localhost';
-GRANT EXECUTE ON PROCEDURE laptop_store.sp_changeOrderStatus TO 'laptop'@'localhost';
-GRANT EXECUTE ON PROCEDURE laptop_store.sp_updateQuantityInLaptops TO 'laptop'@'localhost';
-GRANT EXECUTE ON PROCEDURE laptop_store.sp_updateQuantityInLaptopsAf TO 'laptop'@'localhost';
+GRANT EXECUTE ON PROCEDURE laptop_store.sp_updateOrderAfterPayment TO 'laptop'@'localhost';
+GRANT EXECUTE ON PROCEDURE laptop_store.sp_updateQuantityInLaptopsAfterCreateOrder TO 'laptop'@'localhost';
+GRANT EXECUTE ON PROCEDURE laptop_store.sp_updateQuantityInLaptopsAfterCancelOrder TO 'laptop'@'localhost';
 GRANT EXECUTE ON PROCEDURE laptop_store.sp_getCount TO 'laptop'@'localhost';
-GRANT EXECUTE ON PROCEDURE laptop_store.sp_getLaptops TO 'laptop'@'localhost';
+GRANT EXECUTE ON PROCEDURE laptop_store.sp_searchLaptops TO 'laptop'@'localhost';
 GRANT EXECUTE ON PROCEDURE laptop_store.sp_getLaptopById TO 'laptop'@'localhost';
-GRANT EXECUTE ON PROCEDURE laptop_store.sp_getOrders TO 'laptop'@'localhost';
-GRANT EXECUTE ON PROCEDURE laptop_store.sp_getOrdersById TO 'laptop'@'localhost';
+GRANT EXECUTE ON PROCEDURE laptop_store.sp_getOrdersByStatus TO 'laptop'@'localhost';
+GRANT EXECUTE ON PROCEDURE laptop_store.sp_getOrdersUnpaid TO 'laptop'@'localhost';
+GRANT EXECUTE ON PROCEDURE laptop_store.sp_getOrderById TO 'laptop'@'localhost';
+GRANT EXECUTE ON PROCEDURE laptop_store.sp_getLaptopsInOrder TO 'laptop'@'localhost';
 GRANT EXECUTE ON PROCEDURE laptop_store.sp_getOrderCount TO 'laptop'@'localhost';
-GRANT EXECUTE ON PROCEDURE laptop_store.sp_getLaptopInOrder TO 'laptop'@'localhost';
-GRANT EXECUTE ON PROCEDURE laptop_store.sp_confirmPayment TO 'laptop'@'localhost';
-GRANT EXECUTE ON PROCEDURE laptop_store.sp_updateAccountanceInfo TO 'laptop'@'localhost';
+GRANT EXECUTE ON PROCEDURE laptop_store.sp_changeOrderStatus TO 'laptop'@'localhost';
 GRANT LOCK TABLES ON laptop_store.* TO 'laptop'@'localhost';
 GRANT SELECT ON laptop_store.customers TO 'laptop'@'localhost';
 GRANT SELECT ON laptop_store.laptops TO 'laptop'@'localhost';
 GRANT SELECT ON laptop_store.orders TO 'laptop'@'localhost';
 GRANT SELECT ON laptop_store.order_details TO 'laptop'@'localhost';
+
 
 -- GRANT EXECUTE ON PROCEDURE laptop_store. TO 'laptop'@'localhost';
 -- GRANT ALL ON laptop_store.* TO 'laptop'@'localhost';

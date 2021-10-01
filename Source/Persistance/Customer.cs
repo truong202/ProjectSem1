@@ -11,7 +11,7 @@ namespace Persistance
         public string Address { set; get; }
         public static void CheckPhone(string phone)
         {
-            if (!Regex.IsMatch(phone, @"^([09|03|07|08|05|]{2})+([0-9]{8})"))
+            if (!Regex.IsMatch(phone, @"^([09|03|07|08|05|]{2})+([0-9]{8})$"))
             {
                 throw new Exception("Invalid phone numbers!");
             }

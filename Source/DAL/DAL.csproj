@@ -8,13 +8,13 @@
     <PackageReference Include="MySql.data" Version="8.0.26" />
   </ItemGroup>
 
-  <ItemGroup>
+    <ItemGroup>
     <None Include="DbConfig.txt">
       <Link>DbConfig.txt</Link>
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
   </ItemGroup>
-  
+
   <PropertyGroup>
     <TargetFramework>net5.0</TargetFramework>
   </PropertyGroup>

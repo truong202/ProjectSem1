@@ -11,18 +11,19 @@ namespace ConsolePL
         {
             int[] lengthDatas = GetLength(lines);
             StringBuilder builder = new StringBuilder();
-            builder.Append(GetLine(lengthDatas, " ┌", "─", "┬", "┐\n"));
+            builder.Append(GetLine(lengthDatas, "┌", "─", "┬", "┐\n"));
             for (int index = 0; index < lines.Count; index++)
             {
                 var line = lines[index];
-                builder.Append(" │ ");
+                builder.Append("│ ");
                 for (int i = 0; i < line.Length - 1; i++)
                     builder.Append(line[i].PadRight(lengthDatas[i] + 1) + "│ ");
                 builder.Append(line[line.Length - 1].PadRight(lengthDatas[line.Length - 1] + 1) + "│\n");
+                // builder.AppendLine();
                 if (index < lines.Count - 1)
-                    builder.Append(GetLine(lengthDatas, " ├", "─", "┼", "┤\n"));
+                    builder.Append(GetLine(lengthDatas, "├", "─", "┼", "┤\n"));
                 else
-                    builder.Append(GetLine(lengthDatas, " └", "─", "┴", "┘"));
+                    builder.Append(GetLine(lengthDatas, "└", "─", "┴", "┘"));
             }
             string[] a = builder.ToString().Split('\n');
             return a;
@@ -102,7 +103,7 @@ namespace ConsolePL
             value = new string(arr);
             return value;
         }
-        public static int GetNumber(int numberStart)
+        public static int GetNumber(string msg, int numberStart)
         {
             int number;
             Console.CursorVisible = true;
@@ -110,27 +111,51 @@ namespace ConsolePL
             {
                 if (int.TryParse(Console.ReadLine(), out number) && number >= numberStart) return number;
                 Console.ForegroundColor = ConsoleColor.Red;
-                Console.WriteLine("  Entered incorrectly");
+                Console.WriteLine($"  Invalid {msg}!");
                 Console.ResetColor();
-                Console.Write("  → Re-enter: ");
+                Console.Write($"  → Re-enter {msg}: ");
             }
         }
-
-        public static decimal GetMoney(decimal totalPrice)
+        public static int GetNumber(string msg, int numberStart, out ConsoleKeyInfo keyInfo)
         {
-            decimal money;
-            Console.CursorVisible = true;
+            ConsoleKey key;
+            string input;
+            int value;
             while (true)
             {
-                if (Decimal.TryParse(Console.ReadLine(), out money) && money >= totalPrice) return money;
-                Console.ForegroundColor = ConsoleColor.Red;
-                Console.WriteLine("  Entered incorrectly");
-                Console.ResetColor();
-                Console.Write("  → Re-enter: ");
+                input = string.Empty;
+                do
+                {
+                    keyInfo = Console.ReadKey(true);
+                    key = keyInfo.Key;
+                    if (key == ConsoleKey.Escape || key == ConsoleKey.RightArrow || key == ConsoleKey.LeftArrow || key == ConsoleKey.DownArrow
+                        || key == ConsoleKey.UpArrow)
+                    {
+                        Console.CursorVisible = true; return -1;
+                    }
+                    if (key == ConsoleKey.Backspace && input.Length > 0)
+                    {
+                        Console.Write("\b \b");
+                        input = input[..^1];
+                    }
+                    else if (!char.IsControl(keyInfo.KeyChar) && keyInfo.KeyChar >= '0' && keyInfo.KeyChar <= '9')
+                    {
+                        Console.Write(keyInfo.KeyChar);
+                        input += keyInfo.KeyChar;
+                    }
+                } while (key != ConsoleKey.Enter);
+                if (int.TryParse(input, out value) && value >= numberStart) return value;
+                Console.WriteLine();
+                Utility.PrintColor($"  → Invalid {msg}!", ConsoleColor.Red, ConsoleColor.Black);
+                Console.Write("\n  → Re-enter {0}: ", msg);
             }
         }
-
-    
+        public static void Write(string text, ConsoleColor textColor)
+        {
+            Console.ForegroundColor = textColor;
+            Console.Write(text);
+            Console.ResetColor();
+        }
         public static string GetName()
         {
             string name;
@@ -151,7 +176,50 @@ namespace ConsolePL
                 }
             }
         }
-
+        public static decimal GetMoney(out ConsoleKeyInfo keyInfo)
+        {
+            decimal money = 0;
+            string moneyString;
+            ConsoleKey key;
+            while (true)
+            {
+                moneyString = string.Empty;
+                do
+                {
+                    Console.CursorVisible = true;
+                    keyInfo = Console.ReadKey(intercept: true);
+                    Console.CursorVisible = false;
+                    key = keyInfo.Key;
+                    if (key == ConsoleKey.Escape || key == ConsoleKey.RightArrow || key == ConsoleKey.LeftArrow || key == ConsoleKey.DownArrow
+                        || key == ConsoleKey.UpArrow || (key == ConsoleKey.X && (keyInfo.Modifiers & ConsoleModifiers.Control) != 0))
+                    {
+                        Console.CursorVisible = true; return -1;
+                    }
+                    if (key == ConsoleKey.Backspace && moneyString.Length > 0)
+                    {
+                        moneyString = moneyString[..^1];
+                        decimal.TryParse(moneyString, out money);
+                        if (moneyString.Length > 0)
+                            Console.Write("\b\b  \r  → Enter money: {0:N0}", money);
+                        else
+                            Console.Write("\b \r  → Enter money: ");
+                    }
+                    else if (!char.IsControl(keyInfo.KeyChar) && keyInfo.KeyChar >= '0' && keyInfo.KeyChar <= '9'
+                            && money.ToString().Length <= 27)
+                    {
+                        moneyString += keyInfo.KeyChar;
+                        decimal.TryParse(moneyString, out money);
+                        Console.Write("\r  → Enter money: {0:N0}", money);
+                    }
+                } while (key != ConsoleKey.Enter);
+                if (decimal.TryParse(moneyString, out money))
+                {
+                    Console.CursorVisible = true;
+                    Console.WriteLine();
+                    return money;
+                }
+            }
+        }
         public static string GetPhone()
         {
             string phone;
@@ -186,7 +254,7 @@ namespace ConsolePL
             return lengthDatas;
         }
 
-        private static string GetLine(int[] lengthDatas, string c1, string c2, string c3, string c4)
+        public static string GetLine(int[] lengthDatas, string c1, string c2, string c3, string c4)
         {
             string line = c1;
             int column = lengthDatas.Length;
@@ -197,18 +265,6 @@ namespace ConsolePL
                 line += i < (column - 1) ? c3 : c4;
             }
             return line;
-        }
-        public static void PrintTitle(string title)
-        {
-            string line = "══════════════════════════════════════════════════════════════════════════════════════════════════════════════════";
-            int lengthLine = line.Length + 2;
-            int posLeft = Utility.GetPosition(title, lengthLine);
-            Console.WriteLine("  ╔{0}╗", line);
-            Console.WriteLine("  ║{0," + (lengthLine - 1) + "}", "║");
-            Console.Write("  ║{0," + (posLeft - 1) + "}", ""); Utility.PrintColor(title, ConsoleColor.Green, ConsoleColor.Black);
-            Console.WriteLine("{0," + (lengthLine - title.Length - posLeft) + "}", "║");
-            Console.WriteLine("  ║{0," + (lengthLine - 1) + "}", "║");
-            Console.WriteLine("  ╚{0}╝", line);
         }
         public static void PrintColor(string content, ConsoleColor fColor, ConsoleColor bColor)
         {
@@ -231,6 +287,26 @@ namespace ConsolePL
             Console.Write(".\b");
             Console.ResetColor();
         }
+        public static void PrintTitle(string title, bool lastLine)
+        {
+            string line = "══════════════════════════════════════════════════════════════════════════════════════════════════════════════════";
+            int lengthLine = line.Length + 2;
+            int posLeft = Utility.GetPosition(title, lengthLine);
+            Console.WriteLine("  ╔{0}╗", line);
+            Console.WriteLine("  ║{0," + (lengthLine - 1) + "}", "║");
+            Console.Write("  ║{0," + (posLeft - 1) + "}", ""); Utility.PrintColor(title, ConsoleColor.Green, ConsoleColor.Black);
+            Console.WriteLine("{0," + (lengthLine - title.Length - posLeft) + "}", "║");
+            Console.WriteLine("  ║{0," + (lengthLine - 1) + "}", "║");
+            if (lastLine)
+                Console.WriteLine("  ╚{0}╝", line);
+        }
+        public static void PressAnyKey(string msg)
+        {
+            Console.CursorVisible = false;
+            Console.WriteLine($"  Press any key to {msg}...");
+            Console.ReadKey(true);
+            Console.CursorVisible = true;
+        }
         public static void PrintBorder(int width, int height)
         {
             Console.ForegroundColor = ConsoleColor.Green;
@@ -243,6 +319,7 @@ namespace ConsolePL
             {
                 Console.WriteLine("█{0," + (width - 1) + "}", "█");
             }
+            Console.SetCursorPosition(0, height);
             for (int i = 0; i < width; i++)
             {
                 Console.Write("▀");

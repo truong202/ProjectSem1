@@ -32,13 +32,12 @@ namespace Persistance
             CategoryInfo = new Category();
             ManufactoryInfo = new Manufactory();
         }
-
+    
         public override bool Equals(object obj)
         {
             if (obj is Laptop)
             {
-                Laptop laptop = (Laptop)obj;
-                return this.LaptopId.Equals(laptop.LaptopId);
+                return ((Laptop)obj).LaptopId.Equals(this.LaptopId);
             }
             return false;
         }

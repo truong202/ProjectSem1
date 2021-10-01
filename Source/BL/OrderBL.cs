@@ -13,30 +13,29 @@ namespace BL
         {
             return orderDAL.CreateOrder(order);
         }
-        public List<Order> GetOrders(string searchValue, int offset)
+        public List<Order> GetByStatus(int status, int offset)
         {
-            return orderDAL.GetOrders(searchValue, offset);
+            return orderDAL.GetByStatus(status, offset);
         }
-        public Order GetOrderById(int orderId)
+        public Order GetById(int orderId)
         {
-            return orderDAL.GetOrderById(orderId);
+            return orderDAL.GetById(orderId);
         }
-        public int GetOrderCount(string searchValue)
+        public List<Order> GetOrdersUnpaid()
         {
-            return orderDAL.GetOrderCount(searchValue);
+            return orderDAL.GetOrdersUnpaid();
         }
-        public bool ConfirmPayment(Order order)
+        public bool ChangeStatus(int status,int orderId, int staffId)
         {
-            return orderDAL.ConfirmPayment(order);
+            return orderDAL.ChangeStatus(status, orderId, staffId);
         }
-        public bool CancelPayment(Order order)
+        public int GetCount(int status)
         {
-            return orderDAL.CancelPayment(order);
+            return orderDAL.GetCount(status);
         }
-        public bool ChangeStatus(Order order)
+        public bool Payment(Order order)
         {
-            return orderDAL.ChangeStatus(order);
+            return orderDAL.Payment(order);
         }
-
     }
 }

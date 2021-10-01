@@ -11,30 +11,34 @@ namespace DAL
         public Staff Login(Staff staff)
         {
             Staff _staff = null;
-            lock (connection)
+            try
             {
-                try
+                connection.Open();
+                MySqlCommand command = new MySqlCommand($"call sp_login(@username, @password)", connection);
+                command.Parameters.AddWithValue("@username", staff.Username);
+                command.Parameters.AddWithValue("@password", CreateMD5(staff.Password));
+                using (MySqlDataReader reader = command.ExecuteReader())
                 {
-                    connection.Open();
-                    MySqlCommand command = new MySqlCommand($"call sp_login(@username, @password)", connection);
-                    command.Parameters.AddWithValue("@username", staff.Username);
-                    command.Parameters.AddWithValue("@password", CreateMD5(staff.Password));
-                    using (MySqlDataReader reader = command.ExecuteReader())
+                    if (reader.Read())
                     {
-                        if (reader.Read())
-                            _staff = GetStaff(reader);
+                        _staff = new Staff();
+                        _staff = GetStaff(reader);
                     }
-                    connection.Close();
                 }
-                catch { }
+                // connection.Close();
+            }
+            catch(Exception e) {Console.WriteLine(e); }
+            finally
+            {
+                try { connection.Close(); } catch { }
             }
             return _staff;
         }
-        private Staff GetStaff(MySqlDataReader reader)
+        internal Staff GetStaff(MySqlDataReader reader)
         {
             Staff staff = new Staff();
-            staff.StaffId = reader.GetInt32("staff_id");
-            staff.StaffName = reader.GetString("staff_name");
+            staff.Id = reader.GetInt32("staff_id");
+            staff.Name = reader.GetString("staff_name");
             staff.Username = reader.GetString("username");
             staff.Password = reader.GetString("password");
             staff.Role = reader.GetInt32("role");
