@@ -224,7 +224,6 @@ namespace DAL
             }
             if (orders.Count == 0) orders = null;
             return orders;
-
         }
         public bool ChangeStatus(int status, int orderId, int staffId)
         {
@@ -250,43 +249,7 @@ namespace DAL
             }
             return result;
         }
-        public List<Order> GetByStatus(int status, int offset)
-        {
-            List<Order> orders = new List<Order>();
-            try
-            {
-                connection.Open();
-                MySqlCommand command = new MySqlCommand("call sp_getOrdersByStatus(@status, @offset);", connection);
-                command.Parameters.AddWithValue("@status", status);
-                command.Parameters.AddWithValue("@offset", offset);
-                using (reader = command.ExecuteReader())
-                {
-                    while (reader.Read())
-                        orders.Add(GetOrder(reader));
-                }
-                LaptopDAL laptopDAL = new LaptopDAL();
-                command.CommandText = "call sp_getLaptopsInOrder(@orderId);";
-                for (int i = 0; i < orders.Count; i++)
-                {
-                    command.Parameters.Clear();
-                    command.Parameters.AddWithValue("@orderId", orders[i].OrderId);
-                    using (reader = command.ExecuteReader())
-                    {
-                        while (reader.Read())
-                        {
-                            orders[i].Laptops.Add(laptopDAL.GetLaptop(reader));
-                        }
-                    }
-                }
-            }
-            catch { }
-            finally
-            {
-                try { connection.Close(); } catch { }
-            }
-            if (orders.Count == 0) orders = null;
-            return orders;
-        }
+       
         public Order GetById(int orderId)
         {
             Order order = null;
@@ -309,7 +272,6 @@ namespace DAL
                         order.Laptops.Add(laptopDAL.GetLaptop(reader));
                     reader.Close();
                 }
-                // connection.Close();
             }
             catch (Exception e)
             {
@@ -321,28 +283,6 @@ namespace DAL
                 try { connection.Close(); } catch { }
             }
             return order;
-        }
-        public int GetCount(int status)
-        {
-            int result = 0;
-            try
-            {
-                connection.Open();
-                MySqlCommand command = new MySqlCommand("call sp_getOrderCount(@status)", connection);
-                command.Parameters.AddWithValue("@status", status);
-                using (MySqlDataReader reader = command.ExecuteReader())
-                {
-                    if (reader.Read())
-                        result = reader.GetInt32("count");
-                }
-                // connection.Close();
-            }
-            catch { }
-            finally
-            {
-                try { connection.Close(); } catch { }
-            }
-            return result;
         }
         public Order GetOrder(MySqlDataReader reader)
         {

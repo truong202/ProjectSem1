@@ -9,40 +9,96 @@ namespace DAL
     public class LaptopDAL
     {
         private MySqlConnection connection = DbConfig.GetConnection();
-        public List<Laptop> Search(string searchValue, int offset)
+        // public List<Laptop> Searchs(string searchValue)
+        // {
+        //     List<Laptop> laptops = new List<Laptop>();
+
+        //     try
+        //     {
+        //         connection.Open();
+        //         MySqlCommand command = new MySqlCommand("call sp_searchLaptops(@searchValue)", connection);
+        //         command.Parameters.AddWithValue("@searchValue", searchValue);
+        //         using (MySqlDataReader reader = command.ExecuteReader())
+        //         {
+        //             while (reader.Read())
+        //             {
+        //                 laptops.Add(GetLaptop(reader));
+        //             }
+        //         }
+        //     }
+        //     catch { }
+        //     finally
+        //     {
+        //         try { connection.Close(); } catch { }
+        //     }
+        //     if (laptops.Count == 0) laptops = null;
+        //     return laptops;
+        // }
+        public List<Laptop> Search(string searchValue)
         {
             List<Laptop> laptops = new List<Laptop>();
-
+            string[] filters = searchValue.Split('#');
+            string filter = GetFilter(filters);
+            if (filter == null || filter == "") return null;
+            string query = @"SELECT l.laptop_id, l.laptop_name, c.category_id, c.category_name, m.manufactory_id,
+                m.manufactory_name, IFNULL(m.website, '') AS website, IFNULL(m.address, '') AS address, l.CPU, l.Ram,
+                l.hard_drive, l.VGA, l.display, l.battery, l.weight,l.materials, l.ports, l.network_and_connection,
+                l.security, l.keyboard, l.audio, l.size, l.warranty_period, l.OS, l.price, l.quantity
+                FROM
+                    laptops l
+                        INNER JOIN categories c ON l.category_id = c.category_id
+                        INNER JOIN manufactories m ON l.manufactory_id = m.manufactory_id
+                WHERE ";
             try
             {
                 connection.Open();
-                MySqlCommand command = new MySqlCommand("call sp_searchLaptops(@searchValue, @offset)", connection);
-                command.Parameters.AddWithValue("@searchValue", searchValue);
-                command.Parameters.AddWithValue("@offset", offset);
-                using (MySqlDataReader reader = command.ExecuteReader())
+                MySqlCommand command = connection.CreateCommand();
+                switch (filter)
                 {
-                    while (reader.Read())
-                    {
-                        laptops.Add(GetLaptop(reader));
-                    }
+                    case "SEARCH":
+                        query += @"l.laptop_name LIKE CONCAT('%', @searchValue, '%') OR c.category_name LIKE CONCAT('%', @searchValue, '%') OR
+                            m.manufactory_name LIKE  CONCAT('%', @searchValue, '%') OR l.laptop_id = @searchValue ORDER BY l.laptop_id;";
+                        command.Parameters.AddWithValue("@searchValue", searchValue.Trim());
+                        break;
+                    case "SEARCH_DESC":
+                    case "SEARCH_ASC":
+                        query += @"l.laptop_name LIKE CONCAT('%', @searchValue, '%') OR c.category_name LIKE CONCAT('%', @searchValue, '%') OR
+                            m.manufactory_name LIKE  CONCAT('%', @searchValue, '%') ORDER BY l.price " + (filter.Equals("SEARCH_DESC") ? "DESC;" : ";");
+                        command.Parameters.AddWithValue("@searchValue", filters[0].Trim());
+                        break;
+                    case "MANUFACTORY_CATEGORY":
+                        query += @"m.manufactory_name LIKE  CONCAT('%', @value1, '%') AND c.category_name LIKE CONCAT('%', @value2, '%') OR
+                                m.manufactory_name LIKE  CONCAT('%', @value2, '%') AND c.category_name LIKE CONCAT('%', @value1, '%')
+                                ORDER BY l.laptop_id;";
+                        command.Parameters.AddWithValue("@value1", filters[0].Trim());
+                        command.Parameters.AddWithValue("@value2", filters[1].Trim());
+                        break;
+                    case "MANUFACTORY_CATEGORY_DESC":
+                    case "MANUFACTORY_CATEGORY_ASC":
+                        query += @"m.manufactory_name LIKE  CONCAT('%', @value1, '%') AND c.category_name LIKE CONCAT('%', @value2, '%') OR
+                                m.manufactory_name LIKE  CONCAT('%', @value2, '%') AND c.category_name LIKE CONCAT('%', @value1, '%')
+                                ORDER BY l.price " + (filter.Equals("MANUFACTORY_CATEGORY_DESC") ? "DESC;" : ";");
+                        command.Parameters.AddWithValue("@value1", filters[0].Trim());
+                        command.Parameters.AddWithValue("@value2", filters[1].Trim());
+                        break;
                 }
-                // connection.Close();
+                command.CommandText = query;
+                laptops = GetLaptops(command);
             }
-            catch
+            catch (Exception e)
             {
+                Console.WriteLine(e);
+                Console.ReadKey();
             }
             finally
             {
                 try { connection.Close(); } catch { }
             }
-            if (laptops.Count == 0) laptops = null;
             return laptops;
-
         }
         public Laptop GetById(int laptopId)
         {
             Laptop laptop = null;
-
             try
             {
                 connection.Open();
@@ -64,27 +120,18 @@ namespace DAL
             }
             return laptop;
         }
-        public int GetCount(string searchValue)
+        public List<Laptop> GetLaptops(MySqlCommand command)
         {
-            int result = 0;
-            try
+            List<Laptop> laptops = new List<Laptop>();
+            using (MySqlDataReader reader = command.ExecuteReader())
             {
-                connection.Open();
-                MySqlCommand command = new MySqlCommand("call sp_getCount(@searchValue)", connection);
-                command.Parameters.AddWithValue("@searchValue", searchValue);
-                using (MySqlDataReader reader = command.ExecuteReader())
+                while (reader.Read())
                 {
-                    if (reader.Read())
-                        result = reader.GetInt32("count");
+                    laptops.Add(GetLaptop(reader));
                 }
-                // connection.Close();
             }
-            catch { }
-            finally
-            {
-                try { connection.Close(); } catch { }
-            }
-            return result;
+            if (laptops.Count == 0) return null;
+            return laptops;
         }
         internal Laptop GetLaptop(MySqlDataReader reader)
         {
@@ -99,7 +146,7 @@ namespace DAL
             laptop.VGA = reader.GetString("VGA");
             laptop.Display = reader.GetString("display");
             laptop.Battery = reader.GetString("battery");
-            laptop.Weight = reader.GetString("weight");
+            laptop.Weight = reader.GetFloat("weight");
             laptop.Materials = reader.GetString("materials");
             laptop.Ports = reader.GetString("ports");
             laptop.NetworkAndConnection = reader.GetString("network_and_connection");
@@ -112,6 +159,34 @@ namespace DAL
             laptop.Price = reader.GetDecimal("price");
             laptop.WarrantyPeriod = reader.GetString("warranty_period");
             return laptop;
+        }
+        private string GetFilter(string[] filters)
+        {
+            string filter = "";
+            int count = filters.Length;
+            if (count == 1)
+            {
+                filter = "SEARCH";
+            }
+            else if (count == 2)
+            {
+                if (filters[count - 1].ToUpper().Trim().Equals("DESC") || filters[count - 1].ToUpper().Trim().Equals("ASC"))
+                    filter = "SEARCH_" + filters[count - 1].ToUpper().Trim();
+                else
+                    filter = "MANUFACTORY_CATEGORY";
+            }
+            else if (count == 3)
+            {
+                filter = "MANUFACTORY_CATEGORY_";
+                if (filters[count - 1].ToUpper().Trim().Equals("DESC") || filters[count - 1].ToUpper().Trim().Equals("ASC"))
+                    filter += filters[count - 1].ToUpper().Trim();
+                else filter = "";
+            }
+            else
+            {
+                filter = "";
+            }
+            return filter;
         }
     }
 }

@@ -20,7 +20,6 @@ namespace DAL
                     if (reader.Read())
                         customer = GetCustomer(reader);
                 }
-                // connection.Close();
             }
             catch { }
             finally

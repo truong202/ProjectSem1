@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 
 namespace Persistance
 {
@@ -14,7 +15,7 @@ namespace Persistance
         public string VGA { set; get; }
         public string Display { set; get; }
         public string Battery { set; get; }
-        public string Weight { set; get; }
+        public float Weight { set; get; }
         public string Materials { set; get; }
         public string Ports { set; get; }
         public string NetworkAndConnection { set; get; }
@@ -32,7 +33,19 @@ namespace Persistance
             CategoryInfo = new Category();
             ManufactoryInfo = new Manufactory();
         }
-    
+
+        public static List<Laptop> SplitList(List<Laptop> listLaptop, int index, int count)
+        {
+            if (listLaptop == null || listLaptop.Count == 0) return null;
+            List<Laptop> laptops = new List<Laptop>();
+            for (int i = index; i < index + count; i++)
+            {
+                laptops.Add(listLaptop[i]);
+                if (i == listLaptop.Count - 1) break;
+            }
+            return laptops;
+        }
+
         public override bool Equals(object obj)
         {
             if (obj is Laptop)

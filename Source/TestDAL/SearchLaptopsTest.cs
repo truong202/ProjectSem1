@@ -18,7 +18,7 @@ namespace TestDAL
         [InlineData("asus")]
         public void SearchLaptopsTest1(string searchValue)
         {
-            List<Laptop> result = laptopDAL.Search(searchValue, 0);
+            List<Laptop> result = laptopDAL.Search(searchValue);
             Assert.True(result != null);
             foreach (var laptop in result)
                 Assert.True(laptop.LaptopName.Contains(searchValue, StringComparison.OrdinalIgnoreCase) ||
@@ -30,7 +30,7 @@ namespace TestDAL
         [InlineData("sdfasjhfj")]
         public void SearchLaptopsTest2(string searchValue)
         {
-            List<Laptop> result = laptopDAL.Search(searchValue, 0);
+            List<Laptop> result = laptopDAL.Search(searchValue);
             Assert.True(result == null);
         }
     }

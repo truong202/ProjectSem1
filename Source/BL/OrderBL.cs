@@ -13,10 +13,6 @@ namespace BL
         {
             return orderDAL.CreateOrder(order);
         }
-        public List<Order> GetByStatus(int status, int offset)
-        {
-            return orderDAL.GetByStatus(status, offset);
-        }
         public Order GetById(int orderId)
         {
             return orderDAL.GetById(orderId);
@@ -28,10 +24,6 @@ namespace BL
         public bool ChangeStatus(int status,int orderId, int staffId)
         {
             return orderDAL.ChangeStatus(status, orderId, staffId);
-        }
-        public int GetCount(int status)
-        {
-            return orderDAL.GetCount(status);
         }
         public bool Payment(Order order)
         {

@@ -7,28 +7,7 @@ namespace ConsolePL
 {
     public static class Utility
     {
-        public static string[] GetTable(List<string[]> lines)
-        {
-            int[] lengthDatas = GetLength(lines);
-            StringBuilder builder = new StringBuilder();
-            builder.Append(GetLine(lengthDatas, "┌", "─", "┬", "┐\n"));
-            for (int index = 0; index < lines.Count; index++)
-            {
-                var line = lines[index];
-                builder.Append("│ ");
-                for (int i = 0; i < line.Length - 1; i++)
-                    builder.Append(line[i].PadRight(lengthDatas[i] + 1) + "│ ");
-                builder.Append(line[line.Length - 1].PadRight(lengthDatas[line.Length - 1] + 1) + "│\n");
-                // builder.AppendLine();
-                if (index < lines.Count - 1)
-                    builder.Append(GetLine(lengthDatas, "├", "─", "┼", "┤\n"));
-                else
-                    builder.Append(GetLine(lengthDatas, "└", "─", "┴", "┘"));
-            }
-            string[] a = builder.ToString().Split('\n');
-            return a;
-        }
-        public static List<string> LineFormat(string data, int lengthLine)
+        public static List<string> SplitLine(string data, int lengthLine)
         {
             List<string> lines = new List<string>();
             int startIndex = 0, startIndexFind = 0;
@@ -103,6 +82,17 @@ namespace ConsolePL
             value = new string(arr);
             return value;
         }
+        public static void ShowPageNumber(int pageCount, int page)
+        {
+            if (pageCount > 1)
+            {
+                string nextPage = (page > 0 && page < pageCount) ? "►" : " ";
+                string prePage = (page > 1) ? "◄" : " ";
+                string pages = prePage + $"      [{page}/{pageCount}]      " + nextPage;
+                int position = 60 + pages.Length / 2;
+                Console.WriteLine("{0," + position + "}", pages);
+            }
+        }
         public static int GetNumber(string msg, int numberStart)
         {
             int number;
@@ -128,8 +118,7 @@ namespace ConsolePL
                 {
                     keyInfo = Console.ReadKey(true);
                     key = keyInfo.Key;
-                    if (key == ConsoleKey.Escape || key == ConsoleKey.RightArrow || key == ConsoleKey.LeftArrow || key == ConsoleKey.DownArrow
-                        || key == ConsoleKey.UpArrow)
+                    if (key == ConsoleKey.Escape || key == ConsoleKey.RightArrow || key == ConsoleKey.LeftArrow )
                     {
                         Console.CursorVisible = true; return -1;
                     }
@@ -146,7 +135,7 @@ namespace ConsolePL
                 } while (key != ConsoleKey.Enter);
                 if (int.TryParse(input, out value) && value >= numberStart) return value;
                 Console.WriteLine();
-                Utility.PrintColor($"  → Invalid {msg}!", ConsoleColor.Red, ConsoleColor.Black);
+                Utility.Write($"  → Invalid {msg}!", ConsoleColor.Red);
                 Console.Write("\n  → Re-enter {0}: ", msg);
             }
         }
@@ -187,11 +176,10 @@ namespace ConsolePL
                 do
                 {
                     Console.CursorVisible = true;
-                    keyInfo = Console.ReadKey(intercept: true);
+                    keyInfo = Console.ReadKey(true);
                     Console.CursorVisible = false;
                     key = keyInfo.Key;
-                    if (key == ConsoleKey.Escape || key == ConsoleKey.RightArrow || key == ConsoleKey.LeftArrow || key == ConsoleKey.DownArrow
-                        || key == ConsoleKey.UpArrow || (key == ConsoleKey.X && (keyInfo.Modifiers & ConsoleModifiers.Control) != 0))
+                    if (key == ConsoleKey.Escape || (key == ConsoleKey.X && (keyInfo.Modifiers & ConsoleModifiers.Control) != 0))
                     {
                         Console.CursorVisible = true; return -1;
                     }
@@ -240,20 +228,6 @@ namespace ConsolePL
                 }
             }
         }
-
-        private static int[] GetLength(List<string[]> lines)
-        {
-            var numElements = lines[0].Length;
-            var lengthDatas = new int[numElements];
-            for (int column = 0; column < numElements; column++)
-            {
-                lengthDatas[column] = lines[0][column].Length;
-                for (int rows = 1; rows < lines.Count; rows++)
-                    if (lengthDatas[column] <= lines[rows][column].Length) lengthDatas[column] = lines[rows][column].Length;
-            }
-            return lengthDatas;
-        }
-
         public static string GetLine(int[] lengthDatas, string c1, string c2, string c3, string c4)
         {
             string line = c1;
@@ -266,27 +240,6 @@ namespace ConsolePL
             }
             return line;
         }
-        public static void PrintColor(string content, ConsoleColor fColor, ConsoleColor bColor)
-        {
-            Console.BackgroundColor = bColor;
-            Console.ForegroundColor = fColor;
-            Console.Write(content);
-            Console.BackgroundColor = ConsoleColor.Black;
-            Console.ForegroundColor = ConsoleColor.Black;
-            Console.Write(".\b");
-            Console.ResetColor();
-        }
-        public static void PrintColor(string content, int posleft, ConsoleColor fColor, ConsoleColor bColor)
-        {
-            Console.Write("{0," + (posleft - 1) + "}", "");
-            Console.BackgroundColor = bColor;
-            Console.ForegroundColor = fColor;
-            Console.Write(content);
-            Console.ResetColor();
-            Console.ForegroundColor = Console.BackgroundColor;
-            Console.Write(".\b");
-            Console.ResetColor();
-        }
         public static void PrintTitle(string title, bool lastLine)
         {
             string line = "══════════════════════════════════════════════════════════════════════════════════════════════════════════════════";
@@ -294,7 +247,7 @@ namespace ConsolePL
             int posLeft = Utility.GetPosition(title, lengthLine);
             Console.WriteLine("  ╔{0}╗", line);
             Console.WriteLine("  ║{0," + (lengthLine - 1) + "}", "║");
-            Console.Write("  ║{0," + (posLeft - 1) + "}", ""); Utility.PrintColor(title, ConsoleColor.Green, ConsoleColor.Black);
+            Console.Write("  ║{0," + (posLeft - 1) + "}", ""); Utility.Write(title, ConsoleColor.Green);
             Console.WriteLine("{0," + (lengthLine - title.Length - posLeft) + "}", "║");
             Console.WriteLine("  ║{0," + (lengthLine - 1) + "}", "║");
             if (lastLine)
@@ -306,25 +259,6 @@ namespace ConsolePL
             Console.WriteLine($"  Press any key to {msg}...");
             Console.ReadKey(true);
             Console.CursorVisible = true;
-        }
-        public static void PrintBorder(int width, int height)
-        {
-            Console.ForegroundColor = ConsoleColor.Green;
-            for (int i = 0; i < width; i++)
-            {
-                Console.Write("▄");
-            }
-            Console.WriteLine();
-            for (int i = 1; i < height; i++)
-            {
-                Console.WriteLine("█{0," + (width - 1) + "}", "█");
-            }
-            Console.SetCursorPosition(0, height);
-            for (int i = 0; i < width; i++)
-            {
-                Console.Write("▀");
-            }
-            Console.ResetColor();
         }
         public static int GetPosition(string value, int width)
         {

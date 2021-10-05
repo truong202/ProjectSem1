@@ -12,13 +12,9 @@ namespace BL
         {
             return laptopDAL.GetById(laptopId);
         }
-        public List<Laptop> Search(string searchValue, int offset)
+        public List<Laptop> Search(string searchValue)
         {
-            return laptopDAL.Search(searchValue, offset);
-        }
-        public int GetCount(string searchValue)
-        {
-            return laptopDAL.GetCount(searchValue);
+            return laptopDAL.Search(searchValue);
         }
     }
 }
