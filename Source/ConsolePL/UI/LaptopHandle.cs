@@ -47,10 +47,10 @@ namespace ConsolePL
                             Console.WriteLine();
                             if ((keyInfo.Modifiers & ConsoleModifiers.Control) != 0 && key == ConsoleKey.H)
                             {
-                                Console.WriteLine("  → LaptopName|Manufactory|Category: Tim theo ten or thuong hieu or the loai");
-                                Console.WriteLine("  → LaptopName|Manufactory|Category # desc|asc: Tim theo ten or thuong hieu or the loai, gia cao -> thap or thap-> cao");
-                                Console.WriteLine("  → Manufactory # Category: Tim theo thuong hieu va the loai");
-                                Console.WriteLine("  → Manufactory # Category # desc|asc: Tim theo thuong hieu va the loai, gia cao -> thap or thap-> cao");
+                                Console.WriteLine("  * LaptopName|Manufactory|Category: Tim theo ten or thuong hieu or the loai");
+                                Console.WriteLine("  * LaptopName|Manufactory|Category # desc|asc: Tim theo ten or thuong hieu or the loai, gia cao -> thap or thap-> cao");
+                                Console.WriteLine("  * Manufactory # Category: Tim theo thuong hieu va the loai");
+                                Console.WriteLine("  * Manufactory # Category # desc|asc: Tim theo thuong hieu va the loai, gia cao -> thap or thap-> cao");
                                 continue;
                             }
                             break;
