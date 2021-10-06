@@ -27,6 +27,7 @@ namespace ConsolePL
                 }
                 else
                 {
+                    Console.WriteLine("  Laptop Name: {0}  Price: {1:N0} VNĐ", laptop.LaptopName, laptop.Price);
                     if (laptop.Quantity <= 0)
                     {
                         Utility.Write("  Laptop is out of stock, please choose another laptop!\n", ConsoleColor.Red);

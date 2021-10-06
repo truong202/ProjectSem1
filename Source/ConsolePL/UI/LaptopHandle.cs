@@ -39,18 +39,19 @@ namespace ConsolePL
                 {
                     case ConsoleKey.F:
                         Console.CursorVisible = true;
+                        Console.WriteLine("\n  Press combination CTRL + H to view instructions");
                         while (true)
                         {
-                            Console.Write("\n  → Input search value: ");
+                            Console.Write("  → Input search value: ");
                             searchValue = Utility.GetString(out keyInfo, new[] { ConsoleKey.H });
                             key = keyInfo.Key;
                             Console.WriteLine();
                             if ((keyInfo.Modifiers & ConsoleModifiers.Control) != 0 && key == ConsoleKey.H)
                             {
-                                Console.WriteLine("  * LaptopName|Manufactory|Category: Search by Name or Manufactory or Category ");
-                                Console.WriteLine("  * LaptopName|Manufactory|Category # desc|asc: Search by Name or Manufactory or Category, Price: High -> Low or Low-> High");
+                                Console.WriteLine("\n  * Name|Manufactory|Category: Search by Name or Manufactory or Category");
+                                Console.WriteLine("  * Name|Manufactory|Category # desc|asc: Search by Name or Manufactory or Category, Price: High → Low or Low → High");
                                 Console.WriteLine("  * Manufactory # Category: Search by Manufactory and Category");
-                                Console.WriteLine("  * Manufactory # Category # desc|asc: Search by Manufactory and Category, Price: High -> Low or Low-> High");
+                                Console.WriteLine("  * Manufactory # Category # desc|asc: Search by Manufactory and Category, Price: High → Low or Low → High\n");
                                 continue;
                             }
                             break;

@@ -13,7 +13,7 @@ namespace ConsolePL
             Console.OutputEncoding = System.Text.Encoding.Unicode;
             Console.InputEncoding = System.Text.Encoding.Unicode;
             // Console.TreatControlCAsInput = true;
-            Console.Title = "LAPTOP STORE";
+            Console.Title = "LAPTOP_STORE";
             Staff staff = Login.Run();
             // Staff staff = new Staff() { Role = Staff.SELLER, Id = 1 };
             int choose;
