@@ -38,9 +38,23 @@ namespace ConsolePL
                 switch (key)
                 {
                     case ConsoleKey.F:
-                        Console.Write("\n  → Input search value(Press enter to show all laptop): ");
                         Console.CursorVisible = true;
-                        searchValue = Console.ReadLine().Trim();
+                        while (true)
+                        {
+                            Console.Write("\n  → Input search value: ");
+                            searchValue = Utility.GetString(out keyInfo, new[] { ConsoleKey.H });
+                            key = keyInfo.Key;
+                            Console.WriteLine();
+                            if ((keyInfo.Modifiers & ConsoleModifiers.Control) != 0 && key == ConsoleKey.H)
+                            {
+                                Console.WriteLine("  → LaptopName|Manufactory|Category: Tim theo ten or thuong hieu or the loai");
+                                Console.WriteLine("  → LaptopName|Manufactory|Category # desc|asc: Tim theo ten or thuong hieu or the loai, gia cao -> thap or thap-> cao");
+                                Console.WriteLine("  → Manufactory # Category: Tim theo thuong hieu va the loai");
+                                Console.WriteLine("  → Manufactory # Category # desc|asc: Tim theo thuong hieu va the loai, gia cao -> thap or thap-> cao");
+                                continue;
+                            }
+                            break;
+                        }
                         listLaptop = laptopBL.Search(searchValue);
                         if (listLaptop == null || listLaptop.Count == 0)
                         {
@@ -160,7 +174,7 @@ namespace ConsolePL
                 Console.WriteLine("  │ Display:     {0,-99} │", data);
             Console.WriteLine("  │ Battery:     {0,-99} │", laptop.Battery);
             Console.WriteLine("  │ Weight:      {0,-99} │", laptop.Weight.ToString() + " Kg");
-                Console.WriteLine("  │ Materials:   {0,-99} │", laptop.Materials);
+            Console.WriteLine("  │ Materials:   {0,-99} │", laptop.Materials);
             data = laptop.Ports;
             if (data.Length > 99)
             {

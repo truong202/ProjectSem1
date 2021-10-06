@@ -106,6 +106,29 @@ namespace ConsolePL
                 Console.Write($"  → Re-enter {msg}: ");
             }
         }
+        public static string GetString(out ConsoleKeyInfo keyInfo, ConsoleKey[] validKeys)
+        {
+            ConsoleKey key;
+            string input;
+            input = string.Empty;
+            do
+            {
+                keyInfo = Console.ReadKey(true);
+                key = keyInfo.Key;
+                if ((keyInfo.Modifiers & ConsoleModifiers.Control) != 0 && Array.Exists(validKeys, ch => ch.Equals(key))) break;
+                if (key == ConsoleKey.Backspace && input.Length > 0)
+                {
+                    Console.Write("\b \b");
+                    input = input[..^1];
+                }
+                else if (!char.IsControl(keyInfo.KeyChar))
+                {
+                    Console.Write(keyInfo.KeyChar);
+                    input += keyInfo.KeyChar;
+                }
+            } while (key != ConsoleKey.Enter);
+            return input;
+        }
         public static int GetNumber(string msg, int numberStart, out ConsoleKeyInfo keyInfo)
         {
             ConsoleKey key;
@@ -118,7 +141,7 @@ namespace ConsolePL
                 {
                     keyInfo = Console.ReadKey(true);
                     key = keyInfo.Key;
-                    if (key == ConsoleKey.Escape || key == ConsoleKey.RightArrow || key == ConsoleKey.LeftArrow )
+                    if (key == ConsoleKey.Escape || key == ConsoleKey.RightArrow || key == ConsoleKey.LeftArrow)
                     {
                         Console.CursorVisible = true; return -1;
                     }
@@ -127,7 +150,7 @@ namespace ConsolePL
                         Console.Write("\b \b");
                         input = input[..^1];
                     }
-                    else if (!char.IsControl(keyInfo.KeyChar) && keyInfo.KeyChar >= '0' && keyInfo.KeyChar <= '9')
+                    else if (keyInfo.KeyChar >= '0' && keyInfo.KeyChar <= '9')
                     {
                         Console.Write(keyInfo.KeyChar);
                         input += keyInfo.KeyChar;
