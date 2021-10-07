@@ -21,9 +21,9 @@ namespace TestDAL
             List<Laptop> result = laptopDAL.Search(searchValue);
             Assert.True(result != null);
             foreach (var laptop in result)
-                Assert.True(laptop.LaptopName.Contains(searchValue, StringComparison.OrdinalIgnoreCase) ||
-                laptop.ManufactoryInfo.ManufactoryName.Contains(searchValue, StringComparison.OrdinalIgnoreCase) ||
-                laptop.CategoryInfo.CategoryName.Contains(searchValue, StringComparison.OrdinalIgnoreCase));
+                Assert.True(laptop.Name.Contains(searchValue, StringComparison.OrdinalIgnoreCase) ||
+                laptop.ManufactoryInfo.Name.Contains(searchValue, StringComparison.OrdinalIgnoreCase) ||
+                laptop.CategoryInfo.Name.Contains(searchValue, StringComparison.OrdinalIgnoreCase));
         }
 
         [Theory]

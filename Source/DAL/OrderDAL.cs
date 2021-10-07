@@ -13,7 +13,7 @@ namespace DAL
         public bool CreateOrder(Order order)
         {
             if (order == null || order.Laptops == null || order.Laptops.Count == 0 ||
-                order.CustomerInfo == null || order.Seller.Id == null) return false;
+                order.CustomerInfo == null || order.Seller.ID == null) return false;
             bool result = false;
             try
             {
@@ -31,15 +31,15 @@ namespace DAL
                     reader = command.ExecuteReader();
                     if (reader.Read())
                     {
-                        order.CustomerInfo.CustomerId = reader.GetInt32("customer_id");
+                        order.CustomerInfo.ID = reader.GetInt32("customer_id");
                     }
                     reader.Close();
-                    if (order.CustomerInfo.CustomerId == null)
+                    if (order.CustomerInfo.ID == null)
                     {
                         //Insert new Customer
                         command.CommandText = "call sp_createCustomer(@customerName, @address, @phone);";
                         command.Parameters.Clear();
-                        command.Parameters.AddWithValue("@customerName", order.CustomerInfo.CustomerName);
+                        command.Parameters.AddWithValue("@customerName", order.CustomerInfo.Name);
                         command.Parameters.AddWithValue("@address", order.CustomerInfo.Address ?? "");
                         command.Parameters.AddWithValue("@phone", order.CustomerInfo.Phone);
                         command.ExecuteNonQuery();
@@ -48,15 +48,15 @@ namespace DAL
                         reader = command.ExecuteReader();
                         if (reader.Read())
                         {
-                            order.CustomerInfo.CustomerId = reader.GetInt32("customer_id");
+                            order.CustomerInfo.ID = reader.GetInt32("customer_id");
                         }
                         reader.Close();
                     }
                     //Insert Order
                     command.CommandText = "call sp_createOrder(@customerId, @sellerId, @orderStatus);";
                     command.Parameters.Clear();
-                    command.Parameters.AddWithValue("@customerId", order.CustomerInfo.CustomerId);
-                    command.Parameters.AddWithValue("@sellerId", order.Seller.Id);
+                    command.Parameters.AddWithValue("@customerId", order.CustomerInfo.ID);
+                    command.Parameters.AddWithValue("@sellerId", order.Seller.ID);
                     command.Parameters.AddWithValue("@orderStatus", Order.UNPAID);
                     command.ExecuteNonQuery();
                     //get new Order_ID
@@ -64,7 +64,7 @@ namespace DAL
                     reader = command.ExecuteReader();
                     if (reader.Read())
                     {
-                        order.OrderId = reader.GetInt32("order_id");
+                        order.ID = reader.GetInt32("order_id");
                     }
                     reader.Close();
                     //insert Order Details table
@@ -73,7 +73,7 @@ namespace DAL
                         //get unit_price
                         command.CommandText = "call sp_getPrice(@laptopId);";
                         command.Parameters.Clear();
-                        command.Parameters.AddWithValue("@laptopId", laptop.LaptopId);
+                        command.Parameters.AddWithValue("@laptopId", laptop.ID);
                         reader = command.ExecuteReader();
                         if (!reader.Read())
                         {
@@ -85,8 +85,8 @@ namespace DAL
                         //insert to Order Details
                         command.CommandText = "call sp_insertToOrderDetails(@orderId, @laptopId, @price, @quantity);";
                         command.Parameters.Clear();
-                        command.Parameters.AddWithValue("@orderId", order.OrderId);
-                        command.Parameters.AddWithValue("@laptopId", laptop.LaptopId);
+                        command.Parameters.AddWithValue("@orderId", order.ID);
+                        command.Parameters.AddWithValue("@laptopId", laptop.ID);
                         command.Parameters.AddWithValue("@price", laptop.Price);
                         command.Parameters.AddWithValue("@quantity", laptop.Quantity);
                         command.ExecuteNonQuery();
@@ -95,7 +95,7 @@ namespace DAL
                         command.CommandText = "call sp_updateQuantityInLaptopsAfterCreateOrder(@quantity, @laptopId);";
                         command.Parameters.Clear();
                         command.Parameters.AddWithValue("@quantity", laptop.Quantity);
-                        command.Parameters.AddWithValue("@laptopId", laptop.LaptopId);
+                        command.Parameters.AddWithValue("@laptopId", laptop.ID);
                         command.ExecuteNonQuery();
                     }
                     transaction.Commit();
@@ -136,10 +136,10 @@ namespace DAL
                 command.Transaction = transaction;
                 try
                 {
-                    command.CommandText = "call sp_updateOrderAfterPayment(@accountanceId, @orderStatus, @orderId);";
+                    command.CommandText = "call sp_updateOrderAfterPayment(@accountantId, @orderStatus, @orderId);";
                     command.Parameters.Clear();
-                    command.Parameters.AddWithValue("@accountanceId", order.Accountance.Id);
-                    command.Parameters.AddWithValue("@orderId", order.OrderId);
+                    command.Parameters.AddWithValue("@accountantId", order.Accountant.ID);
+                    command.Parameters.AddWithValue("@orderId", order.ID);
                     if (order.Status == Order.PAID)
                     {
                         command.Parameters.AddWithValue("@orderStatus", Order.PAID);
@@ -154,7 +154,7 @@ namespace DAL
                             command.CommandText = "call sp_updateQuantityInLaptopsAfterCancelOrder(@quantity, @laptopId);";
                             command.Parameters.Clear();
                             command.Parameters.AddWithValue("@quantity", laptop.Quantity);
-                            command.Parameters.AddWithValue("@laptopId", laptop.LaptopId);
+                            command.Parameters.AddWithValue("@laptopId", laptop.ID);
                             command.ExecuteNonQuery();
                         }
                     }
@@ -209,7 +209,7 @@ namespace DAL
                     for (int i = 0; i < orders.Count; i++)
                     {
                         command.Parameters.Clear();
-                        command.Parameters.AddWithValue("@orderId", orders[i].OrderId);
+                        command.Parameters.AddWithValue("@orderId", orders[i].ID);
                         using (reader = command.ExecuteReader())
                         {
                             while (reader.Read())
@@ -288,13 +288,13 @@ namespace DAL
         {
             Order order = new Order();
             StaffDAL staffDAL = new StaffDAL();
-            order.OrderId = reader.GetInt32("order_id");
+            order.ID = reader.GetInt32("order_id");
             order.CustomerInfo = new CustomerDAL().GetCustomer(reader);
-            order.Seller.Id = reader.GetInt32("seller_id");
+            order.Seller.ID = reader.GetInt32("seller_id");
             order.Seller.Name = reader.GetString("seller_name");
             try
             {
-                order.Accountance.Id = reader.GetInt32("accountance_id");
+                order.Accountant.ID = reader.GetInt32("accountance_id");
             }
             catch { }
             order.Date = reader.GetDateTime("order_date");

@@ -128,12 +128,12 @@ namespace ConsolePL
             for (int i = 0; i < laptops.Count; i++)
             {
                 int lengthName = 27;
-                string name = (laptops[i].LaptopName.Length > lengthName) ?
-                laptops[i].LaptopName.Remove(lengthName, laptops[i].LaptopName.Length - lengthName) + "..." : laptops[i].LaptopName;
+                string name = (laptops[i].Name.Length > lengthName) ?
+                laptops[i].Name.Remove(lengthName, laptops[i].Name.Length - lengthName) + "..." : laptops[i].Name;
                 int index = laptops[i].Ram.IndexOf('B') + 1;
                 string ram = laptops[i].Ram.Substring(0, index);
-                Console.WriteLine("  ║ {0,3} │ {1,-30} │ {2,-11} │ {3,-11} │ {4,-21} │ {5,6} │ {6,12:N0} ║", laptops[i].LaptopId,
-                                name, laptops[i].ManufactoryInfo.ManufactoryName, laptops[i].CategoryInfo.CategoryName,
+                Console.WriteLine("  ║ {0,3} │ {1,-30} │ {2,-11} │ {3,-11} │ {4,-21} │ {5,6} │ {6,12:N0} ║", laptops[i].ID,
+                                name, laptops[i].ManufactoryInfo.Name, laptops[i].CategoryInfo.Name,
                                 laptops[i].CPU, ram, laptops[i].Price);
             }
             ConsoleUtility.PrintLine(lengthDatas, "  ╚", "═", "╧", "╝\n");
@@ -156,10 +156,10 @@ namespace ConsolePL
             Console.Write("  │{0," + (posLeft - 1) + "}", ""); ConsoleUtility.Write(title, ConsoleColor.Green);
             Console.WriteLine("{0," + (lengthLine - title.Length - posLeft) + "}", "│");
             Console.WriteLine("  ├{0}┤", line);
-            Console.WriteLine("  │ Laptop Id:   {0,-99} │", laptop.LaptopId);
-            Console.WriteLine("  │ Laptop name: {0,-99} │", laptop.LaptopName);
-            Console.WriteLine("  │ Manufactory: {0,-99} │", laptop.ManufactoryInfo.ManufactoryName);
-            Console.WriteLine("  │ Category:    {0,-99} │", laptop.CategoryInfo.CategoryName);
+            Console.WriteLine("  │ Laptop Id:   {0,-99} │", laptop.ID);
+            Console.WriteLine("  │ Laptop name: {0,-99} │", laptop.Name);
+            Console.WriteLine("  │ Manufactory: {0,-99} │", laptop.ManufactoryInfo.Name);
+            Console.WriteLine("  │ Category:    {0,-99} │", laptop.CategoryInfo.Name);
             Console.WriteLine("  │ CPU:         {0,-99} │", laptop.CPU);
             Console.WriteLine("  │ RAM:         {0,-99} │", laptop.Ram);
             Console.WriteLine("  │ Hard drive:  {0,-99} │", laptop.HardDrive);

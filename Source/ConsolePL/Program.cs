@@ -118,9 +118,8 @@ namespace ConsolePL
                 staff = staffBL.Login(new Staff { Username = username, Password = password });
                 if (staff == null)
                 {
-                    Console.ForegroundColor = ConsoleColor.Red;
-                    Console.WriteLine("\n Incorrect Username or Password!"); Console.ResetColor();
-                    Console.Write(" Press any key to login again...");
+                    ConsoleUtility.Write("\n Incorrect Username or Password!\n", ConsoleColor.Red);
+                    ConsoleUtility.PressAnyKey("login again");
                     Console.ReadKey(true);
                 }
             } while (staff == null);

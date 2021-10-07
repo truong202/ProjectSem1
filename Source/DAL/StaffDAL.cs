@@ -37,7 +37,7 @@ namespace DAL
         internal Staff GetStaff(MySqlDataReader reader)
         {
             Staff staff = new Staff();
-            staff.Id = reader.GetInt32("staff_id");
+            staff.ID = reader.GetInt32("staff_id");
             staff.Name = reader.GetString("staff_name");
             staff.Username = reader.GetString("username");
             staff.Password = reader.GetString("password");

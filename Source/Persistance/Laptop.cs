@@ -5,8 +5,8 @@ namespace Persistance
 {
     public class Laptop
     {
-        public int LaptopId { set; get; }
-        public string LaptopName { set; get; }
+        public int ID { set; get; }
+        public string Name { set; get; }
         public Category CategoryInfo { set; get; }
         public Manufactory ManufactoryInfo { set; get; }
         public string CPU { set; get; }
@@ -48,13 +48,13 @@ namespace Persistance
         {
             if (obj is Laptop)
             {
-                return ((Laptop)obj).LaptopId.Equals(this.LaptopId);
+                return ((Laptop)obj).ID.Equals(this.ID);
             }
             return false;
         }
         public override int GetHashCode()
         {
-            return this.LaptopId.GetHashCode();
+            return this.ID.GetHashCode();
         }
     }
 }

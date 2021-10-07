@@ -132,10 +132,10 @@ namespace DAL
         internal Laptop GetLaptop(MySqlDataReader reader)
         {
             Laptop laptop = new Laptop();
-            laptop.LaptopId = reader.GetInt32("laptop_id");
-            laptop.LaptopName = reader.GetString("laptop_name");
-            laptop.CategoryInfo.CategoryName = reader.GetString("category_name");
-            laptop.ManufactoryInfo.ManufactoryName = reader.GetString("manufactory_name");
+            laptop.ID = reader.GetInt32("laptop_id");
+            laptop.Name = reader.GetString("laptop_name");
+            laptop.CategoryInfo.Name = reader.GetString("category_name");
+            laptop.ManufactoryInfo.Name = reader.GetString("manufactory_name");
             laptop.CPU = reader.GetString("CPU");
             laptop.Ram = reader.GetString("Ram");
             laptop.HardDrive = reader.GetString("hard_drive");

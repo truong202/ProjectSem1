@@ -114,14 +114,14 @@ namespace Utilities
                 name = Console.ReadLine();
                 try
                 {
-                    Utility.CheckName(name); return name;
+                    Utility.CheckName(name); return Utility.Standardize(name);
                 }
                 catch (Exception e)
                 {
                     Console.ForegroundColor = ConsoleColor.Red;
                     Console.WriteLine("  " + e.Message);
                     Console.ResetColor();
-                    Console.Write("  → Re-enter customer name: ");
+                    Console.Write("  → Re-enter name: ");
                 }
             }
         }

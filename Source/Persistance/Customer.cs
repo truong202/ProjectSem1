@@ -5,8 +5,8 @@ namespace Persistance
 {
     public class Customer
     {
-        public int? CustomerId { set; get; }
-        public string CustomerName { set; get; }
+        public int? ID { set; get; }
+        public string Name { set; get; }
         public string Phone { set; get; }
         public string Address { set; get; }
         public static void CheckPhone(string phone)

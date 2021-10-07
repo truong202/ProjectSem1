@@ -18,7 +18,7 @@ namespace TestDAL
         {
             var order = orderDAL.GetById(orderId);
             order.Status = Order.PAID;
-            order.Accountance.Id = 4;
+            order.Accountant.ID = 4;
             bool result = orderDAL.Payment(order);
             Assert.True(result);
             order = orderDAL.GetById(orderId);
@@ -33,7 +33,7 @@ namespace TestDAL
         {
             var order = orderDAL.GetById(orderId);
             order.Status = Order.CANCEL;
-            order.Accountance.Id = 5;
+            order.Accountant.ID = 5;
             bool result = orderDAL.Payment(order);
             Assert.True(result);
             order = orderDAL.GetById(orderId);

@@ -12,7 +12,7 @@ namespace Utilities
                                     ảấầẩẫậắằẳẵặẹẻẽềềểỄỆỈỊỌỎỐỒỔỖỘỚỜỞỠỢỤỦỨỪễệỉịọỏốồổỗộớờởỡợụủứừỬỮỰỲỴÝỶỸửữựỳỵỷỹ])+$"))
                 throw new Exception("Invalid name!");
             if (name.Trim() == "")
-                throw new Exception("Customer name cannot be empty!");
+                throw new Exception("Name cannot be empty!");
         }
         public static void CheckPhone(string phone)
         {

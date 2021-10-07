@@ -18,7 +18,7 @@ namespace TestDAL
         {
             Order result = orderDAL.GetById(orderId);
             Assert.True(result != null);
-            Assert.True(result.OrderId == orderId);
+            Assert.True(result.ID == orderId);
         }
 
         [Theory]

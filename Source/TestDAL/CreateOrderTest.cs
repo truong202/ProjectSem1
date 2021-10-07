@@ -14,12 +14,12 @@ namespace TestDAL
         {
             Order order = new Order
             {
-                CustomerInfo = new Customer { CustomerName = "cus1", Phone = "0836984111", Address = "Ha Noi" },
-                Seller = new Staff { Id = 1 },
-                Laptops = { new Laptop { LaptopId = 26, Quantity =1},
-                            new Laptop { LaptopId = 11, Quantity =1},
-                            new Laptop { LaptopId = 22, Quantity =1},
-                            new Laptop { LaptopId = 7, Quantity =1}}
+                CustomerInfo = new Customer { Name = "cus1", Phone = "0836984111", Address = "Ha Noi" },
+                Seller = new Staff { ID = 1 },
+                Laptops = { new Laptop { ID = 26, Quantity =1},
+                            new Laptop { ID = 11, Quantity =1},
+                            new Laptop { ID = 22, Quantity =1},
+                            new Laptop { ID = 7, Quantity =1}}
             };
             bool result = orderDAL.CreateOrder(order);
             Assert.True(result == true);
@@ -30,12 +30,12 @@ namespace TestDAL
         {
             Order order = new Order
             {
-                CustomerInfo = new Customer { CustomerName = "cus2", Phone = "0836984222", Address = "Ha Noi" },
-                Seller = new Staff { Id = 1 },
-                Laptops = { new Laptop { LaptopId = 26, Quantity =1},
-                            new Laptop { LaptopId = 23, Quantity =1},
-                            new Laptop { LaptopId = 2, Quantity =1},
-                            new Laptop { LaptopId = 20, Quantity =1}}
+                CustomerInfo = new Customer { Name = "cus2", Phone = "0836984222", Address = "Ha Noi" },
+                Seller = new Staff { ID = 1 },
+                Laptops = { new Laptop { ID = 26, Quantity =1},
+                            new Laptop { ID = 23, Quantity =1},
+                            new Laptop { ID = 2, Quantity =1},
+                            new Laptop { ID = 20, Quantity =1}}
             };
             bool result = orderDAL.CreateOrder(order);
             Assert.True(result == true);
@@ -46,12 +46,12 @@ namespace TestDAL
         {
             Order order = new Order
             {
-                CustomerInfo = new Customer { CustomerName = "cus3", Phone = "0836984333", Address = "Ha Noi" },
-                Seller = new Staff { Id = 1 },
-                Laptops = { new Laptop { LaptopId = 4, Quantity =1},
-                            new Laptop { LaptopId = 12, Quantity =1},
-                            new Laptop { LaptopId = 15, Quantity =1},
-                            new Laptop { LaptopId = 18, Quantity =1}}
+                CustomerInfo = new Customer { Name = "cus3", Phone = "0836984333", Address = "Ha Noi" },
+                Seller = new Staff { ID = 1 },
+                Laptops = { new Laptop { ID = 4, Quantity =1},
+                            new Laptop { ID = 12, Quantity =1},
+                            new Laptop { ID = 15, Quantity =1},
+                            new Laptop { ID = 18, Quantity =1}}
             };
             bool result = orderDAL.CreateOrder(order);
             Assert.True(result == true);
@@ -62,10 +62,10 @@ namespace TestDAL
         {
             Order order = new Order
             {
-                CustomerInfo = new Customer { CustomerName = "cus4", Phone = "0836984344", Address = "Ha Noi" },
-                Seller = new Staff { Id = 1 },
-                Laptops = { new Laptop { LaptopId = 1000, Quantity =1},
-                            new Laptop { LaptopId = 7, Quantity =1}}
+                CustomerInfo = new Customer { Name = "cus4", Phone = "0836984344", Address = "Ha Noi" },
+                Seller = new Staff { ID = 1 },
+                Laptops = { new Laptop { ID = 1000, Quantity =1},
+                            new Laptop { ID = 7, Quantity =1}}
             };
             bool result = orderDAL.CreateOrder(order);
             Assert.True(result == false);
@@ -76,10 +76,10 @@ namespace TestDAL
         {
             Order order = new Order
             {
-                CustomerInfo = new Customer { CustomerName = "cus5", Phone = "0836984355", Address = "Ha Noi" },
-                Seller = new Staff { Id = 1 },
-                Laptops = { new Laptop { LaptopId = 6, Quantity =1},
-                            new Laptop { LaptopId = 7, Quantity =1000}}
+                CustomerInfo = new Customer { Name = "cus5", Phone = "0836984355", Address = "Ha Noi" },
+                Seller = new Staff { ID = 1 },
+                Laptops = { new Laptop { ID = 6, Quantity =1},
+                            new Laptop { ID = 7, Quantity =1000}}
             };
             bool result = orderDAL.CreateOrder(order);
             Assert.True(result == false);

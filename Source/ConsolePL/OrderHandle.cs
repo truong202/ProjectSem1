@@ -28,7 +28,7 @@ namespace ConsolePL
                 }
                 else
                 {
-                    Console.WriteLine("  Laptop Name: {0}  Price: {1:N0} VNĐ", laptop.LaptopName, laptop.Price);
+                    Console.WriteLine("  Laptop Name: {0}  Price: {1:N0} VNĐ", laptop.Name, laptop.Price);
                     if (laptop.Quantity <= 0)
                     {
                         ConsoleUtility.Write("  Laptop is out of stock, please choose another laptop!\n", ConsoleColor.Red);
@@ -46,7 +46,7 @@ namespace ConsolePL
             } while (id != 0);
             if (order.Laptops.Count > 0)
             {
-                order.Seller.Id = staff.Id;
+                order.Seller.ID = staff.ID;
                 order.CustomerInfo = GetCustomer();
                 bool result = orderBL.CreateOrder(order);
                 Console.ForegroundColor = result ? ConsoleColor.Green : ConsoleColor.Red;
@@ -68,13 +68,13 @@ namespace ConsolePL
             if (cus != null)
             {
                 customer = cus;
-                Console.WriteLine("  → Customer name: " + customer.CustomerName);
+                Console.WriteLine("  → Customer name: " + customer.Name);
                 Console.WriteLine("  → Address: " + customer.Address);
             }
             else
             {
                 Console.Write("  → Customer name: ");
-                customer.CustomerName = ConsoleUtility.GetName();
+                customer.Name = ConsoleUtility.GetName();
                 Console.Write("  → Address: ");
                 customer.Address = Console.ReadLine();
             }
@@ -82,7 +82,7 @@ namespace ConsolePL
         }
         public bool AddLaptopToOrder(Laptop laptop)
         {
-            int count = laptopBL.GetById(laptop.LaptopId).Quantity;
+            int count = laptopBL.GetById(laptop.ID).Quantity;
             int quantity = 0;
             int index = order.Laptops.IndexOf(laptop);
             if (index != -1)
@@ -151,15 +151,15 @@ namespace ConsolePL
                                     ConsoleUtility.Write("\n  The order has been paid!\n", ConsoleColor.Red);
                                     ConsoleUtility.PressAnyKey("continue");
                                 }
-                                else if (order.Status == Order.PROCESSING && staff.Id != order.Accountance.Id)
+                                else if (order.Status == Order.PROCESSING && staff.ID != order.Accountant.ID)
                                 {
                                     ConsoleUtility.Write("\n  Order is being processed!\n", ConsoleColor.Red);
                                     ConsoleUtility.PressAnyKey("continue");
                                 }
                                 else
                                 {
-                                    order.Accountance = staff;
-                                    var result = orderBL.ChangeStatus(Order.PROCESSING, order.OrderId, (int)staff.Id);
+                                    order.Accountant = staff;
+                                    var result = orderBL.ChangeStatus(Order.PROCESSING, order.ID, (int)staff.ID);
                                     if (result)
                                         Payment(order);
                                     else
@@ -265,7 +265,7 @@ namespace ConsolePL
                     return;
                 }
             } while (key != ConsoleKey.Escape);
-            orderBL.ChangeStatus(Order.UNPAID, order.OrderId, (int)order.Accountance.Id);
+            orderBL.ChangeStatus(Order.UNPAID, order.ID, (int)order.Accountant.ID);
         }
         public void ShowListOrder(List<Order> orders, string title)
         {
@@ -283,7 +283,7 @@ namespace ConsolePL
                     total += laptop.Quantity * laptop.Price;
                 string status = o.Status == Order.UNPAID ? "UNPAID" : o.Status == Order.PAID ? "PAID" : o.Status == Order.CANCEL ? "CANCEL" : "PROCESSING";
                 Console.WriteLine("  ║ {0,8} │ {1,-35} │ {2,10} │ {3,-19:dd/MM/yyyy h:mm tt} │ {4,15:N0} │ {5,-10} ║",
-                                   o.OrderId, o.CustomerInfo.CustomerName, o.CustomerInfo.Phone, o.Date, total, status);
+                                   o.ID, o.CustomerInfo.Name, o.CustomerInfo.Phone, o.Date, total, status);
             }
             ConsoleUtility.PrintLine(lengthDatas, "  ╚", "═", "╧", "╝\n");
         }
@@ -293,8 +293,8 @@ namespace ConsolePL
             Console.Clear();
             ConsoleUtility.PrintTitle("▬▬▬▬ " + title + " ▬▬▬▬", false);
             Console.WriteLine("  ╠══════════════════════════════════════════════════════════════════════════════════════════════════════════════════╣");
-            Console.WriteLine("  ║  Order ID       : {0,-94} ║", order.OrderId);
-            Console.WriteLine("  ║  Customer Name  : {0,-94} ║", order.CustomerInfo.CustomerName);
+            Console.WriteLine("  ║  Order ID       : {0,-94} ║", order.ID);
+            Console.WriteLine("  ║  Customer Name  : {0,-94} ║", order.CustomerInfo.Name);
             Console.WriteLine("  ║  Customer Phone : {0,-94} ║", order.CustomerInfo.Phone);
             Console.WriteLine("  ║  Address        : {0,-94} ║", order.CustomerInfo.Address);
             int[] lengthDatas = { 3, 58, 12, 8, 15 };
@@ -306,7 +306,7 @@ namespace ConsolePL
                 Decimal amount = (order.Laptops[i].Price * order.Laptops[i].Quantity);
                 totalPayment += amount;
                 Console.WriteLine("  ║ │ {0,3} │ {1,-58} │ {2,12:N0} │ {3,8} │ {4,15:N0} │ ║", i + 1,
-                order.Laptops[i].LaptopName, order.Laptops[i].Price, order.Laptops[i].Quantity, amount);
+                order.Laptops[i].Name, order.Laptops[i].Price, order.Laptops[i].Quantity, amount);
             }
             Console.WriteLine("  ║ ├─────┴────────────────────────────────────────────────────────────┴──────────────┴──────────┼─────────────────┤ ║");
             Console.WriteLine("  ║ │ TOTAL PAYMENT                                                                              │ {0,15:N0} │ ║", totalPayment);
@@ -322,16 +322,16 @@ namespace ConsolePL
             int lengthLine = line.Length + 2;
             decimal totalPayment = 0;
             Console.WriteLine("  ╠══════════════════════════════════════════════════════════════════════════════════════════════════════════════════╣");
-            Console.WriteLine("  ║  Invoice No     : {0,-94} ║", order.OrderId);
+            Console.WriteLine("  ║  Invoice No     : {0,-94} ║", order.ID);
             Console.WriteLine("  ║  Invoice Date   : {0,-94} ║", order.Date);
             Console.WriteLine("  ╟──────────────────────────────────────────────────────────────────────────────────────────────────────────────────╢");
             Console.WriteLine("  ║  Store          : {0,-94} ║", "LAPTOP STORE");
             Console.WriteLine("  ║  Phone          : {0,-94} ║", "0999999999");
             Console.WriteLine("  ║  Address        : {0,-94} ║", "18 Tam Trinh, Minh Khai Ward, Hai Ba Trung District, Ha Noi");
             Console.WriteLine("  ║  Seller         : {0,-94} ║", order.Seller.Name);
-            Console.WriteLine("  ║  Accountance    : {0,-94} ║", order.Accountance.Name);
+            Console.WriteLine("  ║  Accountance    : {0,-94} ║", order.Accountant.Name);
             Console.WriteLine("  ╟──────────────────────────────────────────────────────────────────────────────────────────────────────────────────╢");
-            Console.WriteLine("  ║  Customer Name  : {0,-94} ║", order.CustomerInfo.CustomerName);
+            Console.WriteLine("  ║  Customer Name  : {0,-94} ║", order.CustomerInfo.Name);
             Console.WriteLine("  ║  Customer Phone : {0,-94} ║", order.CustomerInfo.Phone);
             Console.WriteLine("  ║  Address        : {0,-94} ║", order.CustomerInfo.Address);
             int[] lengthDatas = { 3, 58, 12, 8, 15 };
@@ -343,7 +343,7 @@ namespace ConsolePL
                 Decimal amount = (order.Laptops[i].Price * order.Laptops[i].Quantity);
                 totalPayment += amount;
                 Console.WriteLine("  ║ │ {0,3} │ {1,-58} │ {2,12:N0} │ {3,8} │ {4,15:N0} │ ║", i + 1,
-                order.Laptops[i].LaptopName, order.Laptops[i].Price, order.Laptops[i].Quantity, amount);
+                order.Laptops[i].Name, order.Laptops[i].Price, order.Laptops[i].Quantity, amount);
             }
             Console.WriteLine("  ║ ├─────┴────────────────────────────────────────────────────────────┴──────────────┴──────────┼─────────────────┤ ║");
             Console.WriteLine("  ║ │ TOTAL PAYMENT                                                                              │ {0,15:N0} │ ║", totalPayment);

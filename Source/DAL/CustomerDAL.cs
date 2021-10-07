@@ -31,8 +31,8 @@ namespace DAL
         protected internal Customer GetCustomer(MySqlDataReader reader)
         {
             Customer customer = new Customer();
-            customer.CustomerId = reader.GetInt32("customer_id");
-            customer.CustomerName = reader.GetString("customer_name");
+            customer.ID = reader.GetInt32("customer_id");
+            customer.Name = reader.GetString("customer_name");
             customer.Phone = reader.GetString("phone");
             customer.Address = reader.GetString("address");
             return customer;

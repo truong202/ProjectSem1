@@ -16,9 +16,9 @@ namespace TestDAL
         [InlineData(27)]
         public void GetLaptopByIdTest1(int laptopId)
         {
-            Laptop result = laptopDAL.GetById(laptopId);
-            Assert.True(result != null);
-            Assert.True(result.LaptopId == laptopId);
+            Laptop laptop = laptopDAL.GetById(laptopId);
+            Assert.True(laptop != null);
+            Assert.True(laptop.ID == laptopId);
         }
 
         [Theory]
@@ -26,8 +26,8 @@ namespace TestDAL
         [InlineData(30)]
         public void GetLaptopByIdTest2(int laptopId)
         {
-            Laptop result = laptopDAL.GetById(laptopId);
-            Assert.True(result == null);
+            Laptop laptop = laptopDAL.GetById(laptopId);
+            Assert.True(laptop == null);
         }
     }
 }

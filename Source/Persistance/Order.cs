@@ -5,10 +5,10 @@ namespace Persistance
 {
     public class Order
     {
-        public int OrderId { get; set; }
+        public int ID { get; set; }
         public Customer CustomerInfo { get; set; }
         public Staff Seller { get; set; }
-        public Staff Accountance { get; set; }
+        public Staff Accountant { get; set; }
         public List<Laptop> Laptops { get; set; }
         public DateTime Date { get; set; }
         public int Status { get; set; }
@@ -20,7 +20,7 @@ namespace Persistance
         {
             CustomerInfo = new Customer();
             Seller = new Staff();
-            Accountance = new Staff();
+            Accountant = new Staff();
             Laptops = new List<Laptop>();
         }
         public static List<Order> SplitList(List<Order> listOrder, int index, int count)
