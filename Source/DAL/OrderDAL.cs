@@ -13,7 +13,9 @@ namespace DAL
         public bool CreateOrder(Order order)
         {
             if (order == null || order.Laptops == null || order.Laptops.Count == 0 ||
-                order.CustomerInfo == null || order.Seller.ID == null) return false;
+                order.CustomerInfo == null || order.CustomerInfo.Phone == null || order.CustomerInfo.Phone == "" ||
+                order.CustomerInfo.Name == null || order.CustomerInfo.Name == "" ||
+                order.Seller == null || order.Seller.ID == null) return false;
             bool result = false;
             try
             {
@@ -71,6 +73,10 @@ namespace DAL
                     foreach (var laptop in order.Laptops)
                     {
                         //get unit_price
+                        if (laptop.Quantity <= 0)
+                        {
+                            throw new Exception("Not Exists Item");
+                        }
                         command.CommandText = "call sp_getPrice(@laptopId);";
                         command.Parameters.Clear();
                         command.Parameters.AddWithValue("@laptopId", laptop.ID);
@@ -101,10 +107,8 @@ namespace DAL
                     transaction.Commit();
                     result = true;
                 }
-                catch (Exception)
+                catch
                 {
-                    // Console.WriteLine(e.Message);
-                    result = false;
                     try { transaction.Rollback(); }
                     catch { }
                 }
@@ -114,7 +118,7 @@ namespace DAL
                     command.ExecuteNonQuery();
                 }
             }
-            catch (Exception e) { Console.Write(e); }
+            catch {}
             finally
             {
                 try { connection.Close(); } catch { }
@@ -161,15 +165,9 @@ namespace DAL
                     transaction.Commit();
                     result = true;
                 }
-                catch (Exception e)
+                catch
                 {
-                    Console.WriteLine(e.Message);
-                    Console.ReadLine();
-                    try
-                    {
-                        transaction.Rollback();
-                    }
-                    catch { }
+                    try { transaction.Rollback(); } catch { }
                 }
                 finally
                 {
@@ -177,12 +175,7 @@ namespace DAL
                     command.ExecuteNonQuery();
                 }
             }
-            catch (Exception e)
-            {
-                Console.WriteLine(e.Message);
-                Console.ReadLine();
-
-            }
+            catch { }
             finally
             {
                 try { connection.Close(); } catch { }
@@ -192,35 +185,35 @@ namespace DAL
         public List<Order> GetOrdersUnpaid()
         {
             List<Order> orders = new List<Order>();
-            lock (connection)
+            try
             {
-                try
+                connection.Open();
+                MySqlCommand command = new MySqlCommand("call sp_getOrdersUnpaid();", connection);
+                reader = command.ExecuteReader();
+                while (reader.Read())
                 {
-                    connection.Open();
-                    MySqlCommand command = new MySqlCommand("call sp_getOrdersUnpaid();", connection);
-                    reader = command.ExecuteReader();
-                    while (reader.Read())
+                    orders.Add(GetOrder(reader));
+                }
+                reader.Close();
+                LaptopDAL laptopDAL = new LaptopDAL();
+                command.CommandText = "call sp_getLaptopsInOrder(@orderId);";
+                for (int i = 0; i < orders.Count; i++)
+                {
+                    command.Parameters.Clear();
+                    command.Parameters.AddWithValue("@orderId", orders[i].ID);
+                    using (reader = command.ExecuteReader())
                     {
-                        orders.Add(GetOrder(reader));
-                    }
-                    reader.Close();
-                    LaptopDAL laptopDAL = new LaptopDAL();
-                    command.CommandText = "call sp_getLaptopsInOrder(@orderId);";
-                    for (int i = 0; i < orders.Count; i++)
-                    {
-                        command.Parameters.Clear();
-                        command.Parameters.AddWithValue("@orderId", orders[i].ID);
-                        using (reader = command.ExecuteReader())
+                        while (reader.Read())
                         {
-                            while (reader.Read())
-                            {
-                                orders[i].Laptops.Add(laptopDAL.GetLaptop(reader));
-                            }
+                            orders[i].Laptops.Add(laptopDAL.GetLaptop(reader));
                         }
                     }
-                    connection.Close();
                 }
-                catch { }
+            }
+            catch { }
+            finally
+            {
+                try { connection.Close(); } catch { }
             }
             if (orders.Count == 0) orders = null;
             return orders;
@@ -231,25 +224,38 @@ namespace DAL
             try
             {
                 connection.Open();
-                MySqlCommand command = new MySqlCommand("call sp_changeOrderStatus(@status, @orderId, @staffId);", connection);
-                command.Parameters.AddWithValue("@status", status);
+                MySqlCommand command = connection.CreateCommand();
+                command.CommandText = "sp_getOrderById(@orderId);";
                 command.Parameters.AddWithValue("@orderId", orderId);
+                reader = command.ExecuteReader();
+                if (!reader.Read())
+                {
+                    throw new Exception("Can't find Order!");
+                }
+                reader.Close();
+
+                command.CommandText = "sp_getStaffById(@staffId);";
                 command.Parameters.AddWithValue("@staffId", staffId);
+                reader = command.ExecuteReader();
+                if (!reader.Read())
+                {
+                    throw new Exception("Can't find Staff!");
+                }
+                reader.Close();
+
+                command.CommandText = "call sp_changeOrderStatus(@status, @orderId, @staffId);";
+                command.Parameters.AddWithValue("@status", status);
                 command.ExecuteNonQuery();
                 result = true;
             }
-            catch (Exception e)
-            {
-                Console.WriteLine(e.Message);
-                Console.ReadKey();
-            }
+            catch { }
             finally
             {
                 try { connection.Close(); } catch { }
             }
             return result;
         }
-       
+
         public Order GetById(int orderId)
         {
             Order order = null;
@@ -273,11 +279,7 @@ namespace DAL
                     reader.Close();
                 }
             }
-            catch (Exception e)
-            {
-                Console.WriteLine(e.Message);
-                Console.ReadKey();
-            }
+            catch { }
             finally
             {
                 try { connection.Close(); } catch { }
@@ -294,7 +296,8 @@ namespace DAL
             order.Seller.Name = reader.GetString("seller_name");
             try
             {
-                order.Accountant.ID = reader.GetInt32("accountance_id");
+                order.Accountant.ID = reader.GetInt32("accountant_id");
+                order.Accountant.Name = reader.GetString("accountant_name");
             }
             catch { }
             order.Date = reader.GetDateTime("order_date");

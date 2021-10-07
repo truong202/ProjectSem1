@@ -51,10 +51,10 @@ namespace TestDAL
                 Laptops = { new Laptop { ID = 4, Quantity =1},
                             new Laptop { ID = 12, Quantity =1},
                             new Laptop { ID = 15, Quantity =1},
-                            new Laptop { ID = 18, Quantity =1}}
+                            new Laptop { ID = 18, Quantity =-4}}
             };
             bool result = orderDAL.CreateOrder(order);
-            Assert.True(result == true);
+            Assert.True(result == false);
         }
 
         [Fact]
@@ -84,5 +84,66 @@ namespace TestDAL
             bool result = orderDAL.CreateOrder(order);
             Assert.True(result == false);
         }
+
+        [Fact]
+        public void CreateOrderTest6()
+        {
+            Order order = null;
+            bool result = orderDAL.CreateOrder(order);
+            Assert.True(result == false);
+        }
+
+        [Fact]
+        public void CreateOrderTest7()
+        {
+            Order order = new Order
+            {
+                Seller = new Staff { ID = 1 },
+                Laptops = { new Laptop { ID = 6, Quantity =1},
+                            new Laptop { ID = 7, Quantity =1}}
+            };
+            bool result = orderDAL.CreateOrder(order);
+            Assert.True(result == false);
+        }
+
+        [Fact]
+        public void CreateOrderTest8()
+        {
+            Order order = new Order
+            {
+                CustomerInfo = new Customer { Name = "cus5", Phone = "0836984355", Address = "Ha Noi" },
+                Laptops = { new Laptop { ID = 1, Quantity =1},
+                            new Laptop { ID = 7, Quantity =1}}
+            };
+            bool result = orderDAL.CreateOrder(order);
+            Assert.True(result == false);
+        }
+
+        [Fact]
+        public void CreateOrderTest9()
+        {
+            Order order = new Order
+            {
+                Seller = new Staff { ID = 1 },
+                CustomerInfo = new Customer { Name = "cus5", Phone = "0836984355", Address = "Ha Noi" },
+            };
+            bool result = orderDAL.CreateOrder(order);
+            Assert.True(result == false);
+        }
+
+        [Fact]
+        public void CreateOrderTest10()
+        {
+            Order order = new Order
+            {
+                Seller = new Staff { ID = 1 },
+                CustomerInfo = new Customer { Name = "cus5", Phone = "0836984355", Address = "Ha Noi" },
+                Laptops = { new Laptop { ID = 1, Quantity =1},
+                            new Laptop { ID = 1, Quantity =2}}
+            };
+            bool result = orderDAL.CreateOrder(order);
+            Assert.True(result == false);
+        }
+
     }
 }

@@ -11,7 +11,7 @@ namespace Persistance
         public string Password { set; get; }
         public int Role { set; get; }
         public const int SELLER = 1;
-        public const int ACCOUNTANCE = 2;
+        public const int ACCOUNTANT= 2;
         public static void CheckUsername(string username)
         {
             if (username == null || username.Trim() == "")

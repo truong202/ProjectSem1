@@ -26,9 +26,9 @@ namespace TestDAL
         }
 
         [Theory]
-        [InlineData(7)]
-        [InlineData(8)]
-        [InlineData(9)]
+        [InlineData(4)]
+        [InlineData(5)]
+        [InlineData(6)]
         public void PaymetTest2(int orderId)
         {
             var order = orderDAL.GetById(orderId);

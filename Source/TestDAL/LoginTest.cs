@@ -12,7 +12,7 @@ namespace TestDAL
 
         [Theory]
         [InlineData("seller001", "12345678")]
-        [InlineData("accountance003", "12345678")]
+        [InlineData("accountant003", "12345678")]
         public void LoginTest1(string userName, string password)
         {
             Staff result = staffDAL.Login(new Staff { Username = userName, Password = password });

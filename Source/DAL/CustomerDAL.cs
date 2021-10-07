@@ -7,6 +7,7 @@ namespace DAL
     public class CustomerDAL
     {
         private MySqlConnection connection = DbConfig.GetConnection();
+        MySqlDataReader reader;
         public Customer GetByPhone(string phone)
         {
             Customer customer = null;
@@ -15,7 +16,7 @@ namespace DAL
                 connection.Open();
                 MySqlCommand command = new MySqlCommand("call sp_getCustomerByPhone(@phone)", connection);
                 command.Parameters.AddWithValue("@phone", phone);
-                using (MySqlDataReader reader = command.ExecuteReader())
+                using (reader = command.ExecuteReader())
                 {
                     if (reader.Read())
                         customer = GetCustomer(reader);
@@ -28,7 +29,7 @@ namespace DAL
             }
             return customer;
         }
-        protected internal Customer GetCustomer(MySqlDataReader reader)
+        internal Customer GetCustomer(MySqlDataReader reader)
         {
             Customer customer = new Customer();
             customer.ID = reader.GetInt32("customer_id");

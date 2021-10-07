@@ -23,7 +23,7 @@ namespace TestDAL
 
         [Theory]
         [InlineData(0)]
-        [InlineData(30)]
+        [InlineData(200)]
         public void GetLaptopByIdTest2(int laptopId)
         {
             Laptop laptop = laptopDAL.GetById(laptopId);

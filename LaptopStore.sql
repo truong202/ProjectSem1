@@ -70,7 +70,7 @@ CREATE TABLE orders (
     order_id INT AUTO_INCREMENT,
     customer_id INT NOT NULL,
     seller_id INT NOT NULL,
-    accountance_id INT,
+    accountant_id INT,
     order_date DATETIME DEFAULT NOW(),
     order_status INT NOT NULL,
     PRIMARY KEY (order_id),
@@ -78,7 +78,7 @@ CREATE TABLE orders (
         REFERENCES customers (customer_id),
     FOREIGN KEY (seller_id)
         REFERENCES staffs (staff_id),
-    FOREIGN KEY (accountance_id)
+    FOREIGN KEY (accountant_id)
         REFERENCES staffs (staff_id)
 );
 
@@ -102,11 +102,11 @@ VALUES ('Nguyễn Văn B', 'seller002', '25d55ad283aa400af464c76d713c07ad', 1);
 INSERT INTO staffs(staff_name, username, password, role)
 VALUES ('Nguyễn Văn C', 'seller003', '25d55ad283aa400af464c76d713c07ad', 1);
 INSERT INTO staffs(staff_name, username, password, role)
-VALUES ('Nguyễn Văn D', 'accountance001', '25d55ad283aa400af464c76d713c07ad', 2);
+VALUES ('Nguyễn Văn D', 'accountant001', '25d55ad283aa400af464c76d713c07ad', 2);
 INSERT INTO staffs(staff_name, username, password, role)
-VALUES ('Nguyễn Văn E', 'accountance002', '25d55ad283aa400af464c76d713c07ad', 2);
+VALUES ('Nguyễn Văn E', 'accountant002', '25d55ad283aa400af464c76d713c07ad', 2);
 INSERT INTO staffs(staff_name, username, password, role)
-VALUES ('Nguyễn Văn F', 'accountance003', '25d55ad283aa400af464c76d713c07ad', 2);
+VALUES ('Nguyễn Văn F', 'accountant003', '25d55ad283aa400af464c76d713c07ad', 2);
 
 INSERT INTO customers(customer_name, address, phone)
 VALUES ('Phạm Công Hưng', 'Nam Định', '0904844014');
@@ -320,6 +320,13 @@ VALUES ('Macbook Air 13 MVFM2', 4, 3, 'Intel Core i5 8th', '8GB LPDDR3', '128 PC
 'Retina 13.3 inch (2560x1600) IPS Led Backlit True Tone', '49.9WHrs', 1.25, 'Metal', 'USB 3.1 Gen2, 2x Thunder Bolt 3',
 'Wifi 802.11ac - Bluetooth 4.2', 'PIN, Touch ID', 'No led', 'Stereo speakers', '304.1 x 212.4 x 4.1  mm', '12 month', 'MAC OS', 27259000, 50);
 
+INSERT INTO orders(order_id, seller_id, customer_id, order_status)
+VALUES(1, 1, 1, 1), (2, 2, 2, 1), (3, 3, 3, 1), (4, 1, 1, 1), (5, 2, 2, 1), (6, 3, 3, 1);
+
+INSERT INTO order_details(order_id, laptop_id, quantity, unit_price)
+VALUES(1, 1, 2, 24990000), (2, 1, 2, 24990000), (3, 1, 2, 24990000), (1, 27, 3, 27259000), (2, 27, 1, 27259000), (3, 27, 2, 27259000),
+	  (4, 1, 2, 24990000), (5, 1, 2, 24990000), (6, 1, 2, 24990000), (4, 27, 1, 27259000), (5, 27, 1, 27259000), (6, 27, 1, 27259000);
+
 DELIMITER $$
 CREATE PROCEDURE sp_login(IN username VARCHAR(255), IN password VARCHAR(255))
 BEGIN
@@ -330,6 +337,16 @@ WHERE s.username = BINARY username AND s.password = BINARY password;
 END $$
 DELIMITER ;
 -- end sp_login
+
+DELIMITER $$
+CREATE PROCEDURE sp_getStaffById(IN id INT)
+BEGIN
+SELECT
+	s.staff_id, s.staff_name, s.username, s.password, s.role
+FROM staffs s
+WHERE staff_id = id;
+END $$
+DELIMITER ;
 
 DELIMITER $$
 CREATE PROCEDURE sp_createCustomer(IN customerName VARCHAR(50), IN address VARCHAR(100), 
@@ -454,12 +471,12 @@ CREATE PROCEDURE sp_getOrdersUnpaid()
 BEGIN
 SELECT 
     o.order_id, o.order_date, o.order_status, c.customer_id, c.customer_name, c.phone, c.address, sl.staff_id AS seller_id,
-    sl.staff_name AS seller_name, ac.staff_id AS accountance_id, ifnull(ac.staff_name,'') AS accountance_name
+    sl.staff_name AS seller_name, ac.staff_id AS accountant_id, ifnull(ac.staff_name,'') AS accountant_name
 FROM
     orders o
         INNER JOIN customers c ON o.customer_id = c.customer_id
         LEFT JOIN staffs sl ON o.seller_id = sl.staff_id
-        LEFT JOIN staffs ac ON o.accountance_id = ac.staff_id
+        LEFT JOIN staffs ac ON o.accountant_id = ac.staff_id
 WHERE o.order_status = 1 OR o.order_status = 2;
 END $$
 DELIMITER ;
@@ -470,12 +487,12 @@ CREATE PROCEDURE sp_getOrderById(IN orderId int)
 BEGIN  
 SELECT 
     o.order_id, o.order_date, o.order_status, c.customer_id, c.customer_name, c.phone, c.address, sl.staff_id AS seller_id,
-    sl.staff_name AS seller_name, ac.staff_id AS accountance_id, ifnull(ac.staff_name,'') AS accountance_name
+    sl.staff_name AS seller_name, ac.staff_id AS accountant_id, ifnull(ac.staff_name,'') AS accountant_name
 FROM
     orders o
         INNER JOIN customers c ON o.customer_id = c.customer_id
         LEFT JOIN staffs sl ON o.seller_id = sl.staff_id
-        LEFT JOIN staffs ac ON o.accountance_id = ac.staff_id
+        LEFT JOIN staffs ac ON o.accountant_id = ac.staff_id
 WHERE o.order_id = orderId;
 END $$
 DELIMITER ;
@@ -499,9 +516,9 @@ DELIMITER ;
 -- end sp_getLaptopsInOrder
 
 DELIMITER $$
-CREATE PROCEDURE sp_updateOrderAfterPayment(IN accountanceId INT, IN orderStatus INT, IN orderId INT)
+CREATE PROCEDURE sp_updateOrderAfterPayment(IN staffId INT, IN orderStatus INT, IN orderId INT)
 BEGIN
-	UPDATE orders SET order_status = orderStatus, accountance_id = accountanceId WHERE order_id = orderId;
+	UPDATE orders SET order_status = orderStatus, accountant_id = staffId WHERE order_id = orderId;
 END $$
 DELIMITER ;
 -- end sp_updateOrderAfterPayment
@@ -509,7 +526,7 @@ DELIMITER ;
 DELIMITER $$
 CREATE PROCEDURE sp_changeOrderStatus(IN status INT, IN orderId INT, IN staffId INT)
 BEGIN
-UPDATE orders SET order_status = status, accountance_id = staffId WHERE order_id = orderId;
+UPDATE orders SET order_status = status, accountant_id = staffId WHERE order_id = orderId;
 END $$
 DELIMITER ;
 -- end sp_sp_changeOrderStatus
@@ -536,11 +553,11 @@ CREATE TRIGGER tg_checkQuantity
     END $$
 DELIMITER ;
 
-
 DROP USER IF EXISTS 'laptop'@'localhost';
 CREATE USER IF NOT EXISTS 'laptop'@'localhost' IDENTIFIED BY 'vtcacademy';
 
 GRANT EXECUTE ON PROCEDURE laptop_store.sp_login TO 'laptop'@'localhost'; 
+GRANT EXECUTE ON PROCEDURE laptop_store.sp_getStaffById TO 'laptop'@'localhost'; 
 GRANT EXECUTE ON PROCEDURE laptop_store.sp_createCustomer TO 'laptop'@'localhost';
 GRANT EXECUTE ON PROCEDURE laptop_store.sp_getCustomerByPhone TO 'laptop'@'localhost';
 GRANT EXECUTE ON PROCEDURE laptop_store.sp_getNewCustomerId TO 'laptop'@'localhost';
@@ -567,3 +584,15 @@ GRANT SELECT ON laptop_store.orders TO 'laptop'@'localhost';
 GRANT SELECT ON laptop_store.categories TO 'laptop'@'localhost';
 GRANT SELECT ON laptop_store.manufactories TO 'laptop'@'localhost';
 GRANT SELECT ON laptop_store.order_details TO 'laptop'@'localhost';
+
+SELECT 
+	l.laptop_id, l.laptop_name, c.category_id, c.category_name, m.manufactory_id, m.manufactory_name, IFNULL(m.website, '') AS website,
+    IFNULL(m.address, '') AS address, l.CPU, l.Ram, l.hard_drive, l.VGA, l.display, l.battery, l.weight,l.materials, l.ports,
+    l.network_and_connection, l.security, l.keyboard, l.audio, l.size, l.warranty_period, l.OS, l.price, l.quantity
+FROM
+    laptops l
+        INNER JOIN categories c ON l.category_id = c.category_id
+        INNER JOIN manufactories m ON l.manufactory_id = m.manufactory_id
+WHERE l.laptop_name LIKE CONCAT('%', 'a', '%') OR 
+	  c.category_name LIKE CONCAT('%', 'a', '%') 
+      ORDER BY l.price desc;

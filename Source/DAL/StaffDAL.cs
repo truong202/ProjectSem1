@@ -27,7 +27,7 @@ namespace DAL
                 }
                 // connection.Close();
             }
-            catch(Exception e) {Console.WriteLine(e); }
+            catch{}
             finally
             {
                 try { connection.Close(); } catch { }

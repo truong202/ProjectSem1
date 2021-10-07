@@ -23,7 +23,7 @@ namespace TestDAL
 
         [Theory]
         [InlineData(0)]
-        [InlineData(30)]
+        [InlineData(1000)]
         public void GetOrderByIdTest2(int orderId)
         {
             Order result = orderDAL.GetById(orderId);

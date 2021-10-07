@@ -33,12 +33,12 @@ namespace ConsolePL
                         }
                     } while (choose != menuItems.Length);
                     break;
-                case Staff.ACCOUNTANCE:
+                case Staff.ACCOUNTANT:
                     menuItems = new[] { "Payment", "Exit" };
                     OrderHandle orderH = new OrderHandle();
                     do
                     {
-                        choose = Menu("[MENU ACCOUNTANCE]", menuItems);
+                        choose = Menu("[MENU ACCOUNTANT]", menuItems);
                         switch (choose)
                         {
                             case 1:
