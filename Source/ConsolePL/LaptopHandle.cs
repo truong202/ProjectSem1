@@ -29,7 +29,7 @@ namespace ConsolePL
             pageCount = (laptopCount % 10 == 0) ? laptopCount / 10 : laptopCount / 10 + 1;
             ShowListLaptop(laptops, "SEARCH LAPTOP");
             ConsoleUtility.ShowPageNumber(pageCount, page);
-            ShowFeature(staff);
+            ShowFeatures(staff);
             ConsoleKey key = new ConsoleKey();
             do
             {
@@ -72,7 +72,7 @@ namespace ConsolePL
                             ShowListLaptop(laptops, "SEARCH LAPTOP");
                             ConsoleUtility.ShowPageNumber(pageCount, page);
                         }
-                        ShowFeature(staff);
+                        ShowFeatures(staff);
                         break;
                     case ConsoleKey.D:
                         Console.Write("\n  → Input Laptop ID to view details: ");
@@ -82,34 +82,28 @@ namespace ConsolePL
                         ConsoleUtility.PressAnyKey("back");
                         ShowListLaptop(laptops, "SEARCH LAPTOP");
                         ConsoleUtility.ShowPageNumber(pageCount, page);
-                        ShowFeature(staff);
+                        ShowFeatures(staff);
                         break;
                     case ConsoleKey.C:
                         orderH.CreateOrder(staff);
                         ShowListLaptop(laptops, "SEARCH LAPTOP");
-                        ShowFeature(staff);
+                        ShowFeatures(staff);
                         break;
                     case ConsoleKey.LeftArrow:
-                        if (page > 1)
-                        {
-                            page--;
-                            index -= 10;
-                            laptops = Laptop.SplitList(listLaptop, index, 10);
-                            ShowListLaptop(laptops, "SEARCH LAPTOP");
-                            ConsoleUtility.ShowPageNumber(pageCount, page);
-                            ShowFeature(staff);
-                        }
-                        break;
                     case ConsoleKey.RightArrow:
-                        if (page < pageCount)
+                        if (page > 1 && key == ConsoleKey.LeftArrow)
                         {
-                            page++;
-                            index += 10;
-                            laptops = Laptop.SplitList(listLaptop, index, 10);
-                            ShowListLaptop(laptops, "SEARCH LAPTOP");
-                            ConsoleUtility.ShowPageNumber(pageCount, page);
-                            ShowFeature(staff);
+                            page--; index -= 10;
                         }
+                        else if (page < pageCount && key == ConsoleKey.RightArrow)
+                        {
+                            page++; index += 10;
+                        }
+                        else break;
+                        laptops = Laptop.SplitList(listLaptop, index, 10);
+                        ShowListLaptop(laptops, "SEARCH LAPTOP");
+                        ConsoleUtility.ShowPageNumber(pageCount, page);
+                        ShowFeatures(staff);
                         break;
                 }
             } while (key != ConsoleKey.Escape);
@@ -140,7 +134,6 @@ namespace ConsolePL
         }
         private void ViewLaptopDetails(Laptop laptop)
         {
-            Console.CursorVisible = false;
             if (laptop == null)
             {
                 ConsoleUtility.Write("  LAPTOP NOT FOUND!\n", ConsoleColor.Red);
@@ -198,7 +191,7 @@ namespace ConsolePL
             Console.WriteLine("  │ Warranty period: {0,-95} │", laptop.WarrantyPeriod);
             Console.WriteLine("  └{0}┘", line);
         }
-        public void ShowFeature(Staff staff)
+        public void ShowFeatures(Staff staff)
         {
             if (staff.Role == Staff.SELLER)
             {
