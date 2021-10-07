@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using BL;
 using Persistance;
+using Utilities;
 
 namespace ConsolePL
 {
@@ -18,7 +19,7 @@ namespace ConsolePL
             do
             {
                 Console.Write("  → Input ID(input 0 to cancel): ");
-                id = Utility.GetNumber("ID", 0);
+                id = ConsoleUtility.GetNumber("ID", 0);
                 if (id == 0) break;
                 laptop = laptopBL.GetById(id);
                 if (laptop == null)
@@ -30,15 +31,15 @@ namespace ConsolePL
                     Console.WriteLine("  Laptop Name: {0}  Price: {1:N0} VNĐ", laptop.LaptopName, laptop.Price);
                     if (laptop.Quantity <= 0)
                     {
-                        Utility.Write("  Laptop is out of stock, please choose another laptop!\n", ConsoleColor.Red);
+                        ConsoleUtility.Write("  Laptop is out of stock, please choose another laptop!\n", ConsoleColor.Red);
                     }
                     else
                     {
                         bool result;
                         Console.Write("  → Input quantity: ");
-                        laptop.Quantity = Utility.GetNumber("quantity", 1);
+                        laptop.Quantity = ConsoleUtility.GetNumber("quantity", 1);
                         result = AddLaptopToOrder(laptop);
-                        Utility.Write(result ? "  Add laptop to order completed!\n" : "  The store doesn't have enough laptops in stock!\n",
+                        ConsoleUtility.Write(result ? "  Add laptop to order completed!\n" : "  The store doesn't have enough laptops in stock!\n",
                         result ? ConsoleColor.Green : ConsoleColor.Red);
                     }
                 }
@@ -62,7 +63,7 @@ namespace ConsolePL
             Customer customer = new Customer();
             Console.CursorVisible = true;
             Console.Write("  → Phone: ");
-            customer.Phone = Utility.GetPhone();
+            customer.Phone = ConsoleUtility.GetPhone();
             var cus = new CustomerBL().GetByPhone(customer.Phone);
             if (cus != null)
             {
@@ -73,7 +74,7 @@ namespace ConsolePL
             else
             {
                 Console.Write("  → Customer name: ");
-                customer.CustomerName = Utility.Standardize(Utility.GetName());
+                customer.CustomerName = ConsoleUtility.GetName();
                 Console.Write("  → Address: ");
                 customer.Address = Console.ReadLine();
             }
@@ -107,9 +108,9 @@ namespace ConsolePL
             if (listOrder == null || listOrder.Count == 0)
             {
                 Console.Clear();
-                Utility.PrintTitle("▬▬▬▬ PAYMENT ▬▬▬▬", true);
+                ConsoleUtility.PrintTitle("▬▬▬▬ PAYMENT ▬▬▬▬", true);
                 Console.WriteLine("\n  Order not found!");
-                Utility.PressAnyKey("back");
+                ConsoleUtility.PressAnyKey("back");
                 return;
             }
             else
@@ -118,16 +119,16 @@ namespace ConsolePL
                 pageCount = (orderCount % 10 == 0) ? orderCount / 10 : orderCount / 10 + 1;
                 orders = Order.SplitList(listOrder, index, 10);
                 ShowListOrder(orders, "PAYMENT");
-                Utility.ShowPageNumber(pageCount, page);
+                ConsoleUtility.ShowPageNumber(pageCount, page);
                 int id;
                 Console.Write("\n  ● Press '");
-                Utility.Write("ESC", ConsoleColor.Red);
+                ConsoleUtility.Write("ESC", ConsoleColor.Red);
                 Console.WriteLine("' to BACK");
                 Console.Write("  → Input order id to payment: ");
                 Console.CursorVisible = true;
                 do
                 {
-                    id = Utility.GetNumber("Order id", 1, out keyInfo);
+                    id = ConsoleUtility.GetNumber("Order id", 1, out keyInfo);
                     key = keyInfo.Key;
                     switch (key)
                     {
@@ -136,24 +137,24 @@ namespace ConsolePL
                             if (order == null)
                             {
                                 Console.WriteLine("\n  Order not found!");
-                                Utility.PressAnyKey("continue");
+                                ConsoleUtility.PressAnyKey("continue");
                             }
                             else
                             {
                                 if (order.Status == Order.CANCEL)
                                 {
-                                    Utility.Write("\n  The order has been cancelled!\n", ConsoleColor.Red);
-                                    Utility.PressAnyKey("continue");
+                                    ConsoleUtility.Write("\n  The order has been cancelled!\n", ConsoleColor.Red);
+                                    ConsoleUtility.PressAnyKey("continue");
                                 }
                                 else if (order.Status == Order.PAID)
                                 {
-                                    Utility.Write("\n  The order has been paid!\n", ConsoleColor.Red);
-                                    Utility.PressAnyKey("continue");
+                                    ConsoleUtility.Write("\n  The order has been paid!\n", ConsoleColor.Red);
+                                    ConsoleUtility.PressAnyKey("continue");
                                 }
                                 else if (order.Status == Order.PROCESSING && staff.Id != order.Accountance.Id)
                                 {
-                                    Utility.Write("\n  Order is being processed!\n", ConsoleColor.Red);
-                                    Utility.PressAnyKey("continue");
+                                    ConsoleUtility.Write("\n  Order is being processed!\n", ConsoleColor.Red);
+                                    ConsoleUtility.PressAnyKey("continue");
                                 }
                                 else
                                 {
@@ -164,7 +165,7 @@ namespace ConsolePL
                                     else
                                     {
                                         Console.WriteLine("\n  An error has occurred please try again later!\n");
-                                        Utility.PressAnyKey("continue");
+                                        ConsoleUtility.PressAnyKey("continue");
                                     }
                                 }
                             }
@@ -172,18 +173,18 @@ namespace ConsolePL
                             if (listOrder == null || listOrder.Count == 0)
                             {
                                 Console.Clear();
-                                Utility.PrintTitle("▬▬▬▬ PAYMENT ▬▬▬▬", true);
+                                ConsoleUtility.PrintTitle("▬▬▬▬ PAYMENT ▬▬▬▬", true);
                                 Console.WriteLine("  Order not found!");
-                                Utility.PressAnyKey("back");
+                                ConsoleUtility.PressAnyKey("back");
                                 return;
                             }
                             page = 1; index = 0; orderCount = listOrder.Count;
                             pageCount = (orderCount % 10 == 0) ? orderCount / 10 : orderCount / 10 + 1;
                             orders = Order.SplitList(listOrder, index, 10);
                             ShowListOrder(orders, "PAYMENT");
-                            Utility.ShowPageNumber(pageCount, page);
+                            ConsoleUtility.ShowPageNumber(pageCount, page);
                             Console.Write("\n  ● Press '");
-                            Utility.Write("ESC", ConsoleColor.Red);
+                            ConsoleUtility.Write("ESC", ConsoleColor.Red);
                             Console.WriteLine("' to BACK");
                             Console.Write("  → Input order id to payment: ");
                             break;
@@ -200,9 +201,9 @@ namespace ConsolePL
                             else break;
                             orders = Order.SplitList(listOrder, index, 10);
                             ShowListOrder(orders, "PAYMENT");
-                            Utility.ShowPageNumber(pageCount, page);
+                            ConsoleUtility.ShowPageNumber(pageCount, page);
                             Console.Write("\n  ● Press '");
-                            Utility.Write("ESC", ConsoleColor.Red);
+                            ConsoleUtility.Write("ESC", ConsoleColor.Red);
                             Console.WriteLine("' to BACK");
                             Console.Write("  → Input order id to payment: ");
                             break;
@@ -220,20 +221,20 @@ namespace ConsolePL
             foreach (var laptop in order.Laptops) totalPayment += laptop.Price * laptop.Quantity;
             ShowOrder(order, "PAYMENT");
             Console.Write("\n  ● Enter money to PAYMENT (input 0 to skip) or Press combination ");
-            Utility.Write("CTRL + X", ConsoleColor.Yellow);
+            ConsoleUtility.Write("CTRL + X", ConsoleColor.Yellow);
             Console.Write(" to CANCEL ORDER or press '");
-            Utility.Write("ESC", ConsoleColor.Red);
+            ConsoleUtility.Write("ESC", ConsoleColor.Red);
             Console.WriteLine("' to EXIT");
             Console.Write("  → Enter money: ");
             do
             {
-                money = Utility.GetMoney(out keyInfo);
+                money = ConsoleUtility.GetMoney(out keyInfo);
                 key = keyInfo.Key;
                 if (key == ConsoleKey.Enter)
                 {
                     if (money < totalPayment && money != 0)
                     {
-                        Utility.Write("  Invalid money!", ConsoleColor.Red);
+                        ConsoleUtility.Write("  Invalid money!", ConsoleColor.Red);
                         Console.Write("\n  → Enter money: ");
                     }
                     else
@@ -247,9 +248,9 @@ namespace ConsolePL
                         }
                         else
                         {
-                            Utility.Write("  PAYMENT NOT COMPLETE!\n", ConsoleColor.Red);
+                            ConsoleUtility.Write("  PAYMENT NOT COMPLETE!\n", ConsoleColor.Red);
                         }
-                        Utility.PressAnyKey("back");
+                        ConsoleUtility.PressAnyKey("back");
                         return;
                     }
                 }
@@ -258,9 +259,9 @@ namespace ConsolePL
                     order.Status = Order.CANCEL;
                     result = orderBL.Payment(order);
                     Console.WriteLine();
-                    Utility.Write(result ? "  CANCEL ORDER COMPLETED!\n" : "  CANCEL ORDER NOT COMPLETE!\n",
+                    ConsoleUtility.Write(result ? "  CANCEL ORDER COMPLETED!\n" : "  CANCEL ORDER NOT COMPLETE!\n",
                                   result ? ConsoleColor.Green : ConsoleColor.Red);
-                    Utility.PressAnyKey("back");
+                    ConsoleUtility.PressAnyKey("back");
                     return;
                 }
             } while (key != ConsoleKey.Escape);
@@ -269,12 +270,12 @@ namespace ConsolePL
         public void ShowListOrder(List<Order> orders, string title)
         {
             Console.Clear();
-            Utility.PrintTitle("▬▬▬▬ " + title + " ▬▬▬▬", false);
+            ConsoleUtility.PrintTitle("▬▬▬▬ " + title + " ▬▬▬▬", false);
             int[] lengthDatas = { 8, 35, 10, 19, 15, 10 };
-            Console.WriteLine(Utility.GetLine(lengthDatas, "  ╟", "─", "┬", "╢"));
+            ConsoleUtility.PrintLine(lengthDatas, "  ╟", "─", "┬", "╢\n");
             Console.WriteLine("  ║ {0,8} │ {1,-35} │ {2,-10} │ {3,-19} │ {4,15} │ {5,-10} ║",
                             "Order ID", "Customer Name", "Phone", "Order Date", "Total cost(VNĐ)", "Status");
-            Console.WriteLine(Utility.GetLine(lengthDatas, "  ╟", "─", "┼", "╢"));
+            ConsoleUtility.PrintLine(lengthDatas, "  ╟", "─", "┼", "╢\n");
             foreach (var o in orders)
             {
                 decimal total = 0;
@@ -284,22 +285,22 @@ namespace ConsolePL
                 Console.WriteLine("  ║ {0,8} │ {1,-35} │ {2,10} │ {3,-19:dd/MM/yyyy h:mm tt} │ {4,15:N0} │ {5,-10} ║",
                                    o.OrderId, o.CustomerInfo.CustomerName, o.CustomerInfo.Phone, o.Date, total, status);
             }
-            Console.WriteLine(Utility.GetLine(lengthDatas, "  ╚", "═", "╧", "╝"));
+            ConsoleUtility.PrintLine(lengthDatas, "  ╚", "═", "╧", "╝\n");
         }
         public void ShowOrder(Order order, string title)
         {
             decimal totalPayment = 0;
             Console.Clear();
-            Utility.PrintTitle("▬▬▬▬ " + title + " ▬▬▬▬", false);
+            ConsoleUtility.PrintTitle("▬▬▬▬ " + title + " ▬▬▬▬", false);
             Console.WriteLine("  ╠══════════════════════════════════════════════════════════════════════════════════════════════════════════════════╣");
             Console.WriteLine("  ║  Order ID       : {0,-94} ║", order.OrderId);
             Console.WriteLine("  ║  Customer Name  : {0,-94} ║", order.CustomerInfo.CustomerName);
             Console.WriteLine("  ║  Customer Phone : {0,-94} ║", order.CustomerInfo.Phone);
             Console.WriteLine("  ║  Address        : {0,-94} ║", order.CustomerInfo.Address);
             int[] lengthDatas = { 3, 58, 12, 8, 15 };
-            Console.WriteLine(Utility.GetLine(lengthDatas, "  ║ ┌", "─", "┬", "┐ ║"));
+            ConsoleUtility.PrintLine(lengthDatas, "  ║ ┌", "─", "┬", "┐ ║\n");
             Console.WriteLine("  ║ │ {0,3} │ {1,-58} │ {2,12} │ {3,8} │ {4,15} │ ║", "NO", "Laptop Name", "Price(VNĐ)", "Quantity", "Amount(VNĐ)");
-            Console.WriteLine(Utility.GetLine(lengthDatas, "  ║ ├", "─", "┼", "┤ ║"));
+            ConsoleUtility.PrintLine(lengthDatas, "  ║ ├", "─", "┼", "┤ ║\n");
             for (int i = 0; i < order.Laptops.Count; i++)
             {
                 Decimal amount = (order.Laptops[i].Price * order.Laptops[i].Quantity);
@@ -317,7 +318,7 @@ namespace ConsolePL
         {
             Console.Clear();
             string line = "══════════════════════════════════════════════════════════════════════════════════════════════════════════════════";
-            Utility.PrintTitle("▬▬▬▬ Invoice ▬▬▬▬", false);
+            ConsoleUtility.PrintTitle("▬▬▬▬ Invoice ▬▬▬▬", false);
             int lengthLine = line.Length + 2;
             decimal totalPayment = 0;
             Console.WriteLine("  ╠══════════════════════════════════════════════════════════════════════════════════════════════════════════════════╣");
@@ -334,9 +335,9 @@ namespace ConsolePL
             Console.WriteLine("  ║  Customer Phone : {0,-94} ║", order.CustomerInfo.Phone);
             Console.WriteLine("  ║  Address        : {0,-94} ║", order.CustomerInfo.Address);
             int[] lengthDatas = { 3, 58, 12, 8, 15 };
-            Console.WriteLine(Utility.GetLine(lengthDatas, "  ║ ┌", "─", "┬", "┐ ║"));
+            ConsoleUtility.PrintLine(lengthDatas, "  ║ ┌", "─", "┬", "┐ ║\n");
             Console.WriteLine("  ║ │ {0,3} │ {1,-58} │ {2,12} │ {3,8} │ {4,15} │ ║", "NO", "Laptop Name", "Price(VNĐ)", "Quantity", "Amount(VNĐ)");
-            Console.WriteLine(Utility.GetLine(lengthDatas, "  ║ ├", "─", "┼", "┤ ║"));
+            ConsoleUtility.PrintLine(lengthDatas, "  ║ ├", "─", "┼", "┤ ║\n");
             for (int i = 0; i < order.Laptops.Count; i++)
             {
                 Decimal amount = (order.Laptops[i].Price * order.Laptops[i].Quantity);

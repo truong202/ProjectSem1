@@ -33,19 +33,17 @@ namespace Persistance
             CategoryInfo = new Category();
             ManufactoryInfo = new Manufactory();
         }
-
-        public static List<Laptop> SplitList(List<Laptop> listLaptop, int index, int count)
+        public static List<Laptop> SplitList(List<Laptop> laptops, int index, int count)
         {
-            if (listLaptop == null || listLaptop.Count == 0) return null;
-            List<Laptop> laptops = new List<Laptop>();
+            if (laptops == null || laptops.Count == 0) return null;
+            List<Laptop> listLaptop = new List<Laptop>();
             for (int i = index; i < index + count; i++)
             {
-                laptops.Add(listLaptop[i]);
-                if (i == listLaptop.Count - 1) break;
+                listLaptop.Add(laptops[i]);
+                if (i == laptops.Count - 1) break;
             }
-            return laptops;
+            return listLaptop;
         }
-
         public override bool Equals(object obj)
         {
             if (obj is Laptop)

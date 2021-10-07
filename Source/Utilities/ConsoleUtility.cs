@@ -1,98 +1,9 @@
 using System;
-using System.Collections.Generic;
-using Persistance;
-using System.Text;
 
-namespace ConsolePL
+namespace Utilities
 {
-    public static class Utility
+    public static class ConsoleUtility
     {
-        public static List<string> SplitLine(string data, int lengthLine)
-        {
-            List<string> lines = new List<string>();
-            int startIndex = 0, startIndexFind = 0;
-            int lastIndex = lengthLine, lengthString = 0;
-            int index, preIndex;
-            for (int i = 0; lengthString < data.Length; i++)
-            {
-                index = 0;
-                do
-                {
-                    preIndex = index;
-                    index = data.IndexOf(" ", startIndexFind);
-                    startIndexFind = index + 1;
-                } while (index < lastIndex && index != -1);
-                if (preIndex == 0)
-                {
-                    if (index == -1 || index > lastIndex && data.Length - lengthString > lengthLine)
-                    {
-                        preIndex = startIndex + lengthLine;
-                    }
-                    if (data.Length - lengthString <= lengthLine)
-                    {
-                        preIndex = data.Length;
-                    }
-                }
-                int length = preIndex - startIndex;
-                lines.Add(data.Substring(startIndex, length));
-                lengthString += lines[i].Length;
-                lines[i] = lines[i].Trim();
-                lastIndex = startIndex + lengthLine;
-                startIndex = preIndex;
-                startIndexFind = lengthString + 1;
-            }
-            return lines;
-        }
-        public static string Standardize(string value)
-        {
-            value = value.Trim();
-            if (value.Length == 0) return "";
-            string CapitalizeLetter = @"ÁÀẠẢÃÂẤẦẬẨẪĂẮẰẶẲẴÉÈẸẺẼÊẾỀỆỂỄÓÒỌỎÕÔỐỒỘỔỖƠỚỜỢỞỠÚÙỤỦŨƯỨỪỰỬỮÍÌỊỈĨĐÝỲỴỶỸ";
-            string LowercaseLetter = @"áàạảãâấầậẩẫăắằặẳẵéèẹẻẽêếềệểễóòọỏõôốồộổỗơớờợởỡúùụủũưứừựửữíìịỉĩđýỳỵỷỹ";
-            int i = 0;
-            while ((i = value.IndexOf("  ", i)) != -1) value = value.Remove(i, 1);
-            char[] arr = value.ToCharArray();
-            for (int index = 1; index < value.Length; index++)
-            {
-                if (arr[index - 1] == ' ')
-                {
-                    if (Char.IsLower(arr[index])) arr[index] = Char.ToUpper(arr[index]);
-                    else
-                    {
-                        int found = LowercaseLetter.IndexOf(arr[index]);
-                        if (found != -1) arr[index] = CapitalizeLetter[found];
-                    }
-                }
-                else if (arr[index - 1] != ' ')
-                {
-                    if (char.IsUpper(arr[index])) arr[index] = char.ToLower(arr[index]);
-                    else
-                    {
-                        int found = CapitalizeLetter.IndexOf(arr[index]);
-                        if (found != -1) arr[index] = LowercaseLetter[found];
-                    }
-                }
-            }
-            if (Char.IsLower(arr[0])) arr[0] = Char.ToUpper(arr[0]);
-            else
-            {
-                int found = LowercaseLetter.IndexOf(arr[0]);
-                if (found != -1) arr[0] = CapitalizeLetter[found];
-            }
-            value = new string(arr);
-            return value;
-        }
-        public static void ShowPageNumber(int pageCount, int page)
-        {
-            if (pageCount > 1)
-            {
-                string nextPage = (page > 0 && page < pageCount) ? "►" : " ";
-                string prePage = (page > 1) ? "◄" : " ";
-                string pages = prePage + $"      [{page}/{pageCount}]      " + nextPage;
-                int position = 60 + pages.Length / 2;
-                Console.WriteLine("{0," + position + "}", pages);
-            }
-        }
         public static int GetNumber(string msg, int numberStart)
         {
             int number;
@@ -129,6 +40,91 @@ namespace ConsolePL
             } while (key != ConsoleKey.Enter);
             return input;
         }
+        public static string GetUsername()
+        {
+            string username;
+            while (true)
+            {
+                username = Console.ReadLine();
+                try
+                {
+                    Utility.CheckUsername(username); return username;
+                }
+                catch (Exception e)
+                {
+                    Console.ForegroundColor = ConsoleColor.Red;
+                    Console.WriteLine(" " + e.Message); Console.ResetColor();
+                    Console.Write(" → Re-enter Username: ");
+                }
+            }
+        }
+        public static string GetPassword()
+        {
+            ConsoleKey key;
+            string pass;
+            while (true)
+            {
+                pass = string.Empty;
+                do
+                {
+                    var keyInfo = Console.ReadKey(true);
+                    key = keyInfo.Key;
+
+                    if (key == ConsoleKey.Backspace && pass.Length > 0)
+                    {
+                        Console.Write("\b \b");
+                        pass = pass[..^1];
+                    }
+                    else if (!char.IsControl(keyInfo.KeyChar))
+                    {
+                        Console.Write("*");
+                        pass += keyInfo.KeyChar;
+                    }
+                } while (key != ConsoleKey.Enter);
+                try
+                {
+                    Utility.CheckPassword(pass); return pass;
+                }
+                catch (Exception e)
+                {
+                    Console.ForegroundColor = ConsoleColor.Red;
+                    Console.WriteLine();
+                    Console.WriteLine(" " + e.Message); Console.ResetColor();
+                    Console.Write(" → Re-enter Password: ");
+                }
+            }
+        }
+        public static void ShowPageNumber(int pageCount, int page)
+        {
+            if (pageCount > 1)
+            {
+                string nextPage = (page > 0 && page < pageCount) ? "►" : " ";
+                string prePage = (page > 1) ? "◄" : " ";
+                string pages = prePage + $"      [{page}/{pageCount}]      " + nextPage;
+                int position = 60 + pages.Length / 2;
+                Console.WriteLine("{0," + position + "}", pages);
+            }
+        }
+        public static string GetName()
+        {
+            string name;
+            Console.CursorVisible = true;
+            while (true)
+            {
+                name = Console.ReadLine();
+                try
+                {
+                    Utility.CheckName(name); return name;
+                }
+                catch (Exception e)
+                {
+                    Console.ForegroundColor = ConsoleColor.Red;
+                    Console.WriteLine("  " + e.Message);
+                    Console.ResetColor();
+                    Console.Write("  → Re-enter customer name: ");
+                }
+            }
+        }
         public static int GetNumber(string msg, int numberStart, out ConsoleKeyInfo keyInfo)
         {
             ConsoleKey key;
@@ -158,7 +154,7 @@ namespace ConsolePL
                 } while (key != ConsoleKey.Enter);
                 if (int.TryParse(input, out value) && value >= numberStart) return value;
                 Console.WriteLine();
-                Utility.Write($"  → Invalid {msg}!", ConsoleColor.Red);
+                Write($"  → Invalid {msg}!", ConsoleColor.Red);
                 Console.Write("\n  → Re-enter {0}: ", msg);
             }
         }
@@ -167,26 +163,6 @@ namespace ConsolePL
             Console.ForegroundColor = textColor;
             Console.Write(text);
             Console.ResetColor();
-        }
-        public static string GetName()
-        {
-            string name;
-            Console.CursorVisible = true;
-            while (true)
-            {
-                name = Console.ReadLine();
-                try
-                {
-                    Customer.CheckName(name); return name;
-                }
-                catch (Exception e)
-                {
-                    Console.ForegroundColor = ConsoleColor.Red;
-                    Console.WriteLine("  " + e.Message);
-                    Console.ResetColor();
-                    Console.Write("  → Re-enter customer name: ");
-                }
-            }
         }
         public static decimal GetMoney(out ConsoleKeyInfo keyInfo)
         {
@@ -240,7 +216,7 @@ namespace ConsolePL
                 phone = Console.ReadLine();
                 try
                 {
-                    Customer.CheckPhone(phone); return phone;
+                    Utility.CheckPhone(phone); return phone;
                 }
                 catch (Exception e)
                 {
@@ -251,26 +227,25 @@ namespace ConsolePL
                 }
             }
         }
-        public static string GetLine(int[] lengthDatas, string c1, string c2, string c3, string c4)
+        public static void PrintLine(int[] lengthDatas, string c1, string c2, string c3, string c4)
         {
-            string line = c1;
+            Console.Write(c1);
             int column = lengthDatas.Length;
             for (int i = 0; i < column; i++)
             {
                 for (int j = 0; j <= lengthDatas[i] + 1; j++)
-                    line += c2;
-                line += i < (column - 1) ? c3 : c4;
+                    Console.Write(c2);
+                Console.Write(i < (column - 1) ? c3 : c4);
             }
-            return line;
         }
         public static void PrintTitle(string title, bool lastLine)
         {
             string line = "══════════════════════════════════════════════════════════════════════════════════════════════════════════════════";
             int lengthLine = line.Length + 2;
-            int posLeft = Utility.GetPosition(title, lengthLine);
+            int posLeft = GetPosition(title, lengthLine);
             Console.WriteLine("  ╔{0}╗", line);
             Console.WriteLine("  ║{0," + (lengthLine - 1) + "}", "║");
-            Console.Write("  ║{0," + (posLeft - 1) + "}", ""); Utility.Write(title, ConsoleColor.Green);
+            Console.Write("  ║{0," + (posLeft - 1) + "}", ""); Write(title, ConsoleColor.Green);
             Console.WriteLine("{0," + (lengthLine - title.Length - posLeft) + "}", "║");
             Console.WriteLine("  ║{0," + (lengthLine - 1) + "}", "║");
             if (lastLine)

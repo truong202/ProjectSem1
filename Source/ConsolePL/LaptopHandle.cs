@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using Persistance;
 using BL;
+using Utilities;
 
 namespace ConsolePL
 {
@@ -18,16 +19,16 @@ namespace ConsolePL
             Console.Clear();
             if (listLaptop == null || listLaptop.Count == 0)
             {
-                Utility.PrintTitle("▬▬▬▬ SEARCH LAPTOP ▬▬▬▬", true);
-                Utility.Write("\n  LAPTOP NOT FOUND!\n", ConsoleColor.Red);
-                Utility.PressAnyKey("back");
+                ConsoleUtility.PrintTitle("▬▬▬▬ SEARCH LAPTOP ▬▬▬▬", true);
+                ConsoleUtility.Write("\n  LAPTOP NOT FOUND!\n", ConsoleColor.Red);
+                ConsoleUtility.PressAnyKey("back");
                 return;
             }
             laptops = Laptop.SplitList(listLaptop, index, 10);
             laptopCount = listLaptop == null ? 0 : listLaptop.Count;
             pageCount = (laptopCount % 10 == 0) ? laptopCount / 10 : laptopCount / 10 + 1;
             ShowListLaptop(laptops, "SEARCH LAPTOP");
-            Utility.ShowPageNumber(pageCount, page);
+            ConsoleUtility.ShowPageNumber(pageCount, page);
             ShowFeature(staff);
             ConsoleKey key = new ConsoleKey();
             do
@@ -43,7 +44,7 @@ namespace ConsolePL
                         while (true)
                         {
                             Console.Write("  → Input search value: ");
-                            searchValue = Utility.GetString(out keyInfo, new[] { ConsoleKey.H });
+                            searchValue = ConsoleUtility.GetString(out keyInfo, new[] { ConsoleKey.H });
                             key = keyInfo.Key;
                             Console.WriteLine();
                             if ((keyInfo.Modifiers & ConsoleModifiers.Control) != 0 && key == ConsoleKey.H)
@@ -60,8 +61,8 @@ namespace ConsolePL
                         if (listLaptop == null || listLaptop.Count == 0)
                         {
                             Console.Clear();
-                            Utility.PrintTitle("▬▬▬▬ SEARCH LAPTOP ▬▬▬▬", true);
-                            Utility.Write("\n  LAPTOP NOT FOUND!\n", ConsoleColor.Red);
+                            ConsoleUtility.PrintTitle("▬▬▬▬ SEARCH LAPTOP ▬▬▬▬", true);
+                            ConsoleUtility.Write("\n  LAPTOP NOT FOUND!\n", ConsoleColor.Red);
                         }
                         else
                         {
@@ -69,18 +70,18 @@ namespace ConsolePL
                             pageCount = (laptopCount % 10 == 0) ? laptopCount / 10 : laptopCount / 10 + 1;
                             laptops = Laptop.SplitList(listLaptop, index, 10);
                             ShowListLaptop(laptops, "SEARCH LAPTOP");
-                            Utility.ShowPageNumber(pageCount, page);
+                            ConsoleUtility.ShowPageNumber(pageCount, page);
                         }
                         ShowFeature(staff);
                         break;
                     case ConsoleKey.D:
                         Console.Write("\n  → Input Laptop ID to view details: ");
-                        int id = Utility.GetNumber("ID", 1);
+                        int id = ConsoleUtility.GetNumber("ID", 1);
                         Laptop laptop = laptopBL.GetById(id);
                         ViewLaptopDetails(laptop);
-                        Utility.PressAnyKey("back");
+                        ConsoleUtility.PressAnyKey("back");
                         ShowListLaptop(laptops, "SEARCH LAPTOP");
-                        Utility.ShowPageNumber(pageCount, page);
+                        ConsoleUtility.ShowPageNumber(pageCount, page);
                         ShowFeature(staff);
                         break;
                     case ConsoleKey.C:
@@ -95,7 +96,7 @@ namespace ConsolePL
                             index -= 10;
                             laptops = Laptop.SplitList(listLaptop, index, 10);
                             ShowListLaptop(laptops, "SEARCH LAPTOP");
-                            Utility.ShowPageNumber(pageCount, page);
+                            ConsoleUtility.ShowPageNumber(pageCount, page);
                             ShowFeature(staff);
                         }
                         break;
@@ -106,7 +107,7 @@ namespace ConsolePL
                             index += 10;
                             laptops = Laptop.SplitList(listLaptop, index, 10);
                             ShowListLaptop(laptops, "SEARCH LAPTOP");
-                            Utility.ShowPageNumber(pageCount, page);
+                            ConsoleUtility.ShowPageNumber(pageCount, page);
                             ShowFeature(staff);
                         }
                         break;
@@ -117,13 +118,13 @@ namespace ConsolePL
         public void ShowListLaptop(List<Laptop> laptops, string title)
         {
             Console.Clear();
-            Utility.PrintTitle("▬▬▬▬ " + title + " ▬▬▬▬", false);
+            ConsoleUtility.PrintTitle("▬▬▬▬ " + title + " ▬▬▬▬", false);
             Console.CursorVisible = false;
             int[] lengthDatas = { 3, 30, 11, 11, 21, 6, 12 };
-            Console.WriteLine(Utility.GetLine(lengthDatas, "  ╟", "─", "┬", "╢"));
+            ConsoleUtility.PrintLine(lengthDatas, "  ╟", "─", "┬", "╢\n");
             Console.WriteLine("  ║ {0,3} │ {1,-30} │ {2,-11} │ {3,-11} │ {4,-21} │ {5,6} │ {6,12} ║", "ID", "Laptop Name",
                                "Manufactory", "Category", "CPU", "RAM", "Price(VNĐ)");
-            Console.WriteLine(Utility.GetLine(lengthDatas, "  ╟", "─", "┼", "╢"));
+            ConsoleUtility.PrintLine(lengthDatas, "  ╟", "─", "┼", "╢\n");
             for (int i = 0; i < laptops.Count; i++)
             {
                 int lengthName = 27;
@@ -135,14 +136,14 @@ namespace ConsolePL
                                 name, laptops[i].ManufactoryInfo.ManufactoryName, laptops[i].CategoryInfo.CategoryName,
                                 laptops[i].CPU, ram, laptops[i].Price);
             }
-            Console.WriteLine(Utility.GetLine(lengthDatas, "  ╚", "═", "╧", "╝"));
+            ConsoleUtility.PrintLine(lengthDatas, "  ╚", "═", "╧", "╝\n");
         }
         private void ViewLaptopDetails(Laptop laptop)
         {
             Console.CursorVisible = false;
             if (laptop == null)
             {
-                Utility.Write("  LAPTOP NOT FOUND!\n", ConsoleColor.Red);
+                ConsoleUtility.Write("  LAPTOP NOT FOUND!\n", ConsoleColor.Red);
                 return;
             }
             Console.Clear();
@@ -150,9 +151,9 @@ namespace ConsolePL
             string line = "──────────────────────────────────────────────────────────────────────────────────────────────────────────────────";
             string title = "LAPTOP INFORMATION";
             int lengthLine = line.Length + 2;
-            int posLeft = Utility.GetPosition(title, lengthLine);
+            int posLeft = ConsoleUtility.GetPosition(title, lengthLine);
             Console.WriteLine("  ┌{0}┐", line);
-            Console.Write("  │{0," + (posLeft - 1) + "}", ""); Utility.Write(title, ConsoleColor.Green);
+            Console.Write("  │{0," + (posLeft - 1) + "}", ""); ConsoleUtility.Write(title, ConsoleColor.Green);
             Console.WriteLine("{0," + (lengthLine - title.Length - posLeft) + "}", "│");
             Console.WriteLine("  ├{0}┤", line);
             Console.WriteLine("  │ Laptop Id:   {0,-99} │", laptop.LaptopId);
@@ -202,13 +203,13 @@ namespace ConsolePL
             if (staff.Role == Staff.SELLER)
             {
                 Console.Write("\n  ● Press '");
-                Utility.Write("F", ConsoleColor.Yellow);
+                ConsoleUtility.Write("F", ConsoleColor.Yellow);
                 Console.Write("' to search laptops, '");
-                Utility.Write("D", ConsoleColor.Yellow);
+                ConsoleUtility.Write("D", ConsoleColor.Yellow);
                 Console.Write("' to view laptop details, '");
-                Utility.Write("C", ConsoleColor.Yellow);
+                ConsoleUtility.Write("C", ConsoleColor.Yellow);
                 Console.Write("' to Create Order, '");
-                Utility.Write("ESC", ConsoleColor.Red);
+                ConsoleUtility.Write("ESC", ConsoleColor.Red);
                 Console.WriteLine("' to exit");
             }
         }

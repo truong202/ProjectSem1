@@ -3,6 +3,7 @@
   <ItemGroup>
     <ProjectReference Include="..\Persistance\Persistance.csproj" />
     <ProjectReference Include="..\BL\BL.csproj" />
+    <ProjectReference Include="..\Utilities\Utilities.csproj" />
   </ItemGroup>
 
   <PropertyGroup>
