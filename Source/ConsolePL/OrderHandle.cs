@@ -28,7 +28,7 @@ namespace ConsolePL
                 }
                 else
                 {
-                    Console.WriteLine("  Laptop Name: {0}  Price: {1:N0} VNĐ", laptop.Name, laptop.Price);
+                    ConsoleUtility.Write(string.Format("  * Laptop Name: {0}\n  * Price: {1:N0} VNĐ\n", laptop.Name, laptop.Price), ConsoleColor.Cyan);
                     if (laptop.Quantity <= 0)
                     {
                         ConsoleUtility.Write("  LAPTOP IS OUT OF STOCK, PLEASE CHOOSE ANOTHER LAPTOP!!!\n", ConsoleColor.Red);
