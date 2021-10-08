@@ -326,7 +326,7 @@ VALUES(1, 1, 1, 1), (2, 2, 2, 1), (3, 3, 3, 1), (4, 1, 1, 1), (5, 2, 2, 1), (6, 
 INSERT INTO order_details(order_id, laptop_id, quantity, unit_price)
 VALUES(1, 1, 2, 24990000), (2, 1, 2, 24990000), (3, 1, 2, 24990000), (1, 27, 3, 27259000), (2, 27, 1, 27259000), (3, 27, 2, 27259000),
 	  (4, 1, 2, 24990000), (5, 1, 2, 24990000), (6, 1, 2, 24990000), (4, 27, 1, 27259000), (5, 27, 1, 27259000), (6, 27, 1, 27259000);
-
+      
 DELIMITER $$
 CREATE PROCEDURE sp_login(IN username VARCHAR(255), IN password VARCHAR(255))
 BEGIN
@@ -477,7 +477,8 @@ FROM
         INNER JOIN customers c ON o.customer_id = c.customer_id
         LEFT JOIN staffs sl ON o.seller_id = sl.staff_id
         LEFT JOIN staffs ac ON o.accountant_id = ac.staff_id
-WHERE o.order_status = 1 OR o.order_status = 2;
+WHERE o.order_status = 1 OR o.order_status = 2
+ORDER BY o.order_status;
 END $$
 DELIMITER ;
 -- end sp_getOrderUnpaid

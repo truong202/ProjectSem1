@@ -243,6 +243,8 @@ namespace ConsolePL
                         if (result)
                         {
                             ExportInvoice(order);
+                            if (money != totalPayment)
+                                Console.WriteLine("\n  → EXCESS CASH: {0:N0} VNĐ\n", money - totalPayment);
                         }
                         else
                         {
