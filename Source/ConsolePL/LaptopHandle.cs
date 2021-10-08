@@ -160,7 +160,7 @@ namespace ConsolePL
             data = laptop.Display;
             if (data.Length > 99)
             {
-                var lines = Utility.SplitLine(data, 99);
+                var lines = ConsoleUtility.SplitLine(data, 99);
                 Console.WriteLine("  │ Display:     {0,-99} │", lines[0]);
                 for (int i = 1; i < lines.Count; i++)
                     Console.WriteLine("  │              {0,-99} │", lines[i]);
@@ -173,7 +173,7 @@ namespace ConsolePL
             data = laptop.Ports;
             if (data.Length > 99)
             {
-                var lines = Utility.SplitLine(data, 99);
+                var lines = ConsoleUtility.SplitLine(data, 99);
                 Console.WriteLine("  │ Ports:       {0,-99} │", lines[0]);
                 for (int i = 1; i < lines.Count; i++)
                     Console.WriteLine("  │              {0,-99} │", lines[i]);

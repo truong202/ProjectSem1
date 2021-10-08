@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 
 namespace Utilities
 {
@@ -257,6 +258,42 @@ namespace Utilities
             Console.WriteLine($"  Press any key to {msg}...");
             Console.ReadKey(true);
             Console.CursorVisible = true;
+        }
+        public static List<string> SplitLine(string data, int lengthLine)
+        {
+            List<string> lines = new List<string>();
+            int startIndex = 0, startIndexFind = 0;
+            int lastIndex = lengthLine, lengthString = 0;
+            int index, preIndex;
+            for (int i = 0; lengthString < data.Length; i++)
+            {
+                index = 0;
+                do
+                {
+                    preIndex = index;
+                    index = data.IndexOf(" ", startIndexFind);
+                    startIndexFind = index + 1;
+                } while (index < lastIndex && index != -1);
+                if (preIndex == 0)
+                {
+                    if (index == -1 || index > lastIndex && data.Length - lengthString > lengthLine)
+                    {
+                        preIndex = startIndex + lengthLine;
+                    }
+                    if (data.Length - lengthString <= lengthLine)
+                    {
+                        preIndex = data.Length;
+                    }
+                }
+                int length = preIndex - startIndex;
+                lines.Add(data.Substring(startIndex, length));
+                lengthString += lines[i].Length;
+                lines[i] = lines[i].Trim();
+                lastIndex = startIndex + lengthLine;
+                startIndex = preIndex;
+                startIndexFind = lengthString + 1;
+            }
+            return lines;
         }
         public static int GetPosition(string value, int width)
         {
