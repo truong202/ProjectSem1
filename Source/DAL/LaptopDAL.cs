@@ -67,31 +67,7 @@ namespace DAL
             }
             return laptops;
         }
-        // public List<Laptop> Searchs(string searchValue)
-        // {
-        //     List<Laptop> laptops = new List<Laptop>();
-
-        //     try
-        //     {
-        //         connection.Open();
-        //         MySqlCommand command = new MySqlCommand("call sp_searchLaptops(@searchValue)", connection);
-        //         command.Parameters.AddWithValue("@searchValue", searchValue);
-        //         using (MySqlDataReader reader = command.ExecuteReader())
-        //         {
-        //             while (reader.Read())
-        //             {
-        //                 laptops.Add(GetLaptop(reader));
-        //             }
-        //         }
-        //     }
-        //     catch { }
-        //     finally
-        //     {
-        //         try { connection.Close(); } catch { }
-        //     }
-        //     if (laptops.Count == 0) laptops = null;
-        //     return laptops;
-        // }
+        
         public Laptop GetById(int laptopId)
         {
             Laptop laptop = null;

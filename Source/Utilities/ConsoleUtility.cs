@@ -53,9 +53,8 @@ namespace Utilities
                 }
                 catch (Exception e)
                 {
-                    Console.ForegroundColor = ConsoleColor.Red;
-                    Console.WriteLine(" " + e.Message); Console.ResetColor();
-                    Console.Write(" → Re-enter Username: ");
+                    Write("  "+e.Message, ConsoleColor.Red);
+                    Console.Write("\n  → Re-enter Username: ");
                 }
             }
         }
@@ -88,10 +87,8 @@ namespace Utilities
                 }
                 catch (Exception e)
                 {
-                    Console.ForegroundColor = ConsoleColor.Red;
-                    Console.WriteLine();
-                    Console.WriteLine(" " + e.Message); Console.ResetColor();
-                    Console.Write(" → Re-enter Password: ");
+                    Write("\n  " + e.Message, ConsoleColor.Red); 
+                    Console.Write("\n  → Re-enter Password: ");
                 }
             }
         }

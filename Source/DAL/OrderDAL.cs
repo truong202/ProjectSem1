@@ -38,14 +38,13 @@ namespace DAL
                     reader.Close();
                     if (order.CustomerInfo.ID == null)
                     {
-                        //Insert new Customer
                         command.CommandText = "call sp_createCustomer(@customerName, @address, @phone);";
                         command.Parameters.Clear();
                         command.Parameters.AddWithValue("@customerName", order.CustomerInfo.Name);
                         command.Parameters.AddWithValue("@address", order.CustomerInfo.Address ?? "");
                         command.Parameters.AddWithValue("@phone", order.CustomerInfo.Phone);
                         command.ExecuteNonQuery();
-                        //Get new customer id
+
                         command.CommandText = "call sp_getNewCustomerId();";
                         reader = command.ExecuteReader();
                         if (reader.Read())
@@ -54,14 +53,14 @@ namespace DAL
                         }
                         reader.Close();
                     }
-                    //Insert Order
+
                     command.CommandText = "call sp_createOrder(@customerId, @sellerId, @orderStatus);";
                     command.Parameters.Clear();
                     command.Parameters.AddWithValue("@customerId", order.CustomerInfo.ID);
                     command.Parameters.AddWithValue("@sellerId", order.Seller.ID);
                     command.Parameters.AddWithValue("@orderStatus", Order.UNPAID);
                     command.ExecuteNonQuery();
-                    //get new Order_ID
+
                     command.CommandText = "call sp_getNewOrderId();";
                     reader = command.ExecuteReader();
                     if (reader.Read())
@@ -69,10 +68,9 @@ namespace DAL
                         order.ID = reader.GetInt32("order_id");
                     }
                     reader.Close();
-                    //insert Order Details table
+
                     foreach (var laptop in order.Laptops)
                     {
-                        //get unit_price
                         if (laptop.Quantity <= 0)
                         {
                             throw new Exception("Not Exists Item");
@@ -88,7 +86,6 @@ namespace DAL
                         laptop.Price = reader.GetDecimal("price");
                         reader.Close();
 
-                        //insert to Order Details
                         command.CommandText = "call sp_insertToOrderDetails(@orderId, @laptopId, @price, @quantity);";
                         command.Parameters.Clear();
                         command.Parameters.AddWithValue("@orderId", order.ID);
@@ -97,7 +94,6 @@ namespace DAL
                         command.Parameters.AddWithValue("@quantity", laptop.Quantity);
                         command.ExecuteNonQuery();
 
-                        //update quantity in laptops
                         command.CommandText = "call sp_updateQuantityInLaptopsAfterCreateOrder(@quantity, @laptopId);";
                         command.Parameters.Clear();
                         command.Parameters.AddWithValue("@quantity", laptop.Quantity);

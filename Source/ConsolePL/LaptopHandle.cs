@@ -49,10 +49,10 @@ namespace ConsolePL
                             Console.WriteLine();
                             if ((keyInfo.Modifiers & ConsoleModifiers.Control) != 0 && key == ConsoleKey.H)
                             {
-                                Console.WriteLine("\n  * Name|Manufactory|Category: Search by Name or Manufactory or Category");
-                                Console.WriteLine("  * Name|Manufactory|Category # desc|asc: Search by Name or Manufactory or Category, Price: High → Low or Low → High");
-                                Console.WriteLine("  * Manufactory # Category: Search by Manufactory and Category");
-                                Console.WriteLine("  * Manufactory # Category # desc|asc: Search by Manufactory and Category, Price: High → Low or Low → High\n");
+                                Console.WriteLine("\n  * NAME|MANUFACTORY|CATEGORY: Search by NAME or MANUFACTORY or CATEGORY");
+                                Console.WriteLine("  * NAME|MANUFACTORY|CATEGORY # desc|asc: Search by NAME or MANUFACTORY or CATEGORY, PRICE: High → Low or Low → High");
+                                Console.WriteLine("  * MANUFACTORY # CATEGORY: Search by MANUFACTORY and CATEGORY");
+                                Console.WriteLine("  * MANUFACTORY # CATEGORY # desc|asc: Search by MANUFACTORY and CATEGORY, PRICE: High → Low or Low → High\n");
                                 continue;
                             }
                             break;
@@ -117,7 +117,7 @@ namespace ConsolePL
             int[] lengthDatas = { 3, 30, 11, 11, 21, 6, 12 };
             ConsoleUtility.PrintLine(lengthDatas, "  ╟", "─", "┬", "╢\n");
             Console.WriteLine("  ║ {0,3} │ {1,-30} │ {2,-11} │ {3,-11} │ {4,-21} │ {5,6} │ {6,12} ║", "ID", "Laptop Name",
-                               "Manufactory", "Category", "CPU", "RAM", "Price(VNĐ)");
+                               "Manufactory", "Category", "CPU", "RAM", "Price(VND)");
             ConsoleUtility.PrintLine(lengthDatas, "  ╟", "─", "┼", "╢\n");
             for (int i = 0; i < laptops.Count; i++)
             {
@@ -187,7 +187,7 @@ namespace ConsolePL
             Console.WriteLine("  │ Size:        {0,-99} │", laptop.Size);
             Console.WriteLine("  │ Operating system: {0,-94} │", laptop.OS);
             Console.WriteLine("  │ Quantity:    {0,-99} │", laptop.Quantity);
-            Console.WriteLine("  │ Price:       {0,-99} │", laptop.Price.ToString("N0"));
+            Console.WriteLine("  │ Price:       {0,-99} │", laptop.Price.ToString("N0") +" VND");
             Console.WriteLine("  │ Warranty period: {0,-95} │", laptop.WarrantyPeriod);
             Console.WriteLine("  └{0}┘", line);
         }

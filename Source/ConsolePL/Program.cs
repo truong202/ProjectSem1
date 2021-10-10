@@ -11,10 +11,9 @@ namespace ConsolePL
         {
             Console.OutputEncoding = System.Text.Encoding.Unicode;
             Console.InputEncoding = System.Text.Encoding.Unicode;
-            // Console.TreatControlCAsInput = true;
+            Console.TreatControlCAsInput = false;
             Console.Title = "LAPTOP_STORE";
             Staff staff = Login();
-            // Staff staff = new Staff() { Role = Staff.SELLER, Id = 1 };
             int choose;
             string[] menuItems;
             switch (staff.Role)
@@ -111,16 +110,15 @@ namespace ConsolePL
                 ConsoleUtility.Write("                         [LOGIN]                        ", ConsoleColor.Yellow);
                 Console.WriteLine("║");
                 Console.WriteLine("╚════════════════════════════════════════════════════════╝");
-                Console.Write("\n → Username: ");
+                Console.Write("\n  → Username: ");
                 username = ConsoleUtility.GetUsername();
-                Console.Write(" → Password: ");
+                Console.Write("  → Password: ");
                 password = ConsoleUtility.GetPassword();
                 staff = staffBL.Login(new Staff { Username = username, Password = password });
                 if (staff == null)
                 {
-                    ConsoleUtility.Write("\n Incorrect Username or Password!\n", ConsoleColor.Red);
+                    ConsoleUtility.Write("\n  Incorrect Username or Password!\n", ConsoleColor.Red);
                     ConsoleUtility.PressAnyKey("login again");
-                    Console.ReadKey(true);
                 }
             } while (staff == null);
             return staff;

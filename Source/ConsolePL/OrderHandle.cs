@@ -106,7 +106,6 @@ namespace ConsolePL
             {
                 Console.Clear();
                 ConsoleUtility.PrintTitle("▬▬▬▬ PAYMENT ▬▬▬▬", true);
-                Console.WriteLine("\n  Order not found!");
                 ConsoleUtility.Write("\n  ORDER NOT FOUND!!!\n", ConsoleColor.Red);
                 ConsoleUtility.PressAnyKey("back");
                 return;
@@ -244,7 +243,7 @@ namespace ConsolePL
                         {
                             ExportInvoice(order);
                             if (money != totalPayment)
-                                Console.WriteLine("\n  → EXCESS CASH: {0:N0} VNĐ\n", money - totalPayment);
+                                Console.WriteLine("\n  → EXCESS CASH: {0:N0} VND\n", money - totalPayment);
                         }
                         else
                         {
@@ -299,7 +298,7 @@ namespace ConsolePL
             Console.WriteLine("  ║  Address        : {0,-94} ║", order.CustomerInfo.Address);
             int[] lengthDatas = { 3, 58, 12, 8, 15 };
             ConsoleUtility.PrintLine(lengthDatas, "  ║ ┌", "─", "┬", "┐ ║\n");
-            Console.WriteLine("  ║ │ {0,3} │ {1,-58} │ {2,12} │ {3,8} │ {4,15} │ ║", "NO", "Laptop Name", "Price(VNĐ)", "Quantity", "Amount(VNĐ)");
+            Console.WriteLine("  ║ │ {0,3} │ {1,-58} │ {2,12} │ {3,8} │ {4,15} │ ║", "NO", "Laptop Name", "Price(VND)", "Quantity", "Amount(VND)");
             ConsoleUtility.PrintLine(lengthDatas, "  ║ ├", "─", "┼", "┤ ║\n");
             for (int i = 0; i < order.Laptops.Count; i++)
             {
@@ -318,7 +317,7 @@ namespace ConsolePL
         {
             Console.Clear();
             string line = "══════════════════════════════════════════════════════════════════════════════════════════════════════════════════";
-            ConsoleUtility.PrintTitle("▬▬▬▬ Invoice ▬▬▬▬", false);
+            ConsoleUtility.PrintTitle("▬▬▬▬ INVOICE ▬▬▬▬", false);
             int lengthLine = line.Length + 2;
             decimal totalPayment = 0;
             Console.WriteLine("  ╠══════════════════════════════════════════════════════════════════════════════════════════════════════════════════╣");
@@ -328,15 +327,13 @@ namespace ConsolePL
             Console.WriteLine("  ║  Store          : {0,-94} ║", "LAPTOP STORE");
             Console.WriteLine("  ║  Phone          : {0,-94} ║", "0999999999");
             Console.WriteLine("  ║  Address        : {0,-94} ║", "18 Tam Trinh, Minh Khai Ward, Hai Ba Trung District, Ha Noi");
-            Console.WriteLine("  ║  Seller         : {0,-94} ║", order.Seller.Name);
-            Console.WriteLine("  ║  Accountant     : {0,-94} ║", order.Accountant.Name);
             Console.WriteLine("  ╟──────────────────────────────────────────────────────────────────────────────────────────────────────────────────╢");
             Console.WriteLine("  ║  Customer Name  : {0,-94} ║", order.CustomerInfo.Name);
             Console.WriteLine("  ║  Customer Phone : {0,-94} ║", order.CustomerInfo.Phone);
             Console.WriteLine("  ║  Address        : {0,-94} ║", order.CustomerInfo.Address);
             int[] lengthDatas = { 3, 58, 12, 8, 15 };
             ConsoleUtility.PrintLine(lengthDatas, "  ║ ┌", "─", "┬", "┐ ║\n");
-            Console.WriteLine("  ║ │ {0,3} │ {1,-58} │ {2,12} │ {3,8} │ {4,15} │ ║", "NO", "Laptop Name", "Price(VNĐ)", "Quantity", "Amount(VNĐ)");
+            Console.WriteLine("  ║ │ {0,3} │ {1,-58} │ {2,12} │ {3,8} │ {4,15} │ ║", "NO", "Laptop Name", "Price(VND)", "Quantity", "Amount(VND)");
             ConsoleUtility.PrintLine(lengthDatas, "  ║ ├", "─", "┼", "┤ ║\n");
             for (int i = 0; i < order.Laptops.Count; i++)
             {
@@ -348,6 +345,15 @@ namespace ConsolePL
             Console.WriteLine("  ║ ├─────┴────────────────────────────────────────────────────────────┴──────────────┴──────────┼─────────────────┤ ║");
             Console.WriteLine("  ║ │ TOTAL PAYMENT                                                                              │ {0,15:N0} │ ║", totalPayment);
             Console.WriteLine("  ║ └────────────────────────────────────────────────────────────────────────────────────────────┴─────────────────┘ ║");
+            Console.WriteLine("  ║                                                                                                                  ║");
+            Console.WriteLine("  ║                SELLER                             ACCOUNTANT                             CUSTOMER                ║");
+            Console.WriteLine("  ║                                                                                                                  ║");
+            int x = ConsoleUtility.GetPosition(order.Seller.Name, 38);
+            Console.Write("  ║{0," + x + "}{1}{2," + (38 - order.Seller.Name.Length - x) + "}", "", order.Seller.Name, "");
+            x = ConsoleUtility.GetPosition(order.Accountant.Name, 38);
+            Console.WriteLine("{0," + (x) + "}{1}{2," + (76 - order.Accountant.Name.Length - x) + "}║", "", order.Accountant.Name, "");
+            Console.WriteLine("  ║                                                                                                                  ║");
+            Console.WriteLine("  ║                                                                                                                  ║");
             Console.WriteLine("  ╚══════════════════════════════════════════════════════════════════════════════════════════════════════════════════╝");
         }
     }
