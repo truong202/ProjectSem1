@@ -6,7 +6,7 @@ using System.Collections.Generic;
 
 namespace TestDAL
 {
-    public class Payment
+    public class PaymentTest
     {
         private OrderDAL orderDAL = new OrderDAL();
 
@@ -14,7 +14,7 @@ namespace TestDAL
         [InlineData(1)]
         [InlineData(2)]
         [InlineData(3)]
-        public void PaymetTest1(int orderId)
+        public void PaymentTest1(int orderId)
         {
             var order = orderDAL.GetById(orderId);
             order.Status = Order.PAID;
@@ -29,7 +29,7 @@ namespace TestDAL
         [InlineData(4)]
         [InlineData(5)]
         [InlineData(6)]
-        public void PaymetTest2(int orderId)
+        public void PaymentTest2(int orderId)
         {
             var order = orderDAL.GetById(orderId);
             order.Status = Order.CANCEL;

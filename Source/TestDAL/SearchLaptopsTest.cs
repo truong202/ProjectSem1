@@ -77,7 +77,7 @@ namespace TestDAL
         [Theory]
         [InlineData("asus # gaming")]
         [InlineData("gaming # acer")]
-        [InlineData("apple # Multimedia")]
+        [InlineData("apple # multimedia")]
         public void SearchLaptopsTest4(string searchValue)
         {
             var searchs = searchValue.Split("#");
