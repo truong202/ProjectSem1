@@ -67,7 +67,6 @@ namespace DAL
             }
             return laptops;
         }
-        
         public Laptop GetById(int laptopId)
         {
             Laptop laptop = null;

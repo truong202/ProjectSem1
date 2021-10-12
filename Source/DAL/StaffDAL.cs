@@ -25,7 +25,6 @@ namespace DAL
                         _staff = GetStaff(reader);
                     }
                 }
-                // connection.Close();
             }
             catch{}
             finally
