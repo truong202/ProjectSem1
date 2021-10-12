@@ -554,6 +554,12 @@ CREATE TRIGGER tg_checkQuantity
     END $$
 DELIMITER ;
 
+DROP EVENT IF EXISTS update_order;
+CREATE EVENT update_order  ON SCHEDULE EVERY 1 MINUTE 
+STARTS '2010-01-01 00:00:00'
+DO
+UPDATE orders set order_status = 4 where (hour(now()) = 0 AND minute(Now() = 0)) AND (order_status = 1 OR order_status = 2);
+
 DROP USER IF EXISTS 'laptop'@'localhost';
 CREATE USER IF NOT EXISTS 'laptop'@'localhost' IDENTIFIED BY 'vtcacademy';
 
