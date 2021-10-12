@@ -9,9 +9,7 @@ namespace ConsolePL
     {
         static void Main(string[] args)
         {
-            Console.OutputEncoding = System.Text.Encoding.Unicode;
-            Console.InputEncoding = System.Text.Encoding.Unicode;
-            Console.TreatControlCAsInput = false;
+            Console.OutputEncoding = System.Text.Encoding.UTF8;
             Console.Title = "LAPTOP_STORE";
             Staff staff = Login();
             int choose;
