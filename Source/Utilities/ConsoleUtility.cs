@@ -53,7 +53,7 @@ namespace Utilities
                 }
                 catch (Exception e)
                 {
-                    Write("  "+e.Message, ConsoleColor.Red);
+                    Write("  " + e.Message, ConsoleColor.Red);
                     Console.Write("\n  → Re-enter Username: ");
                 }
             }
@@ -87,7 +87,7 @@ namespace Utilities
                 }
                 catch (Exception e)
                 {
-                    Write("\n  " + e.Message, ConsoleColor.Red); 
+                    Write("\n  " + e.Message, ConsoleColor.Red);
                     Console.Write("\n  → Re-enter Password: ");
                 }
             }
@@ -189,9 +189,18 @@ namespace Utilities
                         else
                             Console.Write("\b \r  → Enter money: ");
                     }
-                    else if (!char.IsControl(keyInfo.KeyChar) && keyInfo.KeyChar >= '0' && keyInfo.KeyChar <= '9'
-                            && money.ToString().Length <= 27)
+                    else if (keyInfo.KeyChar >= '0' && keyInfo.KeyChar <= '9' && money.ToString().Length <= 27)
                     {
+                        if (moneyString.Length == 1 && moneyString[0] == '0')
+                        {
+                            if (keyInfo.KeyChar != '0')
+                            {
+                                moneyString = moneyString[..^1];
+                                Console.Write("\b \b");
+                            }
+                            else
+                                continue;
+                        }
                         moneyString += keyInfo.KeyChar;
                         decimal.TryParse(moneyString, out money);
                         Console.Write("\r  → Enter money: {0:N0}", money);
