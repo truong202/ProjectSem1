@@ -196,6 +196,10 @@ namespace ConsolePL
             if (staff.Role == Staff.SELLER)
             {
                 Console.Write("\n  ● Press '");
+                ConsoleUtility.Write("LEFT", ConsoleColor.Yellow);
+                Console.Write("' or '");
+                ConsoleUtility.Write("RIGHT", ConsoleColor.Yellow);
+                Console.Write("' arrow to switch page, '");
                 ConsoleUtility.Write("F", ConsoleColor.Yellow);
                 Console.Write("' to search laptops, '");
                 ConsoleUtility.Write("D", ConsoleColor.Yellow);
