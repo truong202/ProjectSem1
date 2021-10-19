@@ -555,12 +555,13 @@ CREATE TRIGGER tg_checkQuantity
 DELIMITER ;
 
 DROP EVENT IF EXISTS update_order;
-CREATE EVENT update_order  ON SCHEDULE EVERY 1 HOUR 
-STARTS '2010-01-01 00:00:00'
+CREATE EVENT update_order  ON SCHEDULE EVERY 1 MINUTE 
+STARTS '2021-01-01 00:00:00'
 DO
-UPDATE orders SET status = 4 WHERE (hour(now()) = 1) AND (status = 1 OR status = 2);
+UPDATE orders SET status = 4 WHERE datediff(curdate(), order_date) >= 1 AND (status = 1 OR status = 2);
 
 DROP USER IF EXISTS 'laptop'@'localhost';
 CREATE USER IF NOT EXISTS 'laptop'@'localhost' IDENTIFIED BY 'vtcacademy';
 
 GRANT ALL ON laptop_store.* TO 'laptop'@'localhost';
+select * from orders;
