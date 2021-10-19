@@ -75,11 +75,14 @@ namespace ConsolePL
                         ShowFeatures(staff);
                         break;
                     case ConsoleKey.D:
-                        Console.Write("\n  → Input Laptop ID to view details: ");
-                        int id = ConsoleUtility.GetNumber("ID", 1);
-                        Laptop laptop = laptopBL.GetById(id);
-                        ViewLaptopDetails(laptop);
-                        ConsoleUtility.PressAnyKey("back");
+                        Console.Write("\n  → Input Laptop ID to view details(input 0 to cancel): ");
+                        int id = ConsoleUtility.GetNumber("ID", 0);
+                        if (id != 0)
+                        {
+                            Laptop laptop = laptopBL.GetById(id);
+                            ViewLaptopDetails(laptop);
+                            ConsoleUtility.PressAnyKey("back");
+                        }
                         ShowListLaptop(laptops, "SEARCH LAPTOP");
                         ConsoleUtility.ShowPageNumber(pageCount, page);
                         ShowFeatures(staff);
@@ -187,7 +190,7 @@ namespace ConsolePL
             Console.WriteLine("  │ Size:        {0,-99} │", laptop.Size);
             Console.WriteLine("  │ Operating system: {0,-94} │", laptop.OS);
             Console.WriteLine("  │ Quantity:    {0,-99} │", laptop.Quantity);
-            Console.WriteLine("  │ Price:       {0,-99} │", laptop.Price.ToString("N0") +" VND");
+            Console.WriteLine("  │ Price:       {0,-99} │", laptop.Price.ToString("N0") + " VND");
             Console.WriteLine("  │ Warranty period: {0,-95} │", laptop.WarrantyPeriod);
             Console.WriteLine("  └{0}┘", line);
         }
@@ -195,12 +198,7 @@ namespace ConsolePL
         {
             if (staff.Role == Staff.SELLER)
             {
-                Console.Write("\n  ● Press '");
-                ConsoleUtility.Write("LEFT", ConsoleColor.Yellow);
-                Console.Write("' or '");
-                ConsoleUtility.Write("RIGHT", ConsoleColor.Yellow);
-                Console.WriteLine("' arrow to switch page");
-                Console.Write("\n  ● Press '");
+                Console.Write("  ● Press '");
                 ConsoleUtility.Write("F", ConsoleColor.Yellow);
                 Console.Write("' to search laptops, '");
                 ConsoleUtility.Write("D", ConsoleColor.Yellow);

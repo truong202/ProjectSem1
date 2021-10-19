@@ -296,7 +296,7 @@ namespace DAL
             }
             catch { }
             order.Date = reader.GetDateTime("order_date");
-            order.Status = reader.GetInt32("order_status");
+            order.Status = reader.GetInt32("status");
             return order;
         }
     }

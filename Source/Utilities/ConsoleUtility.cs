@@ -101,6 +101,11 @@ namespace Utilities
                 string pages = prePage + $"      [{page}/{pageCount}]      " + nextPage;
                 int position = 60 + pages.Length / 2;
                 Console.WriteLine("{0," + position + "}", pages);
+                Console.Write("\n  ● Press '");
+                ConsoleUtility.Write("LEFT", ConsoleColor.Yellow);
+                Console.Write("' or '");
+                ConsoleUtility.Write("RIGHT", ConsoleColor.Yellow);
+                Console.WriteLine("' arrow to switch page");
             }
         }
         public static string GetName()
