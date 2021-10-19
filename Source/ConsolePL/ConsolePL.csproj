@@ -10,8 +10,7 @@
     <OutputType>Exe</OutputType>
     <TargetFramework>net5.0</TargetFramework>
     <RootNamespace>ConsolePL</RootNamespace>
-    <AssemblyName>Laptop Store</AssemblyName>
-    <!-- <ApplicationIcon>../../laptop.ico</ApplicationIcon> -->
+    <AssemblyName>LaptopStore</AssemblyName>
   </PropertyGroup>
 
 </Project>
