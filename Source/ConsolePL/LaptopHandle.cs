@@ -199,7 +199,8 @@ namespace ConsolePL
                 ConsoleUtility.Write("LEFT", ConsoleColor.Yellow);
                 Console.Write("' or '");
                 ConsoleUtility.Write("RIGHT", ConsoleColor.Yellow);
-                Console.Write("' arrow to switch page, '");
+                Console.WriteLine("' arrow to switch page");
+                Console.Write("\n  ● Press '");
                 ConsoleUtility.Write("F", ConsoleColor.Yellow);
                 Console.Write("' to search laptops, '");
                 ConsoleUtility.Write("D", ConsoleColor.Yellow);

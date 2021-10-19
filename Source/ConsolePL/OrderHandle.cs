@@ -105,7 +105,7 @@ namespace ConsolePL
             if (listOrder == null || listOrder.Count == 0)
             {
                 Console.Clear();
-                ConsoleUtility.PrintTitle("▬▬▬▬ PAYMENT ▬▬▬▬", true);
+                ConsoleUtility.PrintTitle("▬▬▬▬ORDER LIST ▬▬▬▬", true);
                 ConsoleUtility.Write("\n  ORDER NOT FOUND!!!\n", ConsoleColor.Red);
                 ConsoleUtility.PressAnyKey("back");
                 return;
@@ -115,7 +115,7 @@ namespace ConsolePL
                 orderCount = listOrder.Count;
                 pageCount = (orderCount % 10 == 0) ? orderCount / 10 : orderCount / 10 + 1;
                 orders = Order.SplitList(listOrder, index, 10);
-                ShowListOrder(orders, "PAYMENT");
+                ShowListOrder(orders, "ORDER LIST");
                 ConsoleUtility.ShowPageNumber(pageCount, page);
                 int id;
                 Console.Write("\n  ● Press '");
@@ -170,7 +170,7 @@ namespace ConsolePL
                             if (listOrder == null || listOrder.Count == 0)
                             {
                                 Console.Clear();
-                                ConsoleUtility.PrintTitle("▬▬▬▬ PAYMENT ▬▬▬▬", true);
+                                ConsoleUtility.PrintTitle("▬▬▬▬ ORDER LIST ▬▬▬▬", true);
                                 ConsoleUtility.Write("\n  ORDER NOT FOUND!!!\n", ConsoleColor.Red);
                                 ConsoleUtility.PressAnyKey("back");
                                 return;
@@ -178,7 +178,7 @@ namespace ConsolePL
                             page = 1; index = 0; orderCount = listOrder.Count;
                             pageCount = (orderCount % 10 == 0) ? orderCount / 10 : orderCount / 10 + 1;
                             orders = Order.SplitList(listOrder, index, 10);
-                            ShowListOrder(orders, "PAYMENT");
+                            ShowListOrder(orders, "ORDER LIST");
                             ConsoleUtility.ShowPageNumber(pageCount, page);
                             Console.Write("\n  ● Press '");
                             ConsoleUtility.Write("ESC", ConsoleColor.Red);
@@ -197,7 +197,7 @@ namespace ConsolePL
                             }
                             else break;
                             orders = Order.SplitList(listOrder, index, 10);
-                            ShowListOrder(orders, "PAYMENT");
+                            ShowListOrder(orders, "ORDER LIST");
                             ConsoleUtility.ShowPageNumber(pageCount, page);
                             Console.Write("\n  ● Press '");
                             ConsoleUtility.Write("ESC", ConsoleColor.Red);
