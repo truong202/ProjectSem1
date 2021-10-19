@@ -564,4 +564,3 @@ DROP USER IF EXISTS 'laptop'@'localhost';
 CREATE USER IF NOT EXISTS 'laptop'@'localhost' IDENTIFIED BY 'vtcacademy';
 
 GRANT ALL ON laptop_store.* TO 'laptop'@'localhost';
-select * from orders;
