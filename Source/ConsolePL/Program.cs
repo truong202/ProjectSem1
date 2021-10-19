@@ -2,7 +2,6 @@
 using Persistance;
 using BL;
 using Utilities;
-// dotnet publish --configuration Release -o D:\APP
 namespace ConsolePL
 {
     class Program
