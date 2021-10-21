@@ -90,6 +90,7 @@ namespace ConsolePL
                     case ConsoleKey.C:
                         orderH.CreateOrder(staff);
                         ShowListLaptop(laptops, "SEARCH LAPTOP");
+                        ConsoleUtility.ShowPageNumber(pageCount, page);
                         ShowFeatures(staff);
                         break;
                     case ConsoleKey.LeftArrow:

@@ -348,11 +348,12 @@ namespace ConsolePL
             Console.WriteLine("  ║                                                                                                                  ║");
             Console.WriteLine("  ║                SELLER                             ACCOUNTANT                             CUSTOMER                ║");
             Console.WriteLine("  ║                                                                                                                  ║");
+            Console.WriteLine("  ║                                                                                                                  ║");
+            Console.WriteLine("  ║                                                                                                                  ║");
             int x = ConsoleUtility.GetPosition(order.Seller.Name, 38);
             Console.Write("  ║{0," + x + "}{1}{2," + (38 - order.Seller.Name.Length - x) + "}", "", order.Seller.Name, "");
             x = ConsoleUtility.GetPosition(order.Accountant.Name, 38);
             Console.WriteLine("{0," + (x) + "}{1}{2," + (76 - order.Accountant.Name.Length - x) + "}║", "", order.Accountant.Name, "");
-            Console.WriteLine("  ║                                                                                                                  ║");
             Console.WriteLine("  ║                                                                                                                  ║");
             Console.WriteLine("  ╚══════════════════════════════════════════════════════════════════════════════════════════════════════════════════╝");
         }

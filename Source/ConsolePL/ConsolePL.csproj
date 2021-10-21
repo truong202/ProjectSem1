@@ -11,6 +11,7 @@
     <TargetFramework>net5.0</TargetFramework>
     <RootNamespace>ConsolePL</RootNamespace>
     <AssemblyName>LaptopStore</AssemblyName>
+    <ApplicationIcon>laptop.ico</ApplicationIcon>
   </PropertyGroup>
 
 </Project>
