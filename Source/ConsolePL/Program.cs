@@ -9,7 +9,7 @@ namespace ConsolePL
         static void Main(string[] args)
         {
             Console.OutputEncoding = System.Text.Encoding.UTF8;
-            Console.Title = "LAPTOP_STORE";
+            Console.Title = "LAPTOP STORE";
             Staff staff = Login();
             int choose;
             string[] menuItems;
