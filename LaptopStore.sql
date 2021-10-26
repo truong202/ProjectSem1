@@ -96,22 +96,22 @@ CREATE TABLE order_details (
 
  -- pass 12345678 
 INSERT INTO staffs(staff_name, username, password, role)
-VALUES ('Nguyễn Văn A', 'seller001', '25d55ad283aa400af464c76d713c07ad', 1);
+VALUES ('Nguyen Van A', 'seller001', '25d55ad283aa400af464c76d713c07ad', 1);
 INSERT INTO staffs(staff_name, username, password, role)
-VALUES ('Nguyễn Văn B', 'seller002', '25d55ad283aa400af464c76d713c07ad', 1);
+VALUES ('Nguyen Van B', 'seller002', '25d55ad283aa400af464c76d713c07ad', 1);
 INSERT INTO staffs(staff_name, username, password, role)
-VALUES ('Nguyễn Văn C', 'seller003', '25d55ad283aa400af464c76d713c07ad', 1);
+VALUES ('Nguyen Van C', 'seller003', '25d55ad283aa400af464c76d713c07ad', 1);
 INSERT INTO staffs(staff_name, username, password, role)
-VALUES ('Nguyễn Văn D', 'accountant001', '25d55ad283aa400af464c76d713c07ad', 2);
+VALUES ('Nguyen Van D', 'accountant001', '25d55ad283aa400af464c76d713c07ad', 2);
 INSERT INTO staffs(staff_name, username, password, role)
-VALUES ('Nguyễn Văn E', 'accountant002', '25d55ad283aa400af464c76d713c07ad', 2);
+VALUES ('Nguyen Van E', 'accountant002', '25d55ad283aa400af464c76d713c07ad', 2);
 INSERT INTO staffs(staff_name, username, password, role)
-VALUES ('Nguyễn Văn F', 'accountant003', '25d55ad283aa400af464c76d713c07ad', 2);
+VALUES ('Nguyen Van F', 'accountant003', '25d55ad283aa400af464c76d713c07ad', 2);
 
 INSERT INTO customers(customer_name, address, phone)
-VALUES ('Phạm Công Hưng', 'Nam Định', '0904844014');
+VALUES ('Pham Cong Hung', 'Nam Dinh', '0904844014');
 INSERT INTO customers(customer_name, address, phone)
-VALUES ('Phạm Công Hà', 'Nam Định', '0906450904');
+VALUES ('Pham Cong Ha', 'Nam Dinh', '0906450904');
 INSERT INTO customers(customer_name, phone, address)
 VALUES ('Customer1', '0836984311', 'Ho Chi Minh');
 INSERT INTO customers(customer_name, phone, address)
