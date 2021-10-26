@@ -1,23 +1,16 @@
-using System;
-using Xunit;
-using Persistance;
 using DAL;
-using System.Collections.Generic;
+using Persistance;
+using Xunit;
 
-namespace TestDAL
-{
-    public class GetOrdersUnpaidTest
-    {
+namespace TestDAL {
+    public class GetOrdersUnpaidTest {
         private OrderDAL orderDAL = new OrderDAL();
-        
+
         [Fact]
-        public void GetOrdersUnpaid()
-        {
+        public void GetOrdersUnpaid() {
             var result = orderDAL.GetOrdersUnpaid();
-            if (result != null)
-            {
-                foreach (var order in result)
-                {
+            if (result != null) {
+                foreach (var order in result) {
                     Assert.True(order.Status == Order.UNPAID || order.Status == Order.PROCESSING);
                 }
             }

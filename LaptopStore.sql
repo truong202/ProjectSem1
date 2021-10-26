@@ -234,7 +234,7 @@ INSERT INTO laptops(laptop_name, manufactory_id, category_id, CPU, Ram, hard_dri
 			 network_and_connection, security, keyboard, audio, size, warranty_period, OS, price, quantity)
 VALUES ('MSI GF63 Thin 10SC 468VN', 2, 1, 'Intel Core i5-10500H', '8GB DDR4 3200MHz', '512GB SSD M.2 PCIE', 'NVIDIA GeForce GTX 1650',
 '15.6" FHD (1920 x 1080) IPS, 144Hz, Thin Bezel', '3 Cell 51WHr', 1.86, 'Plastic', '3x USB3.2 Gen1, 1x Type-C USB3.2 Gen1, HDMI, RJ-45',
-'LAN, Intel Wireless-AC 9560 (2*2 AC), Bluetooth v5.0', 'PIN', 'Red led', '2x 2W Speaker', '359 x 254 x 21.7 mm', '24 month', 'Windows 10 Home', 20490000, 50);
+'LAN, Intel Wireless-AC 9560 (2*2 AC), Bluetooth v5.0', 'PIN', 'Red led', '2x 2W Speaker', '359 x 254 x 21.7 mm', '24 month', 'Windows 10 Home', 20490000, 0);
 
 INSERT INTO laptops(laptop_name, manufactory_id, category_id, CPU, Ram, hard_drive, VGA, display, battery, weight, materials, ports,
 			 network_and_connection, security, keyboard, audio, size, warranty_period, OS, price, quantity)

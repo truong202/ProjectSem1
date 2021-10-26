@@ -1,13 +1,9 @@
-using System;
-using Xunit;
 using DAL;
 using Persistance;
-using System.Collections.Generic;
+using Xunit;
 
-namespace TestDAL
-{
-    public class GetCustomerByPhoneTest
-    {
+namespace TestDAL {
+    public class GetCustomerByPhoneTest {
         CustomerDAL cusDAL = new CustomerDAL();
 
         [Theory]
@@ -15,8 +11,7 @@ namespace TestDAL
         [InlineData("0836984312")]
         [InlineData("0836984313")]
 
-        public void GetCustomerByPhoneTest1(string phone)
-        {
+        public void GetCustomerByPhoneTest1(string phone) {
             Customer result = cusDAL.GetByPhone(phone);
             Assert.True(result.Phone == phone);
         }
@@ -24,8 +19,7 @@ namespace TestDAL
         [Theory]
         [InlineData("0836984310")]
         [InlineData("")]
-        public void GetCustomerByPhoneTest2(string phone)
-        {
+        public void GetCustomerByPhoneTest2(string phone) {
             Customer result = cusDAL.GetByPhone(phone);
             Assert.True(result == null);
         }

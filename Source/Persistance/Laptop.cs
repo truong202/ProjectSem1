@@ -1,10 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
 
-namespace Persistance
-{
-    public class Laptop
-    {
+namespace Persistance {
+    public class Laptop {
         public int ID { set; get; }
         public string Name { set; get; }
         public Category CategoryInfo { set; get; }
@@ -28,32 +26,26 @@ namespace Persistance
         public Decimal Price { set; get; }
         public string WarrantyPeriod { set; get; }
 
-        public Laptop()
-        {
+        public Laptop() {
             CategoryInfo = new Category();
             ManufactoryInfo = new Manufactory();
         }
-        public static List<Laptop> SplitList(List<Laptop> laptops, int index, int count)
-        {
+        public static List<Laptop> SplitList(List<Laptop> laptops, int index, int count) {
             if (laptops == null || laptops.Count == 0) return null;
             List<Laptop> listLaptop = new List<Laptop>();
-            for (int i = index; i < index + count; i++)
-            {
+            for (int i = index; i < index + count; i++) {
                 listLaptop.Add(laptops[i]);
                 if (i == laptops.Count - 1) break;
             }
             return listLaptop;
         }
-        public override bool Equals(object obj)
-        {
-            if (obj is Laptop)
-            {
+        public override bool Equals(object obj) {
+            if (obj is Laptop) {
                 return ((Laptop)obj).ID.Equals(this.ID);
             }
             return false;
         }
-        public override int GetHashCode()
-        {
+        public override int GetHashCode() {
             return this.ID.GetHashCode();
         }
     }

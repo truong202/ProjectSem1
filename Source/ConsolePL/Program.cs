@@ -1,28 +1,22 @@
-﻿using System;
+﻿using BL;
 using Persistance;
-using BL;
+using System;
 using Utilities;
-namespace ConsolePL
-{
-    class Program
-    {
-        static void Main(string[] args)
-        {
+namespace ConsolePL {
+    class Program {
+        static void Main(string[] args) {
             Console.OutputEncoding = System.Text.Encoding.UTF8;
             Console.Title = "LAPTOP STORE";
             Staff staff = Login();
             int choose;
             string[] menuItems;
-            switch (staff.Role)
-            {
+            switch (staff.Role) {
                 case Staff.SELLER:
                     menuItems = new[] { "Search Laptops", "Exit" };
                     LaptopHandle laptopH = new LaptopHandle();
-                    do
-                    {
+                    do {
                         choose = Menu("[MENU SELLER]", menuItems);
-                        switch (choose)
-                        {
+                        switch (choose) {
                             case 1:
                                 laptopH.SearchLaptops(staff);
                                 break;
@@ -32,11 +26,9 @@ namespace ConsolePL
                 case Staff.ACCOUNTANT:
                     menuItems = new[] { "Payment", "Exit" };
                     OrderHandle orderH = new OrderHandle();
-                    do
-                    {
+                    do {
                         choose = Menu("[MENU ACCOUNTANT]", menuItems);
-                        switch (choose)
-                        {
+                        switch (choose) {
                             case 1:
                                 orderH.Payment(staff);
                                 break;
@@ -48,37 +40,34 @@ namespace ConsolePL
             Console.CursorVisible = true;
         }
 
-        public static int Menu(string title, string[] menuItems)
-        {
+        public static int Menu(string title, string[] menuItems) {
             int choose = 0;
             string input;
             Console.Clear();
-            Console.WriteLine("╔════════════════════════════════════════════════════════╗");
-            Console.Write("║                                                        ║\n║");
+            Console.WriteLine(" ╔════════════════════════════════════════════════════════╗");
+            Console.Write(" ║                                                        ║\n ║");
             ConsoleUtility.Write("     ╦   ╔═╗ ╔═╗ ╔╦╗ ╔═╗ ╔═╗    ╔═╗ ╔╦╗ ╔═╗ ╦═╗ ╔═╗     ", ConsoleColor.Cyan);
-            Console.Write("║\n║");
+            Console.Write("║\n ║");
             ConsoleUtility.Write("     ║   ╠═╣ ╠═╝  ║  ║ ║ ╠═╝    ╚═╗  ║  ║ ║ ╠╦╝ ╠╣      ", ConsoleColor.Cyan);
-            Console.Write("║\n║");
+            Console.Write("║\n ║");
             ConsoleUtility.Write("     ╩═╝ ╩ ╩ ╩    ╩  ╚═╝ ╩      ╚═╝  ╩  ╚═╝ ╝╚═ ╚═╝     ", ConsoleColor.Cyan);
             Console.WriteLine("║");
-            Console.Write("║                                                        ║\n║");
+            Console.Write(" ║                                                        ║\n ║");
             int x = ConsoleUtility.GetPosition(title, 58);
             ConsoleUtility.Write(String.Format("{0," + x + "}{1}", "", title), ConsoleColor.Yellow);
             Console.Write(String.Format("{0," + (56 - x - title.Length) + "}", ""));
             Console.WriteLine("║");
-            for (int i = 0; i < menuItems.Length; i++)
-            {
-                Console.WriteLine("╟────────────────────────────────────────────────────────╢");
-                Console.Write("║");
+            for (int i = 0; i < menuItems.Length; i++) {
+                Console.WriteLine(" ╟────────────────────────────────────────────────────────╢");
+                Console.Write(" ║");
                 x = ConsoleUtility.GetPosition(menuItems[i] + (i + 1) + ". ", 58);
                 Console.Write(String.Format("{0," + x + "}{1}. {2}", "", i + 1, menuItems[i]));
                 Console.Write(String.Format("{0," + (53 - x - menuItems[i].Length) + "}", ""));
                 Console.WriteLine("║");
             }
-            Console.WriteLine("╚════════════════════════════════════════════════════════╝");
+            Console.WriteLine(" ╚════════════════════════════════════════════════════════╝");
             Console.Write("\n  → Your choice: ");
-            while (true)
-            {
+            while (true) {
                 input = Console.ReadLine();
                 if (int.TryParse(input, out choose) && choose >= 1 && choose <= menuItems.Length) return choose;
                 Console.ForegroundColor = ConsoleColor.Red;
@@ -87,33 +76,30 @@ namespace ConsolePL
                 Console.Write("  → re-enter: ");
             }
         }
-        public static Staff Login()
-        {
+        public static Staff Login() {
             string username, password;
             StaffBL staffBL = new StaffBL();
             Staff staff;
-            do
-            {
+            do {
                 Console.Clear();
-                Console.WriteLine("╔════════════════════════════════════════════════════════╗");
-                Console.Write("║                                                        ║\n║");
+                Console.WriteLine(" ╔════════════════════════════════════════════════════════╗");
+                Console.Write(" ║                                                        ║\n ║");
                 ConsoleUtility.Write("     ╦   ╔═╗ ╔═╗ ╔╦╗ ╔═╗ ╔═╗    ╔═╗ ╔╦╗ ╔═╗ ╦═╗ ╔═╗     ", ConsoleColor.Cyan);
-                Console.Write("║\n║");
+                Console.Write("║\n ║");
                 ConsoleUtility.Write("     ║   ╠═╣ ╠═╝  ║  ║ ║ ╠═╝    ╚═╗  ║  ║ ║ ╠╦╝ ╠╣      ", ConsoleColor.Cyan);
-                Console.Write("║\n║");
+                Console.Write("║\n ║");
                 ConsoleUtility.Write("     ╩═╝ ╩ ╩ ╩    ╩  ╚═╝ ╩      ╚═╝  ╩  ╚═╝ ╝╚═ ╚═╝     ", ConsoleColor.Cyan);
                 Console.WriteLine("║");
-                Console.Write("║                                                        ║\n║");
+                Console.Write(" ║                                                        ║\n ║");
                 ConsoleUtility.Write("                         [LOGIN]                        ", ConsoleColor.Yellow);
                 Console.WriteLine("║");
-                Console.WriteLine("╚════════════════════════════════════════════════════════╝");
+                Console.WriteLine(" ╚════════════════════════════════════════════════════════╝");
                 Console.Write("\n  → Username: ");
                 username = ConsoleUtility.GetUsername();
                 Console.Write("  → Password: ");
                 password = ConsoleUtility.GetPassword();
                 staff = staffBL.Login(new Staff { Username = username, Password = password });
-                if (staff == null)
-                {
+                if (staff == null) {
                     ConsoleUtility.Write("\n  Incorrect Username or Password!\n", ConsoleColor.Red);
                     ConsoleUtility.PressAnyKey("login again");
                 }

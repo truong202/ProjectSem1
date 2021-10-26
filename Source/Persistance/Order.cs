@@ -1,10 +1,8 @@
 using System;
 using System.Collections.Generic;
 
-namespace Persistance
-{
-    public class Order
-    {
+namespace Persistance {
+    public class Order {
         public int ID { get; set; }
         public Customer CustomerInfo { get; set; }
         public Staff Seller { get; set; }
@@ -16,19 +14,16 @@ namespace Persistance
         public const int PROCESSING = 2;
         public const int PAID = 3;
         public const int CANCEL = 4;
-        public Order()
-        {
+        public Order() {
             CustomerInfo = new Customer();
             Seller = new Staff();
             Accountant = new Staff();
             Laptops = new List<Laptop>();
         }
-        public static List<Order> SplitList(List<Order> listOrder, int index, int count)
-        {
+        public static List<Order> SplitList(List<Order> listOrder, int index, int count) {
             if (listOrder == null || listOrder.Count == 0) return null;
             List<Order> orders = new List<Order>();
-            for (int i = index; i < index + count; i++)
-            {
+            for (int i = index; i < index + count; i++) {
                 orders.Add(listOrder[i]);
                 if (i == listOrder.Count - 1) break;
             }

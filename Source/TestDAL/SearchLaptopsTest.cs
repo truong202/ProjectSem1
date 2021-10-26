@@ -1,14 +1,12 @@
-using System;
-using Xunit;
 using DAL;
 using Persistance;
+using System;
 using System.Collections.Generic;
+using Xunit;
 
 
-namespace TestDAL
-{
-    public class SearchLaptopTest
-    {
+namespace TestDAL {
+    public class SearchLaptopTest {
         LaptopDAL laptopDAL = new LaptopDAL();
 
         [Theory]
@@ -16,12 +14,10 @@ namespace TestDAL
         [InlineData("office")]
         [InlineData("macbook")]
         [InlineData("asus")]
-        public void SearchLaptopsTest1(string searchValue)
-        {
+        public void SearchLaptopsTest1(string searchValue) {
             List<Laptop> result = laptopDAL.Search(searchValue);
             Assert.True(result != null);
-            foreach (var laptop in result)
-            {
+            foreach (var laptop in result) {
                 Assert.True(
                     laptop.Name.Contains(searchValue, StringComparison.OrdinalIgnoreCase) ||
                     laptop.ManufactoryInfo.Name.Contains(searchValue, StringComparison.OrdinalIgnoreCase) ||
@@ -33,21 +29,18 @@ namespace TestDAL
         [InlineData("a # desc")]
         [InlineData("office # desc")]
         [InlineData("asus # desc")]
-        public void SearchLaptopsTest2(string searchValue)
-        {
+        public void SearchLaptopsTest2(string searchValue) {
             var searchs = searchValue.Split("#");
             List<Laptop> result = laptopDAL.Search(searchValue);
             Assert.True(result != null);
-            foreach (var laptop in result)
-            {
+            foreach (var laptop in result) {
                 Assert.True(
                     laptop.Name.Contains(searchs[0].Trim(), StringComparison.OrdinalIgnoreCase) ||
                     laptop.ManufactoryInfo.Name.Contains(searchs[0].Trim(), StringComparison.OrdinalIgnoreCase) ||
                     laptop.CategoryInfo.Name.Contains(searchs[0].Trim(), StringComparison.OrdinalIgnoreCase)
                 );
             }
-            for (int i = 0; i < result.Count - 1; i++)
-            {
+            for (int i = 0; i < result.Count - 1; i++) {
                 Assert.True(result[i].Price >= result[i + 1].Price);
             }
         }
@@ -56,21 +49,18 @@ namespace TestDAL
         [InlineData("a # asc")]
         [InlineData("office # asc")]
         [InlineData("asus # asc")]
-        public void SearchLaptopsTest3(string searchValue)
-        {
+        public void SearchLaptopsTest3(string searchValue) {
             var searchs = searchValue.Split("#");
             List<Laptop> result = laptopDAL.Search(searchValue);
             Assert.True(result != null);
-            foreach (var laptop in result)
-            {
+            foreach (var laptop in result) {
                 Assert.True(
                     laptop.Name.Contains(searchs[0].Trim(), StringComparison.OrdinalIgnoreCase) ||
                     laptop.ManufactoryInfo.Name.Contains(searchs[0].Trim(), StringComparison.OrdinalIgnoreCase) ||
                     laptop.CategoryInfo.Name.Contains(searchs[0].Trim(), StringComparison.OrdinalIgnoreCase)
                 );
             }
-            for (int i = 0; i < result.Count - 1; i++)
-            {
+            for (int i = 0; i < result.Count - 1; i++) {
                 Assert.True(result[i].Price <= result[i + 1].Price);
             }
         }
@@ -78,13 +68,11 @@ namespace TestDAL
         [InlineData("asus # gaming")]
         [InlineData("gaming # acer")]
         [InlineData("apple # multimedia")]
-        public void SearchLaptopsTest4(string searchValue)
-        {
+        public void SearchLaptopsTest4(string searchValue) {
             var searchs = searchValue.Split("#");
             List<Laptop> result = laptopDAL.Search(searchValue);
             Assert.True(result != null);
-            foreach (var laptop in result)
-            {
+            foreach (var laptop in result) {
                 Assert.True(
                     (laptop.ManufactoryInfo.Name.Contains(searchs[0].Trim(), StringComparison.OrdinalIgnoreCase) &&
                     laptop.CategoryInfo.Name.Contains(searchs[1].Trim(), StringComparison.OrdinalIgnoreCase)) ||
@@ -98,13 +86,11 @@ namespace TestDAL
         [InlineData("asus # gaming # desc")]
         [InlineData("gaming # acer # desc")]
         [InlineData("apple # Multimedia # desc")]
-        public void SearchLaptopsTest5(string searchValue)
-        {
+        public void SearchLaptopsTest5(string searchValue) {
             var searchs = searchValue.Split("#");
             List<Laptop> result = laptopDAL.Search(searchValue);
             Assert.True(result != null);
-            foreach (var laptop in result)
-            {
+            foreach (var laptop in result) {
                 Assert.True(
                     (laptop.ManufactoryInfo.Name.Contains(searchs[0].Trim(), StringComparison.OrdinalIgnoreCase) &&
                     laptop.CategoryInfo.Name.Contains(searchs[1].Trim(), StringComparison.OrdinalIgnoreCase)) ||
@@ -112,23 +98,20 @@ namespace TestDAL
                     laptop.CategoryInfo.Name.Contains(searchs[0].Trim(), StringComparison.OrdinalIgnoreCase))
                 );
             }
-            for (int i = 0; i < result.Count - 1; i++)
-            {
+            for (int i = 0; i < result.Count - 1; i++) {
                 Assert.True(result[i].Price >= result[i + 1].Price);
             }
         }
 
-         [Theory]
+        [Theory]
         [InlineData("asus # gaming # asc")]
         [InlineData("gaming # acer # asc")]
         [InlineData("apple # Multimedia # asc")]
-        public void SearchLaptopsTest6(string searchValue)
-        {
+        public void SearchLaptopsTest6(string searchValue) {
             var searchs = searchValue.Split("#");
             List<Laptop> result = laptopDAL.Search(searchValue);
             Assert.True(result != null);
-            foreach (var laptop in result)
-            {
+            foreach (var laptop in result) {
                 Assert.True(
                     (laptop.ManufactoryInfo.Name.Contains(searchs[0].Trim(), StringComparison.OrdinalIgnoreCase) &&
                     laptop.CategoryInfo.Name.Contains(searchs[1].Trim(), StringComparison.OrdinalIgnoreCase)) ||
@@ -136,8 +119,7 @@ namespace TestDAL
                     laptop.CategoryInfo.Name.Contains(searchs[0].Trim(), StringComparison.OrdinalIgnoreCase))
                 );
             }
-            for (int i = 0; i < result.Count - 1; i++)
-            {
+            for (int i = 0; i < result.Count - 1; i++) {
                 Assert.True(result[i].Price <= result[i + 1].Price);
             }
         }
@@ -146,8 +128,7 @@ namespace TestDAL
         [InlineData("asus # dell # ")]
         [InlineData("a # # asus")]
         [InlineData("dell # mac # # desc")]
-        public void SearchLaptopsTest7(string searchValue)
-        {
+        public void SearchLaptopsTest7(string searchValue) {
             List<Laptop> result = laptopDAL.Search(searchValue);
             Assert.True(result == null);
         }

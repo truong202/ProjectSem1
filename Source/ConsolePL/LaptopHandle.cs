@@ -1,24 +1,20 @@
+using BL;
+using Persistance;
 using System;
 using System.Collections.Generic;
-using Persistance;
-using BL;
 using Utilities;
 
-namespace ConsolePL
-{
-    public class LaptopHandle
-    {
+namespace ConsolePL {
+    public class LaptopHandle {
         private LaptopBL laptopBL = new LaptopBL();
         private OrderHandle orderH = new OrderHandle();
-        public void SearchLaptops(Staff staff)
-        {
+        public void SearchLaptops(Staff staff) {
             int index = 0, laptopCount, pageCount, page = 1;
             string searchValue = "";
             List<Laptop> laptops;
             var listLaptop = laptopBL.Search(searchValue);
             Console.Clear();
-            if (listLaptop == null || listLaptop.Count == 0)
-            {
+            if (listLaptop == null || listLaptop.Count == 0) {
                 ConsoleUtility.PrintTitle("▬▬▬▬ SEARCH LAPTOP ▬▬▬▬", true);
                 ConsoleUtility.Write("\n  LAPTOP NOT FOUND!\n", ConsoleColor.Red);
                 ConsoleUtility.PressAnyKey("back");
@@ -31,24 +27,20 @@ namespace ConsolePL
             ConsoleUtility.ShowPageNumber(pageCount, page);
             ShowFeatures(staff);
             ConsoleKey key = new ConsoleKey();
-            do
-            {
+            do {
                 Console.CursorVisible = false;
                 var keyInfo = Console.ReadKey(true);
                 key = keyInfo.Key;
-                switch (key)
-                {
+                switch (key) {
                     case ConsoleKey.F:
                         Console.CursorVisible = true;
                         Console.WriteLine("\n  Press combination CTRL + H to view instructions");
-                        while (true)
-                        {
+                        while (true) {
                             Console.Write("  → Input search value: ");
                             searchValue = ConsoleUtility.GetString(out keyInfo, new[] { ConsoleKey.H });
                             key = keyInfo.Key;
                             Console.WriteLine();
-                            if ((keyInfo.Modifiers & ConsoleModifiers.Control) != 0 && key == ConsoleKey.H)
-                            {
+                            if ((keyInfo.Modifiers & ConsoleModifiers.Control) != 0 && key == ConsoleKey.H) {
                                 Console.WriteLine("\n  * NAME|MANUFACTORY|CATEGORY: Search by NAME or MANUFACTORY or CATEGORY");
                                 Console.WriteLine("  * NAME|MANUFACTORY|CATEGORY # desc|asc: Search by NAME or MANUFACTORY or CATEGORY, PRICE: High → Low or Low → High");
                                 Console.WriteLine("  * MANUFACTORY # CATEGORY: Search by MANUFACTORY and CATEGORY");
@@ -58,14 +50,12 @@ namespace ConsolePL
                             break;
                         }
                         listLaptop = laptopBL.Search(searchValue);
-                        if (listLaptop == null || listLaptop.Count == 0)
-                        {
+                        if (listLaptop == null || listLaptop.Count == 0) {
                             Console.Clear();
                             ConsoleUtility.PrintTitle("▬▬▬▬ SEARCH LAPTOP ▬▬▬▬", true);
                             ConsoleUtility.Write("\n  LAPTOP NOT FOUND!\n", ConsoleColor.Red);
                         }
-                        else
-                        {
+                        else {
                             index = 0; page = 1; laptopCount = listLaptop.Count;
                             pageCount = (laptopCount % 10 == 0) ? laptopCount / 10 : laptopCount / 10 + 1;
                             laptops = Laptop.SplitList(listLaptop, index, 10);
@@ -77,8 +67,7 @@ namespace ConsolePL
                     case ConsoleKey.D:
                         Console.Write("\n  → Input Laptop ID to view details(input 0 to cancel): ");
                         int id = ConsoleUtility.GetNumber("ID", 0);
-                        if (id != 0)
-                        {
+                        if (id != 0) {
                             Laptop laptop = laptopBL.GetById(id);
                             ViewLaptopDetails(laptop);
                             ConsoleUtility.PressAnyKey("back");
@@ -95,12 +84,10 @@ namespace ConsolePL
                         break;
                     case ConsoleKey.LeftArrow:
                     case ConsoleKey.RightArrow:
-                        if (page > 1 && key == ConsoleKey.LeftArrow)
-                        {
+                        if (page > 1 && key == ConsoleKey.LeftArrow) {
                             page--; index -= 10;
                         }
-                        else if (page < pageCount && key == ConsoleKey.RightArrow)
-                        {
+                        else if (page < pageCount && key == ConsoleKey.RightArrow) {
                             page++; index += 10;
                         }
                         else break;
@@ -113,8 +100,7 @@ namespace ConsolePL
             } while (key != ConsoleKey.Escape);
             Console.CursorVisible = true;
         }
-        public void ShowListLaptop(List<Laptop> laptops, string title)
-        {
+        public void ShowListLaptop(List<Laptop> laptops, string title) {
             Console.Clear();
             ConsoleUtility.PrintTitle("▬▬▬▬ " + title + " ▬▬▬▬", false);
             Console.CursorVisible = false;
@@ -123,8 +109,7 @@ namespace ConsolePL
             Console.WriteLine("  ║ {0,3} │ {1,-30} │ {2,-11} │ {3,-11} │ {4,-21} │ {5,6} │ {6,12} ║", "ID", "Laptop Name",
                                "Manufactory", "Category", "CPU", "RAM", "Price(VND)");
             ConsoleUtility.PrintLine(lengthDatas, "  ╟", "─", "┼", "╢\n");
-            for (int i = 0; i < laptops.Count; i++)
-            {
+            for (int i = 0; i < laptops.Count; i++) {
                 int lengthName = 27;
                 string name = (laptops[i].Name.Length > lengthName) ?
                 laptops[i].Name.Remove(lengthName, laptops[i].Name.Length - lengthName) + "..." : laptops[i].Name;
@@ -136,10 +121,8 @@ namespace ConsolePL
             }
             ConsoleUtility.PrintLine(lengthDatas, "  ╚", "═", "╧", "╝\n");
         }
-        private void ViewLaptopDetails(Laptop laptop)
-        {
-            if (laptop == null)
-            {
+        private void ViewLaptopDetails(Laptop laptop) {
+            if (laptop == null) {
                 ConsoleUtility.Write("  LAPTOP NOT FOUND!\n", ConsoleColor.Red);
                 return;
             }
@@ -162,8 +145,7 @@ namespace ConsolePL
             Console.WriteLine("  │ Hard drive:  {0,-99} │", laptop.HardDrive);
             Console.WriteLine("  │ VGA:         {0,-99} │", laptop.VGA);
             data = laptop.Display;
-            if (data.Length > 99)
-            {
+            if (data.Length > 99) {
                 var lines = ConsoleUtility.SplitLine(data, 99);
                 Console.WriteLine("  │ Display:     {0,-99} │", lines[0]);
                 for (int i = 1; i < lines.Count; i++)
@@ -175,8 +157,7 @@ namespace ConsolePL
             Console.WriteLine("  │ Weight:      {0,-99} │", laptop.Weight.ToString() + " Kg");
             Console.WriteLine("  │ Materials:   {0,-99} │", laptop.Materials);
             data = laptop.Ports;
-            if (data.Length > 99)
-            {
+            if (data.Length > 99) {
                 var lines = ConsoleUtility.SplitLine(data, 99);
                 Console.WriteLine("  │ Ports:       {0,-99} │", lines[0]);
                 for (int i = 1; i < lines.Count; i++)
@@ -195,10 +176,8 @@ namespace ConsolePL
             Console.WriteLine("  │ Warranty period: {0,-95} │", laptop.WarrantyPeriod);
             Console.WriteLine("  └{0}┘", line);
         }
-        public void ShowFeatures(Staff staff)
-        {
-            if (staff.Role == Staff.SELLER)
-            {
+        public void ShowFeatures(Staff staff) {
+            if (staff.Role == Staff.SELLER) {
                 Console.Write("  ● Press '");
                 ConsoleUtility.Write("F", ConsoleColor.Yellow);
                 Console.Write("' to search laptops, '");

@@ -1,10 +1,5 @@
-﻿using System;
-using System.Text.RegularExpressions;
-
-namespace Persistance
-{
-    public class Customer
-    {
+﻿namespace Persistance {
+    public class Customer {
         public int? ID { set; get; }
         public string Name { set; get; }
         public string Phone { set; get; }

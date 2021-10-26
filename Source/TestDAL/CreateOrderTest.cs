@@ -1,19 +1,13 @@
-using System;
-using Xunit;
-using Persistance;
 using DAL;
-using System.Collections.Generic;
+using Persistance;
+using Xunit;
 
-namespace TestDAL
-{
-    public class CreateOrderTest
-    {
+namespace TestDAL {
+    public class CreateOrderTest {
         private OrderDAL orderDAL = new OrderDAL();
         [Fact]
-        public void CreateOrderTest1()
-        {
-            Order order = new Order
-            {
+        public void CreateOrderTest1() {
+            Order order = new Order {
                 CustomerInfo = new Customer { Name = "cus1", Phone = "0836984111", Address = "Ha Noi" },
                 Seller = new Staff { ID = 1 },
                 Laptops = { new Laptop { ID = 26, Quantity =1},
@@ -26,10 +20,8 @@ namespace TestDAL
         }
 
         [Fact]
-        public void CreateOrderTest2()
-        {
-            Order order = new Order
-            {
+        public void CreateOrderTest2() {
+            Order order = new Order {
                 CustomerInfo = new Customer { Name = "cus2", Phone = "0836984222", Address = "Ha Noi" },
                 Seller = new Staff { ID = 1 },
                 Laptops = { new Laptop { ID = 26, Quantity =1},
@@ -42,10 +34,8 @@ namespace TestDAL
         }
 
         [Fact]
-        public void CreateOrderTest3()
-        {
-            Order order = new Order
-            {
+        public void CreateOrderTest3() {
+            Order order = new Order {
                 CustomerInfo = new Customer { Name = "cus3", Phone = "0836984333", Address = "Ha Noi" },
                 Seller = new Staff { ID = 1 },
                 Laptops = { new Laptop { ID = 4, Quantity =1},
@@ -58,10 +48,8 @@ namespace TestDAL
         }
 
         [Fact]
-        public void CreateOrderTest4()
-        {
-            Order order = new Order
-            {
+        public void CreateOrderTest4() {
+            Order order = new Order {
                 CustomerInfo = new Customer { Name = "cus4", Phone = "0836984344", Address = "Ha Noi" },
                 Seller = new Staff { ID = 1 },
                 Laptops = { new Laptop { ID = 1000, Quantity =1},
@@ -72,10 +60,8 @@ namespace TestDAL
         }
 
         [Fact]
-        public void CreateOrderTest5()
-        {
-            Order order = new Order
-            {
+        public void CreateOrderTest5() {
+            Order order = new Order {
                 CustomerInfo = new Customer { Name = "cus5", Phone = "0836984355", Address = "Ha Noi" },
                 Seller = new Staff { ID = 1 },
                 Laptops = { new Laptop { ID = 6, Quantity =1},
@@ -86,18 +72,15 @@ namespace TestDAL
         }
 
         [Fact]
-        public void CreateOrderTest6()
-        {
+        public void CreateOrderTest6() {
             Order order = null;
             bool result = orderDAL.CreateOrder(order);
             Assert.True(result == false);
         }
 
         [Fact]
-        public void CreateOrderTest7()
-        {
-            Order order = new Order
-            {
+        public void CreateOrderTest7() {
+            Order order = new Order {
                 Seller = new Staff { ID = 1 },
                 Laptops = { new Laptop { ID = 6, Quantity =1},
                             new Laptop { ID = 7, Quantity =1}}
@@ -107,10 +90,8 @@ namespace TestDAL
         }
 
         [Fact]
-        public void CreateOrderTest8()
-        {
-            Order order = new Order
-            {
+        public void CreateOrderTest8() {
+            Order order = new Order {
                 CustomerInfo = new Customer { Name = "cus5", Phone = "0836984355", Address = "Ha Noi" },
                 Laptops = { new Laptop { ID = 1, Quantity =1},
                             new Laptop { ID = 7, Quantity =1}}
@@ -120,10 +101,8 @@ namespace TestDAL
         }
 
         [Fact]
-        public void CreateOrderTest9()
-        {
-            Order order = new Order
-            {
+        public void CreateOrderTest9() {
+            Order order = new Order {
                 Seller = new Staff { ID = 1 },
                 CustomerInfo = new Customer { Name = "cus5", Phone = "0836984355", Address = "Ha Noi" },
             };
@@ -132,10 +111,8 @@ namespace TestDAL
         }
 
         [Fact]
-        public void CreateOrderTest10()
-        {
-            Order order = new Order
-            {
+        public void CreateOrderTest10() {
+            Order order = new Order {
                 Seller = new Staff { ID = 1 },
                 CustomerInfo = new Customer { Name = "cus5", Phone = "0836984355", Address = "Ha Noi" },
                 Laptops = { new Laptop { ID = 1, Quantity =1},

@@ -1,16 +1,12 @@
-﻿using System;
+﻿using MySql.Data.MySqlClient;
 using Persistance;
 using System.Collections.Generic;
-using MySql.Data.MySqlClient;
 
 
-namespace DAL
-{
-    public class LaptopDAL
-    {
+namespace DAL {
+    public class LaptopDAL {
         private MySqlConnection connection = DbConfig.GetConnection();
-        public List<Laptop> Search(string searchValue)
-        {
+        public List<Laptop> Search(string searchValue) {
             List<Laptop> laptops = new List<Laptop>();
             string[] filters = searchValue.Split('#');
             string filter = GetFilter(filters);
@@ -24,12 +20,10 @@ namespace DAL
                         INNER JOIN categories c ON l.category_id = c.category_id
                         INNER JOIN manufactories m ON l.manufactory_id = m.manufactory_id
                 WHERE ";
-            try
-            {
+            try {
                 connection.Open();
                 MySqlCommand command = connection.CreateCommand();
-                switch (filter)
-                {
+                switch (filter) {
                     case "SEARCH":
                         query += @"l.laptop_name LIKE CONCAT('%', @searchValue, '%') OR c.category_name LIKE CONCAT('%', @searchValue, '%') OR
                             m.manufactory_name LIKE  CONCAT('%', @searchValue, '%') OR l.laptop_id = @searchValue ORDER BY l.laptop_id;";
@@ -61,51 +55,41 @@ namespace DAL
                 laptops = GetLaptops(command);
             }
             catch { }
-            finally
-            {
+            finally {
                 try { connection.Close(); } catch { }
             }
             return laptops;
         }
-        public Laptop GetById(int laptopId)
-        {
+        public Laptop GetById(int laptopId) {
             Laptop laptop = null;
-            try
-            {
+            try {
                 connection.Open();
                 MySqlCommand command = new MySqlCommand("call sp_GetLaptopById(@laptopId)", connection);
                 command.Parameters.AddWithValue("@laptopId", laptopId);
-                using (MySqlDataReader reader = command.ExecuteReader())
-                {
-                    if (reader.Read())
-                    {
+                using (MySqlDataReader reader = command.ExecuteReader()) {
+                    if (reader.Read()) {
                         laptop = new Laptop();
                         laptop = GetLaptop(reader);
                     }
                 }
             }
             catch { }
-            finally
-            {
+            finally {
                 try { connection.Close(); } catch { }
             }
             return laptop;
         }
-        public List<Laptop> GetLaptops(MySqlCommand command)
-        {
+        public List<Laptop> GetLaptops(MySqlCommand command) {
             List<Laptop> laptops = new List<Laptop>();
-            using (MySqlDataReader reader = command.ExecuteReader())
-            {
-                while (reader.Read())
-                {
+            using (MySqlDataReader reader = command.ExecuteReader()) {
+                while (reader.Read()) {
                     laptops.Add(GetLaptop(reader));
                 }
             }
             if (laptops.Count == 0) return null;
             return laptops;
         }
-        internal Laptop GetLaptop(MySqlDataReader reader)
-        {
+        internal Laptop GetLaptop(MySqlDataReader reader) {
             Laptop laptop = new Laptop();
             laptop.ID = reader.GetInt32("laptop_id");
             laptop.Name = reader.GetString("laptop_name");
@@ -131,30 +115,25 @@ namespace DAL
             laptop.WarrantyPeriod = reader.GetString("warranty_period");
             return laptop;
         }
-        private string GetFilter(string[] filters)
-        {
+        private string GetFilter(string[] filters) {
             string filter = "";
             int count = filters.Length;
-            if (count == 1)
-            {
+            if (count == 1) {
                 filter = "SEARCH";
             }
-            else if (count == 2)
-            {
+            else if (count == 2) {
                 if (filters[count - 1].ToUpper().Trim().Equals("DESC") || filters[count - 1].ToUpper().Trim().Equals("ASC"))
                     filter = "SEARCH_" + filters[count - 1].ToUpper().Trim();
                 else
                     filter = "MANUFACTORY_CATEGORY";
             }
-            else if (count == 3)
-            {
+            else if (count == 3) {
                 filter = "MANUFACTORY_CATEGORY_";
                 if (filters[count - 1].ToUpper().Trim().Equals("DESC") || filters[count - 1].ToUpper().Trim().Equals("ASC"))
                     filter += filters[count - 1].ToUpper().Trim();
                 else filter = "";
             }
-            else
-            {
+            else {
                 filter = "";
             }
             return filter;
